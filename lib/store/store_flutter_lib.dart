@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:dart_flutter/store/store_lib.dart';
+import 'package:notify/store/store_lib.dart';
 import 'package:flutter/material.dart';
 
 class StoreConnect{

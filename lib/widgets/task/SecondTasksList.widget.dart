@@ -1,7 +1,7 @@
-import 'package:dart_flutter/custom_classes/task.dart';
-import 'package:dart_flutter/sockets/sockets.dart';
-import 'package:dart_flutter/widgets/task/LoadingPlaceholder.widget.dart';
-import 'package:dart_flutter/widgets/task/TaskItem.widget.dart';
+import 'package:notify/custom_classes/task.dart';
+import 'package:notify/sockets/sockets.dart';
+import 'package:notify/widgets/task/LoadingPlaceholder.widget.dart';
+import 'package:notify/widgets/task/TaskItem.widget.dart';
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import '../../http/tasks.http.dart';

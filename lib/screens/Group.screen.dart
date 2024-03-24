@@ -1,8 +1,7 @@
-import 'package:dart_flutter/http/tasks.http.dart';
-import 'package:dart_flutter/widgets/group/ShowGroupCreateModal.dart';
-import 'package:dart_flutter/widgets/group/ShowGroupSettings.dart';
-import 'package:dart_flutter/widgets/ui/PicturesGrid.ui.dart';
-import 'package:dart_flutter/widgets/ui/Skeleton.ui.dart';
+import 'package:notify/http/tasks.http.dart';
+import 'package:notify/widgets/group/ShowGroupSettings.dart';
+import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
+import 'package:notify/widgets/ui/Skeleton.ui.dart';
 import 'package:flutter/material.dart';
 import '../custom_classes/group.dart';
 import '../custom_classes/task.dart';

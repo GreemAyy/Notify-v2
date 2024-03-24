@@ -1,8 +1,8 @@
-import 'package:dart_flutter/custom_classes/group.dart';
-import 'package:dart_flutter/widgets/group/MyGroupsList.widget.dart';
-import 'package:dart_flutter/widgets/task/SecondTaskSlider.widget.dart';
-import 'package:dart_flutter/widgets/task/ShowCreateTaskModal.dart';
-import 'package:dart_flutter/widgets/task/ShowDatePickerModal.dart';
+import 'package:notify/custom_classes/group.dart';
+import 'package:notify/widgets/group/MyGroupsList.widget.dart';
+import 'package:notify/widgets/task/SecondTaskSlider.widget.dart';
+import 'package:notify/widgets/task/ShowCreateTaskModal.dart';
+import 'package:notify/widgets/task/ShowDatePickerModal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../store/store.dart';

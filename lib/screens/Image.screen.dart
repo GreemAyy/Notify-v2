@@ -1,6 +1,4 @@
-import 'package:dart_flutter/screens/Task.screen.dart';
-import 'package:dart_flutter/widgets/ui/PicturesGrid.ui.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:notify/screens/Task.screen.dart';
 import 'package:flutter/material.dart';
 
 import '../custom_classes/task.dart';

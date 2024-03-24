@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:dart_flutter/custom_classes/group.dart';
+import 'package:notify/custom_classes/group.dart';
 import 'package:http/http.dart' as http;
 import '../app_settings/const.dart';
 

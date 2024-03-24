@@ -1,14 +1,14 @@
-import 'package:dart_flutter/Navigation.dart';
-import 'package:dart_flutter/custom_classes/group.dart';
-import 'package:dart_flutter/custom_classes/task.dart';
-import 'package:dart_flutter/screens/Auth.screen.dart';
-import 'package:dart_flutter/screens/Group.screen.dart';
-import 'package:dart_flutter/screens/Home.screen.dart';
-import 'package:dart_flutter/screens/Image.screen.dart';
-import 'package:dart_flutter/screens/Init.screen.dart';
-import 'package:dart_flutter/screens/Search.screen.dart';
-import 'package:dart_flutter/screens/Task.screen.dart';
-import 'package:dart_flutter/screens/Tasks.screen.dart';
+import 'package:notify/Navigation.dart';
+import 'package:notify/custom_classes/group.dart';
+import 'package:notify/custom_classes/task.dart';
+import 'package:notify/screens/Auth.screen.dart';
+import 'package:notify/screens/Group.screen.dart';
+import 'package:notify/screens/Home.screen.dart';
+import 'package:notify/screens/Image.screen.dart';
+import 'package:notify/screens/Init.screen.dart';
+import 'package:notify/screens/Search.screen.dart';
+import 'package:notify/screens/Task.screen.dart';
+import 'package:notify/screens/Tasks.screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

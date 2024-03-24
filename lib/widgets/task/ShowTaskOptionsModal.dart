@@ -1,5 +1,5 @@
-import 'package:dart_flutter/custom_classes/task.dart';
-import 'package:dart_flutter/store/store.dart';
+import 'package:notify/custom_classes/task.dart';
+import 'package:notify/store/store.dart';
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 

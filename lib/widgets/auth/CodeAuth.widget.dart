@@ -1,6 +1,6 @@
-import 'package:dart_flutter/generated/l10n.dart';
-import 'package:dart_flutter/store/store.dart';
-import 'package:dart_flutter/widgets/auth/PhoneAuth.widget.dart';
+import 'package:notify/generated/l10n.dart';
+import 'package:notify/store/store.dart';
+import 'package:notify/widgets/auth/PhoneAuth.widget.dart';
 import 'package:flutter/material.dart';
 
 import '../../screens/Auth.screen.dart';

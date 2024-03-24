@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:dart_flutter/app_settings/const.dart';
-import 'package:dart_flutter/custom_classes/group.dart';
-import 'package:dart_flutter/sockets/notification.dart';
+import 'package:notify/app_settings/const.dart';
+import 'package:notify/custom_classes/group.dart';
+import 'package:notify/sockets/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;

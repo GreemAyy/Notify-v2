@@ -1,5 +1,5 @@
-import 'package:dart_flutter/store/store.dart';
-import 'package:dart_flutter/widgets/group/ShowGroupCreateModal.dart';
+import 'package:notify/store/store.dart';
+import 'package:notify/widgets/group/ShowGroupCreateModal.dart';
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
 import '../sockets/sockets.dart';

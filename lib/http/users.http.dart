@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:dart_flutter/app_settings/const.dart';
+import 'package:notify/app_settings/const.dart';
 import 'package:http/http.dart' as http;
 
 class UsersHttp{

@@ -1,4 +1,4 @@
-import 'package:dart_flutter/generated/l10n.dart';
+import 'package:notify/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import '../../screens/Auth.screen.dart';
 

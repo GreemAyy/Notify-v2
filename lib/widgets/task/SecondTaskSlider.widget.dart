@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:dart_flutter/widgets/task/SecondTasksList.widget.dart';
+import 'package:notify/widgets/task/SecondTasksList.widget.dart';
 import 'package:flutter/material.dart';
 import '../../store/store.dart';
 import 'LoadingPlaceholder.widget.dart';

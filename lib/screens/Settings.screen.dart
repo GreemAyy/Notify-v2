@@ -1,4 +1,4 @@
-import 'package:dart_flutter/methods/workWithUser.dart';
+import 'package:notify/methods/workWithUser.dart';
 import 'package:flutter/material.dart';
 
 import '../generated/l10n.dart';

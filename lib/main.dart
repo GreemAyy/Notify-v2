@@ -1,6 +1,6 @@
-import 'package:dart_flutter/app_settings/routes.dart';
-import 'package:dart_flutter/app_settings/theme.dart';
-import 'package:dart_flutter/store/store.dart';
+import 'package:notify/app_settings/routes.dart';
+import 'package:notify/app_settings/theme.dart';
+import 'package:notify/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'generated/l10n.dart';

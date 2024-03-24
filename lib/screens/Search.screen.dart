@@ -1,6 +1,6 @@
-import 'package:dart_flutter/http/tasks.http.dart';
-import 'package:dart_flutter/widgets/task/SecondTasksList.widget.dart';
-import 'package:dart_flutter/widgets/ui/FormTextField.ui.dart';
+import 'package:notify/http/tasks.http.dart';
+import 'package:notify/widgets/task/SecondTasksList.widget.dart';
+import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
 import '../store/store.dart';

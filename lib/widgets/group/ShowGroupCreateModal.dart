@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:dart_flutter/custom_classes/group.dart';
-import 'package:dart_flutter/http/groups.http.dart';
-import 'package:dart_flutter/store/store.dart';
-import 'package:dart_flutter/widgets/FilePicker.widget.dart';
-import 'package:dart_flutter/widgets/ui/FormTextField.ui.dart';
+import 'package:notify/custom_classes/group.dart';
+import 'package:notify/http/groups.http.dart';
+import 'package:notify/store/store.dart';
+import 'package:notify/widgets/FilePicker.widget.dart';
+import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import '../../http/images.http.dart';

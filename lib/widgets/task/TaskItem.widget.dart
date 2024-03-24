@@ -1,5 +1,5 @@
-import 'package:dart_flutter/widgets/task/ShowTaskOptionsModal.dart';
-import 'package:dart_flutter/widgets/ui/PicturesGrid.ui.dart';
+import 'package:notify/widgets/task/ShowTaskOptionsModal.dart';
+import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
 import 'package:flutter/material.dart';
 import '../../custom_classes/task.dart';
 import '../../generated/l10n.dart';

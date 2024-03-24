@@ -1,7 +1,7 @@
-import 'package:dart_flutter/http/users.http.dart';
-import 'package:dart_flutter/methods/workWithUser.dart';
-import 'package:dart_flutter/widgets/auth/CodeAuth.widget.dart';
-import 'package:dart_flutter/widgets/auth/PhoneAuth.widget.dart';
+import 'package:notify/http/users.http.dart';
+import 'package:notify/methods/workWithUser.dart';
+import 'package:notify/widgets/auth/CodeAuth.widget.dart';
+import 'package:notify/widgets/auth/PhoneAuth.widget.dart';
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
 import '../store/store_flutter_lib.dart';
