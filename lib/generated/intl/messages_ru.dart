@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_delete": MessageLookupByLibrary.simpleMessage("Удалить"),
         "create": MessageLookupByLibrary.simpleMessage("Создать"),
         "create_group": MessageLookupByLibrary.simpleMessage("Создать группу"),
+        "dark_theme": MessageLookupByLibrary.simpleMessage("Тёмная"),
         "edit": MessageLookupByLibrary.simpleMessage("Изменить"),
         "edit_task":
             MessageLookupByLibrary.simpleMessage("Редактировать задачу"),
@@ -44,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Главная"),
         "home_header": MessageLookupByLibrary.simpleMessage("Группы"),
         "home_task_header": MessageLookupByLibrary.simpleMessage("Задачи"),
+        "language": MessageLookupByLibrary.simpleMessage("Язык"),
+        "light_theme": MessageLookupByLibrary.simpleMessage("Светлая"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("Мои задачи"),
@@ -59,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "status_completed": MessageLookupByLibrary.simpleMessage("Выполнено"),
         "status_uncompleted":
             MessageLookupByLibrary.simpleMessage("Не выполнено"),
+        "system_theme": MessageLookupByLibrary.simpleMessage("Системная"),
         "task": MessageLookupByLibrary.simpleMessage("Задача"),
         "task_date": MessageLookupByLibrary.simpleMessage("Дата"),
         "task_description": MessageLookupByLibrary.simpleMessage("Описание"),
@@ -66,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_time": MessageLookupByLibrary.simpleMessage("Время"),
         "task_title": MessageLookupByLibrary.simpleMessage("Заголовок"),
         "task_to": MessageLookupByLibrary.simpleMessage("По"),
+        "theme": MessageLookupByLibrary.simpleMessage("Тема"),
         "write": MessageLookupByLibrary.simpleMessage("Напишите")
       };
 }

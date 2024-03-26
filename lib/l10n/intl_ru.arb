@@ -39,5 +39,10 @@
   "save": "Сохранить",
   "home": "Главная",
   "settings": "Настройки",
-  "logout": "Выйти"
+  "logout": "Выйти",
+  "system_theme": "Системная",
+  "light_theme": "Светлая",
+  "dark_theme": "Тёмная",
+  "theme": "Тема",
+  "language": "Язык"
 }

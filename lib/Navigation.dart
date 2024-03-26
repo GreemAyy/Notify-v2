@@ -2,12 +2,12 @@ import 'package:notify/screens/Home.screen.dart';
 import 'package:notify/screens/Settings.screen.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:flutter/material.dart';
-
 import 'generated/l10n.dart';
+
+final pickedIndex = Reactive(0);
 
 class Navigation extends StatelessWidget{
   Navigation({super.key});
-  final pickedIndex = Reactive(0);
 
   @override
   Widget build(BuildContext context) {

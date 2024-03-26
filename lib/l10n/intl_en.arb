@@ -39,5 +39,10 @@
   "save": "Save",
   "home": "Home",
   "settings": "Settings",
-  "logout": "Log out"
+  "logout": "Log out",
+  "system_theme": "System",
+  "light_theme": "Light",
+  "dark_theme": "Dark",
+  "theme": "Theme",
+  "language": "Language"
 }

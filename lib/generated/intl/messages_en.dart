@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "create": MessageLookupByLibrary.simpleMessage("Create"),
         "create_group": MessageLookupByLibrary.simpleMessage("Create group"),
+        "dark_theme": MessageLookupByLibrary.simpleMessage("Dark"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "edit_task": MessageLookupByLibrary.simpleMessage("Edit task"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -43,6 +44,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "home_header": MessageLookupByLibrary.simpleMessage("Groups"),
         "home_task_header": MessageLookupByLibrary.simpleMessage("Tasks"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "light_theme": MessageLookupByLibrary.simpleMessage("Light"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Log"),
         "logout": MessageLookupByLibrary.simpleMessage("Log out"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
@@ -58,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "status_completed": MessageLookupByLibrary.simpleMessage("Completed"),
         "status_uncompleted":
             MessageLookupByLibrary.simpleMessage("Uncompleted"),
+        "system_theme": MessageLookupByLibrary.simpleMessage("System"),
         "task": MessageLookupByLibrary.simpleMessage("Task"),
         "task_date": MessageLookupByLibrary.simpleMessage("Date"),
         "task_description": MessageLookupByLibrary.simpleMessage("Description"),
@@ -65,6 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_time": MessageLookupByLibrary.simpleMessage("Time"),
         "task_title": MessageLookupByLibrary.simpleMessage("Title"),
         "task_to": MessageLookupByLibrary.simpleMessage("To"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "write": MessageLookupByLibrary.simpleMessage("Write")
       };
 }

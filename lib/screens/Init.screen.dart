@@ -24,13 +24,41 @@ class _StateInitScreen extends State<InitScreen>{
      if(_timer!=null) setState(() => opacity = opacity < 1 ? 1 : 0.75);
     });
   }
+  
+  ThemeMode getThemeMode(String? theme){
+    ThemeMode mode;
+    switch(theme){
+      case 'light':
+        mode = ThemeMode.light;
+        break;
+      case 'dark':
+        mode = ThemeMode.dark;
+        break;
+      default:
+        mode = ThemeMode.system;
+        break;
+    }
+    return mode;
+  }
 
   void init() async {
     var prefs = await SharedPreferences.getInstance();
-    var id = prefs.get('id') as int?;
-    var hash = prefs.get('hash') as String?;
-    var access = await UsersHttp.checkUserAccess(id??0, hash??'');
+    final id = prefs.getInt('id');
+    final hash = prefs.getString('hash');
+    final localeCode = prefs.getString('locale');
+    final themeMode = prefs.getString('theme_mode');
+    final access = await UsersHttp.checkUserAccess(id??0, hash??'');
+    final locale = WidgetsBinding.instance.platformDispatcher.locale;
+
+    store.mapMultiSet({
+      "locale":localeCode!=null?Locale(localeCode):locale,
+      "theme_mode":getThemeMode(themeMode)
+    });
+    
+    if(localeCode==null) prefs.setString('locale', locale.languageCode);
+
     if(!access) cleanUser();
+
     if(id==null||hash==null||!access){
       Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
     }else{
@@ -53,6 +81,7 @@ class _StateInitScreen extends State<InitScreen>{
     final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: theme.primaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -60,10 +89,10 @@ class _StateInitScreen extends State<InitScreen>{
             AnimatedOpacity(
                 duration: const Duration(milliseconds: 300),
                 opacity: opacity,
-                child: Text(
-                    'Notify🛎️',
+                child: const Text(
+                    'Notify',
                     style: TextStyle(
-                        color: theme.primaryColor,
+                        color: Colors.white,
                         fontSize: 70,
                         fontWeight: FontWeight.w600
                     )

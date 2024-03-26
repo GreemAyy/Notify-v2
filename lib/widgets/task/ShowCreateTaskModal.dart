@@ -285,20 +285,21 @@ class _StateImages extends State<ImagesGrid>{
 
           return Column(
             children: [
+              if(indexes.isNotEmpty)
               AnimatedContainer(
                 duration: const Duration(milliseconds: 100),
-                height: indexes.isNotEmpty?50:0,
+                height: indexes.isNotEmpty ? 50 : 0,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       IconButton(
                           onPressed: (){
                             var list = ImagesList.value;
-                            ImagesList.value = () sync* {
-                              for(var i=0;i<list.length;i++){
+                            ImagesList.value = (() sync* {
+                              for(var i=0; i<list.length; i++){
                                 if(!indexes.contains(i)) yield list[i];
                               }
-                            }().toList();
+                            }()).toList();
                             indexes.clear();
                             setState(() {});
                           },
@@ -308,7 +309,7 @@ class _StateImages extends State<ImagesGrid>{
                           icon: const Icon(
                             Icons.delete,
                             size: 30,
-                            color: Colors.white,
+                            color: Colors.white
                           )
                       ),
                       const SizedBox(width: 10),

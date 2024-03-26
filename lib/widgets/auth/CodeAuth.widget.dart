@@ -1,8 +1,5 @@
 import 'package:notify/generated/l10n.dart';
-import 'package:notify/store/store.dart';
-import 'package:notify/widgets/auth/PhoneAuth.widget.dart';
 import 'package:flutter/material.dart';
-
 import '../../screens/Auth.screen.dart';
 
 class CodeAuth extends StatefulWidget{
@@ -55,59 +52,84 @@ class _StateCodeAuth extends State<CodeAuth>{
         gapPadding: 0
     );
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Stack(
       children: [
-        Text(
-            _S.auth_code,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.primaryColor
-            )
-        ),
-        Padding(
-            padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
-            child: TextFormField(
-              focusNode: _focus,
-              keyboardType: TextInputType.emailAddress,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                fontSize: 40
-              ),
-              maxLength: 4,
-              onChanged: (text){
-                code = text;
-              },
-              decoration: InputDecoration(
-                  filled: true,
-                  errorText: codeErrorText,
-                  hintText: _S.auth_code,
-                  contentPadding:const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
-                  enabledBorder: borderTheme,
-                  focusedBorder: borderTheme
-              ),
-            )
-        ),
-         ElevatedButton(
-                onPressed: onSubmit,
-                style: ButtonStyle(
-                    elevation: const MaterialStatePropertyAll(0),
-                    backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
-                    padding: const MaterialStatePropertyAll(
-                        EdgeInsets.symmetric(vertical: 5, horizontal: 30)
-                    ),
-                    shape: MaterialStatePropertyAll<OutlinedBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)
-                        )
-                    )
-                ),
-                child: Text(
-                  _S.log_btn,
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: Colors.white
-                  ),
+        Positioned(
+            top: 20,
+            left: 0,
+            child: TextButton(
+                onPressed: widget.onBack, 
+                child: Row(
+                  children: [
+                   Icon(
+                     Icons.arrow_back_ios_sharp,
+                     color: theme.primaryColor
+                   ),
+                   Text(
+                     'Back',
+                     style: theme.textTheme.bodyLarge!.copyWith(
+                       color: theme.primaryColor
+                     )
+                   )
+                  ]
                 )
             )
+        ),
+        Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                  _S.auth_code,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                      color: theme.primaryColor
+                  )
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(top: 10, left: 30, right: 30),
+                  child: TextFormField(
+                    focusNode: _focus,
+                    keyboardType: TextInputType.number,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                        fontSize: 40
+                    ),
+                    maxLength: 4,
+                    onChanged: (text){
+                      code = text;
+                    },
+                    decoration: InputDecoration(
+                        filled: true,
+                        errorText: codeErrorText,
+                        hintText: _S.auth_code,
+                        contentPadding:const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                        enabledBorder: borderTheme,
+                        focusedBorder: borderTheme
+                    ),
+                  )
+              ),
+              ElevatedButton(
+                  onPressed: onSubmit,
+                  style: ButtonStyle(
+                      elevation: const MaterialStatePropertyAll(0),
+                      backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
+                      padding: const MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 30)
+                      ),
+                      shape: MaterialStatePropertyAll<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)
+                          )
+                      )
+                  ),
+                  child: Text(
+                    _S.log_btn,
+                    style: theme.textTheme.bodyLarge!.copyWith(
+                        color: Colors.white
+                    ),
+                  )
+              )
+            ]
+        )
       ]
     );
   }

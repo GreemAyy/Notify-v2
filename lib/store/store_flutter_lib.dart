@@ -58,7 +58,7 @@ class Reactive<T> with ChangeNotifier{
     return key;
   }
 
-  factory Reactive.withStore(StoreConnect store, [T? value])=>Reactive(value, store);
+  factory Reactive.withStore(StoreConnect store, [T? optionalValue])=>Reactive(optionalValue, store);
 }
 
 class ReactiveBuilder<React extends Reactive> extends StatefulWidget{

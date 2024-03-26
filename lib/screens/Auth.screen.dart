@@ -65,7 +65,9 @@ class _StateAuthScreen extends State<AuthScreen>{
   }
 
   void backScreen(){
-
+    currentIndex = 0;
+    focusEmitter.value = 0;
+    setState(() {});
   }
 
   @override

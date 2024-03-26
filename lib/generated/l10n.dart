@@ -459,6 +459,56 @@ class S {
       args: [],
     );
   }
+
+  /// `System`
+  String get system_theme {
+    return Intl.message(
+      'System',
+      name: 'system_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Light`
+  String get light_theme {
+    return Intl.message(
+      'Light',
+      name: 'light_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dark`
+  String get dark_theme {
+    return Intl.message(
+      'Dark',
+      name: 'dark_theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Theme`
+  String get theme {
+    return Intl.message(
+      'Theme',
+      name: 'theme',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message(
+      'Language',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
