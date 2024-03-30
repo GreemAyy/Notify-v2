@@ -127,142 +127,161 @@ class _StateCreateTask extends State<_CreateTask>{
     final theme = Theme.of(context);
     final safeAreaSize = View.of(context).padding.top;
 
-    return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        height: (MediaQuery.of(context).size.height)-safeAreaSize,
-        child: SingleChildScrollView(
-          child:
-             Optional(
-               conditional: isLoading,
-               complited:Align(
-                   heightFactor: 16,
-                   child: Center(
-                       child: CircularProgressIndicator(
-                           color: theme.primaryColor
-                       )
-                   )
-               ),
-               uncomplited:Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
-                   children: [
-                     Text(
-                         _S.task_title,
-                         style: theme.textTheme.bodyLarge
-                     ),
-                     const SizedBox(height: 5),
-                     FormTextField(
-                       onInput: (String text) => title = text,
-                       hintText: '${_S.write} ${_S.task_title.toLowerCase()}',
-                       borderRadius: 10,
-                     ),
-                     const SizedBox(height: 5),
-                     Text(
-                         _S.task_description,
-                         style: theme.textTheme.bodyLarge
-                     ),
-                     const SizedBox(height: 5),
-                     FormTextField(
-                       onInput: (String text) => description = text,
-                       hintText: '${_S.write} ${_S.task_description.toLowerCase()}',
-                       borderRadius: 10,
-                       maxLines: 3
-                     ),
-                     const SizedBox(height: 5),
-                     Text(
-                         _S.task_date,
-                         style: theme.textTheme.bodyLarge
-                     ),
-                     DatePicker(
-                         date: dateFrom,
-                         selectionMode: DateRangePickerSelectionMode.range,
-                         onDateChange: (args){
-                           var date = args.value as PickerDateRange;
-                           setState(() {
-                             dateFrom = date.startDate!=null?date.startDate!:date.endDate!;
-                             dateTo = date.endDate!=null?date.endDate!:date.startDate!;
-                           });
-                         }
-                     ),
-                     Text(
-                         _S.task_time,
-                         style: theme.textTheme.bodyLarge
-                     ),
-                     const SizedBox(height: 10),
-                     TimerPicker(
-                         timeFrom: timeFrom,
-                         timeTo: timeTo,
-                         onDateChange: (dates){
-                           setState(() {
-                             timeFrom = dates.from;
-                             timeTo = dates.to;
-                           });
-                         }
-                     ),
-                     const SizedBox(height: 10),
-                     Text(
-                         _S.photo,
-                         style: theme.textTheme.bodyLarge
-                     ),
-                     const SizedBox(height: 10),
-                     Row(
-                         children: [
-                           CameraFilePicker(
-                               size: 40,
-                               onPick: (path){
-                                 var files = ImagesList.value;
-                                 if(files.length<=8){
-                                   ImagesList.value = [...files, (file: File(path!), type: FileType.photo)];
-                                 }else{
-
-                                 }
-                               }
-                           ),
-                           FilePicker(
-                               onPick: (paths, fileType){
-                                 var files = ImagesList.value;
-                                 if(files.length+paths.length<=9){
-                                   var generated = List.generate(paths.length, (index) =>
-                                   (type: fileType, file:File(paths[index])));
-                                   ImagesList.value = [ ...files, ...generated];
-                                 }else{
-
-                                 }
-                               },
-                               multiple: true,
-                               icon: Icon(
-                                 Icons.photo,
-                                 color: theme.primaryColor,
-                                 size: 40,
-                               )
+    return Stack(
+      children: [
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            height: (MediaQuery.of(context).size.height)-safeAreaSize,
+            child: SingleChildScrollView(
+              child:
+                 Optional(
+                   conditional: isLoading,
+                   complited:Align(
+                       heightFactor: 16,
+                       child: Center(
+                           child: CircularProgressIndicator(
+                               color: theme.primaryColor
                            )
-                         ]
-                     ),
-                     const SizedBox(height: 10),
-                     const ImagesGrid(),
-                     const SizedBox(height: 10),
-                     Align(
-                         alignment: Alignment.center,
-                         child: ElevatedButton(
-                             onPressed: createTask,
-                             style: ButtonStyle(
-                                 backgroundColor: MaterialStatePropertyAll(
-                                     theme.primaryColor
-                                 )
-                             ),
-                             child: Text(
-                                 _S.create,
-                                 style: theme.textTheme.bodyLarge!.copyWith(
-                                     color: Colors.white
+                       )
+                   ),
+                   uncomplited:Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Text(
+                             _S.task_title,
+                             style: theme.textTheme.bodyLarge
+                         ),
+                         const SizedBox(height: 5),
+                         FormTextField(
+                           onInput: (String text) => title = text,
+                           hintText: '${_S.write} ${_S.task_title.toLowerCase()}',
+                           borderRadius: 10,
+                         ),
+                         const SizedBox(height: 5),
+                         Text(
+                             _S.task_description,
+                             style: theme.textTheme.bodyLarge
+                         ),
+                         const SizedBox(height: 5),
+                         FormTextField(
+                           onInput: (String text) => description = text,
+                           hintText: '${_S.write} ${_S.task_description.toLowerCase()}',
+                           borderRadius: 10,
+                           maxLines: 3
+                         ),
+                         const SizedBox(height: 5),
+                         Text(
+                             _S.task_date,
+                             style: theme.textTheme.bodyLarge
+                         ),
+                         DatePicker(
+                             date: dateFrom,
+                             selectionMode: DateRangePickerSelectionMode.range,
+                             onDateChange: (args){
+                               var date = args.value as PickerDateRange;
+                               setState(() {
+                                 dateFrom = date.startDate!=null?date.startDate!:date.endDate!;
+                                 dateTo = date.endDate!=null?date.endDate!:date.startDate!;
+                               });
+                             }
+                         ),
+                         Text(
+                             _S.task_time,
+                             style: theme.textTheme.bodyLarge
+                         ),
+                         const SizedBox(height: 10),
+                         TimerPicker(
+                             timeFrom: timeFrom,
+                             timeTo: timeTo,
+                             onDateChange: (dates){
+                               setState(() {
+                                 timeFrom = dates.from;
+                                 timeTo = dates.to;
+                               });
+                             }
+                         ),
+                         const SizedBox(height: 10),
+                         Text(
+                             _S.photo,
+                             style: theme.textTheme.bodyLarge
+                         ),
+                         const SizedBox(height: 10),
+                         Row(
+                             children: [
+                               CameraFilePicker(
+                                   size: 40,
+                                   onPick: (path){
+                                     var files = ImagesList.value;
+                                     if(files.length<=8){
+                                       ImagesList.value = [...files, (file: File(path!), type: FileType.photo)];
+                                     }else{
+
+                                     }
+                                   }
+                               ),
+                               FilePicker(
+                                   onPick: (paths, fileType){
+                                     var files = ImagesList.value;
+                                     if(files.length+paths.length<=9){
+                                       var generated = List.generate(paths.length, (index) =>
+                                       (type: fileType, file:File(paths[index])));
+                                       ImagesList.value = [ ...files, ...generated];
+                                     }else{
+
+                                     }
+                                   },
+                                   multiple: true,
+                                   icon: Icon(
+                                     Icons.photo,
+                                     color: theme.primaryColor,
+                                     size: 40,
+                                   )
+                               )
+                             ]
+                         ),
+                         const SizedBox(height: 10),
+                         const ImagesGrid(),
+                         const SizedBox(height: 10),
+                         Align(
+                             alignment: Alignment.center,
+                             child: ElevatedButton(
+                                 onPressed: createTask,
+                                 style: ButtonStyle(
+                                     backgroundColor: MaterialStatePropertyAll(
+                                         theme.primaryColor
+                                     )
+                                 ),
+                                 child: Text(
+                                     _S.create,
+                                     style: theme.textTheme.bodyLarge!.copyWith(
+                                         color: Colors.white
+                                     )
                                  )
                              )
-                         )
-                     ),
-                     const SizedBox(height: 10)
-                   ]
-               )
-             )
-        )
-      );
+                         ),
+                         const SizedBox(height: 10)
+                       ]
+                   )
+                 )
+            )
+          ),
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child:IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(theme.primaryColor.withOpacity(.75))
+                  ),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 40
+                  )
+              )
+          )
+      ],
+    );
   }
 }
 

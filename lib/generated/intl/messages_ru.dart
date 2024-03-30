@@ -49,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "light_theme": MessageLookupByLibrary.simpleMessage("Светлая"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
+        "message": MessageLookupByLibrary.simpleMessage("Сообщение"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("Мои задачи"),
         "name": MessageLookupByLibrary.simpleMessage("Имя"),
         "no_photo": MessageLookupByLibrary.simpleMessage("Нет фото"),
@@ -71,6 +72,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_title": MessageLookupByLibrary.simpleMessage("Заголовок"),
         "task_to": MessageLookupByLibrary.simpleMessage("По"),
         "theme": MessageLookupByLibrary.simpleMessage("Тема"),
-        "write": MessageLookupByLibrary.simpleMessage("Напишите")
+        "write": MessageLookupByLibrary.simpleMessage("Напишите"),
+        "write_message":
+            MessageLookupByLibrary.simpleMessage("Написать сообщение")
       };
 }

@@ -23,10 +23,7 @@ void showGroupCreateModal(BuildContext context, void Function(int groupId) onCre
           child: Container(
               padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
               height: MediaQuery.of(context).size.height*0.6,
-              child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: _Form(onCreate: onCreate)
-              )
+              child: _Form(onCreate: onCreate)
           ),
         );
       }
@@ -90,89 +87,91 @@ class _StateForm extends State<_Form>{
         )
       );
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
+      alignment: Alignment.topCenter,
       children: [
-        Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Align(
-                child: Text(
-                    _S.create_group,
-                    style: theme.textTheme.bodyLarge
-                )
-            )
-        ),
-        Text(
-          _S.name,
-          style: theme.textTheme.bodyLarge
-        ),
-        Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
-            child: FormTextField(
-                errorText: nameErrorText,
-                borderRadius: 7.5,
-                borderWidth: 2,
-                hintText: _S.hint_name,
-                onInput: (text) => name = text
-            )
-        ),
-        Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-                _S.photo,
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Align(
+                      child: Text(
+                          _S.create_group,
+                          style: theme.textTheme.bodyLarge
+                      )
+                  )
+              ),
+              Text(
+                _S.name,
                 style: theme.textTheme.bodyLarge
-            )
-        ),
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
+                  child: FormTextField(
+                      errorText: nameErrorText,
+                      borderRadius: 7.5,
+                      borderWidth: 2,
+                      hintText: _S.hint_name,
+                      onInput: (text) => name = text
+                  )
+              ),
+              Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                      _S.photo,
+                      style: theme.textTheme.bodyLarge
+                  )
+              ),
 
-        FilePicker(
-            onPick: (path, type) async {
-              File image = File(path[0]);
-              setState(() {
-                imageFile = image;
-                imagePicked = true;
-              });
-            },
-            icon: Icon(
-                Icons.photo,
-                color: theme.primaryColor,
-                size: 40,
-            )
-        ),
-        if(imagePicked)
-          Align(
-            child: Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: ClipOval(
-                    child: Image.file(
-                      imageFile!,
-                      width:  150,
-                      height: 150,
-                      fit: BoxFit.fill,
-                    )
+              FilePicker(
+                  onPick: (path, type) async {
+                    File image = File(path[0]);
+                    setState(() {
+                      imageFile = image;
+                      imagePicked = true;
+                    });
+                  },
+                  icon: Icon(
+                      Icons.photo,
+                      color: theme.primaryColor,
+                      size: 40,
+                  )
+              ),
+              if(imagePicked)
+                Align(
+                  child: ClipOval(
+                      child: Image.file(
+                        imageFile!,
+                        width:  150,
+                        height: 150,
+                        fit: BoxFit.fill
+                      )
+                  )
                 )
-            )
-          ),
-        Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Align(
-                child: TextButton(
-                    onPressed: create,
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(
-                            theme.primaryColor
-                        )
-                    ),
-                    child: Text(
-                        _S.create,
-                        style: theme.textTheme.bodyMedium!.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600
-                        )
+            ]
+          )
+        ),
+        Positioned(
+            bottom: 10,
+            child: TextButton(
+                onPressed: create,
+                style: ButtonStyle(
+                    backgroundColor: MaterialStatePropertyAll(
+                        theme.primaryColor
+                    )
+                ),
+                child: Text(
+                    _S.create,
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600
                     )
                 )
             )
         )
-      ]
+      ],
     );
   }
 }

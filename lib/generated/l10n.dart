@@ -509,6 +509,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Message`
+  String get message {
+    return Intl.message(
+      'Message',
+      name: 'message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write message`
+  String get write_message {
+    return Intl.message(
+      'Write message',
+      name: 'write_message',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

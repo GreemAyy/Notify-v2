@@ -58,6 +58,10 @@ class Reactive<T> with ChangeNotifier{
     return key;
   }
 
+  ReactiveBuilder toBuilder(Widget Function(BuildContext context) builder){
+    return ReactiveBuilder(reactive: this, builder: builder);
+  }
+
   factory Reactive.withStore(StoreConnect store, [T? optionalValue])=>Reactive(optionalValue, store);
 }
 

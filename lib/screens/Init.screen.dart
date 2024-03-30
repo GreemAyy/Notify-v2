@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:notify/Navigation.dart';
 import 'package:notify/http/users.http.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -66,6 +67,7 @@ class _StateInitScreen extends State<InitScreen>{
           "id":id,
           "hash":hash
         });
+        rxPickedIndex.value = 0;
         Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     }
   }

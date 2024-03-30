@@ -44,5 +44,7 @@
   "light_theme": "Светлая",
   "dark_theme": "Тёмная",
   "theme": "Тема",
-  "language": "Язык"
+  "language": "Язык",
+  "message": "Сообщение",
+  "write_message": "Написать сообщение"
 }

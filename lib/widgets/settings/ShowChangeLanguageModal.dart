@@ -5,6 +5,7 @@ import 'package:notify/store/store.dart';
 void showChangeLanguageModal(BuildContext context){
   showModalBottomSheet(
       context: context,
+      showDragHandle: true,
       builder: (context){
         final locale = store.get<Locale>('locale')!;
         final theme = Theme.of(context);
@@ -14,7 +15,7 @@ void showChangeLanguageModal(BuildContext context){
           child: Container(
             width: screenSize.width,
             height: screenSize.height*.3,
-            padding: const EdgeInsets.only(top: 20),
+            // padding: const EdgeInsets.only(top: 20),
             child: Column(
               children: langs.entries.map((e){
                 return InkWell(

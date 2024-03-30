@@ -44,5 +44,7 @@
   "light_theme": "Light",
   "dark_theme": "Dark",
   "theme": "Theme",
-  "language": "Language"
+  "language": "Language",
+  "message": "Message",
+  "write_message": "Write message"
 }

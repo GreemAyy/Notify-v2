@@ -48,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "light_theme": MessageLookupByLibrary.simpleMessage("Light"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Log"),
         "logout": MessageLookupByLibrary.simpleMessage("Log out"),
+        "message": MessageLookupByLibrary.simpleMessage("Message"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "no_photo": MessageLookupByLibrary.simpleMessage("No photo"),
@@ -70,6 +71,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_title": MessageLookupByLibrary.simpleMessage("Title"),
         "task_to": MessageLookupByLibrary.simpleMessage("To"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
-        "write": MessageLookupByLibrary.simpleMessage("Write")
+        "write": MessageLookupByLibrary.simpleMessage("Write"),
+        "write_message": MessageLookupByLibrary.simpleMessage("Write message")
       };
 }

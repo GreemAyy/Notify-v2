@@ -2,6 +2,7 @@ import 'package:notify/Navigation.dart';
 import 'package:notify/custom_classes/group.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/screens/Auth.screen.dart';
+import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/screens/Group.screen.dart';
 import 'package:notify/screens/Home.screen.dart';
 import 'package:notify/screens/Image.screen.dart';
@@ -64,6 +65,11 @@ Route<dynamic> myOnGenerateRoute(RouteSettings settings){
           builder: routes['/task']!,
           settings: settings
       );
+    case '/chat':
+      return CupertinoPageRoute(
+          builder: routes['/chat']!,
+          settings: settings
+      );
     default:
       return CupertinoPageRoute(
       builder: routes['/init']!,
@@ -106,6 +112,11 @@ Map<String, Widget Function(BuildContext)> routes = {
     var args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     var task = args['task'] as Task;
     return TaskScreen(task: task);
+  },
+  '/chat':(context){
+    var args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    var group = args['group'] as Group;
+    return ChatScreen(group: group);
   }
 };
 

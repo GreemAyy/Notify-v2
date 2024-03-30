@@ -21,7 +21,7 @@ class TasksScreen extends StatefulWidget{
 class _StateTasksScreen extends State<TasksScreen>{
   final headerHeight = (60).toDouble();
   final tabHeight = (150).toDouble();
-  late var groupBarHeight = (widget.group!=null?67.5:0).toDouble();
+  late final groupBarHeight = (widget.group!=null?67.5:0).toDouble();
   var date = DateTime.now();
   var dateWatchIndex = 0;
 
@@ -75,7 +75,7 @@ class _StateTasksScreen extends State<TasksScreen>{
                             .pushNamed('/group',arguments: {"group":widget.group});
                       },
                       group: widget.group!,
-                      padding: (horizontal: 15, vertical: 5),
+                      padding: (horizontal: 20, vertical: 5),
                       heroTag: 'hero_group_image_${widget.group!.id}'
                     )
                   )
@@ -118,10 +118,21 @@ class _StateTasksScreen extends State<TasksScreen>{
                                 ),
                                 child: Text(
                                     DateFormat('dd.MM.yyyy').format(date),
-                                    style: theme.textTheme.bodyLarge!.copyWith(
-                                        color: Colors.white
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600
                                     )
                                 )
+                            )
+                        ),
+                        IconButton(
+                            onPressed: (){
+                              Navigator.pushNamed(context, '/chat', arguments: {'group':widget.group});
+                            },
+                            padding: const EdgeInsets.all(15),
+                            icon: Icon(
+                              Icons.message,
+                              color: theme.primaryColor
                             )
                         )
                       ]

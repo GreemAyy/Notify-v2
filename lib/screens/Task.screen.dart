@@ -38,8 +38,8 @@ class _StateTaskScreen extends State<TaskScreen>{
   final ScrollController _controller = ScrollController();
   static const _imageWidth = 200.0;
   static const _imageHeight = 275.0;
-  int userId = store.get('id')!;
   List<int> pickedImages = [];
+  int userId = store.get('id')!;
   int pickedIndex = 0;
   bool isLoading = false;
   bool showBottomBar = false;
@@ -356,13 +356,31 @@ class _StateTaskScreen extends State<TaskScreen>{
                       )
                     ),
                   ),
-                  if(!widget.isChild||task.creatorId==userId)
+                  if(!widget.isChild&&task.creatorId==userId)
                     const SliverToBoxAdapter(
                       child: SizedBox(
                         height: 150
                       )
                     )
                 ]
+              ),
+              AnimatedPositioned(
+                  top: !canPop ? 10 : -screenSize.height,
+                  right: 10,
+                  duration: const Duration(milliseconds: 300),
+                  child: IconButton(
+                      onPressed: (){
+
+                      },
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(theme.primaryColor)
+                      ),
+                      icon: const Icon(
+                        Icons.add,
+                        size: 40,
+                        color: Colors.white,
+                      )
+                  )
               ),
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 500),

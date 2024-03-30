@@ -42,44 +42,44 @@ class _StateSecondTasksList extends State<SecondTasksList>{
       dateWatchIndex = store.watch<DateTime>('date', (date){
         loadTasks(date);
       });
-      updateListWatchIndex = store.watch('update_tasks_list', (_) {
-        loadTasks(store.get<DateTime>('date')!);
-      });
-      deleteTaskWatchIndex = store.watch<Task>('delete_task', (task) async {
-        setState(() => isLoading = true);
-        var isDeleted = await TasksHttp.deleteTask(task.id);
-        if(isDeleted){
-          setState(() {
-            tasksList = tasksList.where((e) => e.id != task.id).toList();
-            isLoading = false;
-          });
-          updateSocket(task, SocketCommand.delete);
-        }else{
-          setState(() => isLoading = false);
-        }
-      });
-      changeStatusWatchIndex = store.watch<({int status, Task task})>('change_task_status', (data) async {
-        var task = data.task;
-        var isChanged = await TasksHttp.changeTaskStatus(data.task.id, data.status);
-        if(isChanged){
-          setState(() {
-            tasksList = tasksList.map((i){
-              if(i.id==task.id){
-                i.status = data.status;
-              }
-              return i;
-            }).toList();
-          });
-          updateSocket(task, SocketCommand.update);
-        }else{
-          setState(() => isLoading = false);
-        }
-      });
     }else{
       store.watch<List<Task>>('search_tasks', (tasks) {
         setState(() => tasksList = tasks);
       });
     }
+    updateListWatchIndex = store.watch('update_tasks_list', (_) {
+      loadTasks(store.get<DateTime>('date')!);
+    });
+    deleteTaskWatchIndex = store.watch<Task>('delete_task', (task) async {
+      setState(() => isLoading = true);
+      var isDeleted = await TasksHttp.deleteTask(task.id);
+      if(isDeleted){
+        setState(() {
+          tasksList = tasksList.where((e) => e.id != task.id).toList();
+          isLoading = false;
+        });
+        updateSocket(task, SocketCommand.delete);
+      }else{
+        setState(() => isLoading = false);
+      }
+    });
+    changeStatusWatchIndex = store.watch<({int status, Task task})>('change_task_status', (data) async {
+      var task = data.task;
+      var isChanged = await TasksHttp.changeTaskStatus(data.task.id, data.status);
+      if(isChanged){
+        setState(() {
+          tasksList = tasksList.map((i){
+            if(i.id==task.id){
+              i.status = data.status;
+            }
+            return i;
+          }).toList();
+        });
+        updateSocket(task, SocketCommand.update);
+      }else{
+        setState(() => isLoading = false);
+      }
+    });
   }
 
   void loadTasks(DateTime date) async {
@@ -103,14 +103,11 @@ class _StateSecondTasksList extends State<SecondTasksList>{
   @override
   void dispose() {
     super.dispose();
-    if(widget.initLoad){
-      store.unSeeAt('date', dateWatchIndex);
-      store.unSeeAt('delete_task', deleteTaskWatchIndex);
-      store.unSeeAt('change_task_status', changeStatusWatchIndex);
-      store.unSeeAt('update_tasks_list', updateListWatchIndex);
-    }else{
-      store.unSee('search_tasks');
-    }
+    if(widget.initLoad) store.unSeeAt('date', dateWatchIndex);
+    else store.unSee('search_tasks');
+    store.unSeeAt('delete_task', deleteTaskWatchIndex);
+    store.unSeeAt('change_task_status', changeStatusWatchIndex);
+    store.unSeeAt('update_tasks_list', updateListWatchIndex);
   }
 
   @override
