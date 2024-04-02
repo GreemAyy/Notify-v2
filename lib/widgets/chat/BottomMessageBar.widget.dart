@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
@@ -11,11 +10,14 @@ class BottomMessageBar extends StatefulWidget{
   const BottomMessageBar({
     super.key,
     required this.height,
-    required this.openHeight
+    required this.openHeight,
+    this.onOpen,
+    this.onClose
   });
   final double height;
   final double openHeight;
-
+  final void Function()? onOpen;
+  final void Function()? onClose;
 
   @override
   State<StatefulWidget> createState() => _StateBottomMessageBar();
@@ -23,63 +25,144 @@ class BottomMessageBar extends StatefulWidget{
 
 class _StateBottomMessageBar extends State<BottomMessageBar>{
   bool isOpen = false;
-  final openDuration = const Duration(milliseconds: 300);
+  double yStart = 0;
+  late double startPos = widget.openHeight;
+  late double yPos = widget.openHeight;
+  bool isOnDrag = false;
+  final openDuration = const Duration(milliseconds: 150);
+  FocusNode? _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _textFieldListener(){
+    if(_focusNode!.hasFocus&&yPos>widget.openHeight){
+      yPos = widget.openHeight;
+    }
+    if(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null)
+      widget.onClose!();
+    else if(!_focusNode!.hasFocus&&yPos==widget.openHeight&&isOpen&&widget.onOpen!=null)
+      widget.onOpen!();
+    else if(!_focusNode!.hasFocus&&!isOpen&&widget.onClose!=null)
+      widget.onClose!();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     final _S = S.of(context);
 
     return PopScope(
         onPopInvoked: (pop){
-          if(isOpen) setState(() => isOpen = false);
+          setState((){
+            if(isOpen){
+              isOpen = false;
+              if(widget.onClose!=null) widget.onClose!();
+            }
+          });
         },
         canPop: !isOpen,
-        child: AnimatedContainer(
-            duration: openDuration,
-            height:isOpen ? widget.openHeight : widget.height,
-            width: MediaQuery.of(context).size.width,
-            padding:const EdgeInsets.only(top: 12.5, left: 5, right: 5),
-            decoration: BoxDecoration(
-              color: theme.textTheme.bodyMedium!.color!.withOpacity(.05),
-              borderRadius: isOpen? const BorderRadius.only(
-                  topRight: Radius.circular(35),
-                  topLeft: Radius.circular(35)
-              ):null
-            ),
-            child: Column(
-                children: [
-                  Row(
-                      children: [
-                        IconButton(
-                            onPressed: () => setState(() => isOpen = !isOpen),
-                            icon: Icon(isOpen?Icons.close:Icons.attach_file)
-                        ),
-                        Expanded(
-                            child: FormTextField(
-                                hintText: _S.write_message,
-                                onInput: (text){
+        child: GestureDetector(
+          onVerticalDragStart: (details){
+            if(!isOpen) return;
+            yStart = details.globalPosition.dy;
+            isOnDrag = true;
+            startPos = yPos;
+            setState(() {});
+          },
+          onVerticalDragUpdate: (details){
+            if(!isOpen) return;
+            yPos = startPos-(details.globalPosition.dy-yStart);
+            if(yPos<=widget.height) yPos = widget.height;
+            if(yPos>=widget.openHeight*1.75) yPos = widget.openHeight*1.75;
+            setState(() {});
+          },
+          onVerticalDragEnd: (details){
+            if(!isOpen) return;
+            isOnDrag = false;
+            if(yPos>=widget.openHeight*1.25){
+              yPos=widget.openHeight*1.75;
+              _focusNode!.unfocus();
+              if(widget.onClose!=null) widget.onClose!();
+            }else if(yPos<=widget.openHeight*1.25&&yPos>=widget.openHeight*0.5){
+              yPos = widget.openHeight;
+              if(widget.onOpen!=null&&isOpen&&!_focusNode!.hasFocus) widget.onOpen!();
+            }else{
+              yPos = widget.openHeight;
+              isOpen = false;
+              if(widget.onClose!=null) widget.onClose!();
+            }
+            setState(() {});
+          },
+          child: AnimatedContainer(
+              duration: isOnDrag?Duration.zero:openDuration,
+              height:isOpen ? yPos : widget.height,
+              width: MediaQuery.of(context).size.width,
+              padding:const EdgeInsets.only(top: 12.5, left: 5, right: 5),
+              decoration: BoxDecoration(
+                  color: theme.scaffoldBackgroundColor,
+                  borderRadius: isOpen? const BorderRadius.only(
+                      topRight: Radius.circular(35),
+                      topLeft: Radius.circular(35)
+                  ) : null
+              ),
+              child: Column(
+                  children: [
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 250),
+                      width: !isOpen ? 0 : isOnDrag ? 100 : 75,
+                      height: isOpen ? 5 : 0,
+                      margin: const EdgeInsets.only(bottom: 5),
+                      decoration: BoxDecoration(
+                        color: theme.textTheme.bodyMedium!.color,
+                        borderRadius: BorderRadius.circular(15)
+                      )
+                    ),
+                    Row(
+                        children: [
+                          IconButton(
+                              onPressed: () => setState((){
+                                isOpen = !isOpen;
+                                yPos = widget.openHeight;
+                                if(widget.onClose!=null&&!isOpen) widget.onClose!();
+                                if(widget.onOpen!=null&&isOpen) widget.onOpen!();
+                                if(isOpen&&(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null))
+                                  widget.onClose!();
+                              }),
+                              icon: Icon(isOpen?Icons.close:Icons.attach_file)
+                          ),
+                          Expanded(
+                              child: FormTextField(
+                                  hintText: _S.write_message,
+                                  onInput: (text){
 
-                                }
-                            )
-                        ),
-                        IconButton(
-                            onPressed: (){},
-                            icon: Icon(
-                                Icons.send,
-                                color: theme.primaryColor
-                            )
-                        )
-                      ]
-                  ),
-                  SizedBox(height: 10),
-                  AnimatedContainer(
-                      duration: openDuration,
-                      height: isOpen? widget.openHeight-widget.height:0,
-                      child: PhotoPicker()
-                  )
-                ]
-            )
+                                  },
+                                  getFocusNode: (node) {
+                                    _focusNode = node;
+                                    _focusNode!.addListener(_textFieldListener);
+                                  })
+                          ),
+                          IconButton(
+                              onPressed: (){},
+                              icon: Icon(
+                                  Icons.send,
+                                  color: theme.primaryColor
+                              )
+                          )
+                        ]
+                    ),
+                    const SizedBox(height: 10),
+                    AnimatedContainer(
+                        duration: isOnDrag ? Duration.zero : openDuration,
+                        height: isOpen ? yPos - widget.height : 0,
+                        child: const PhotoPicker()
+                    )
+                  ]
+              )
+          ),
         )
     );
   }
@@ -88,19 +171,25 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
 final rxImageFiles = Reactive(<AssetEntity>[]);
 
 class PhotoPicker extends StatefulWidget{
+  const PhotoPicker({super.key});
+
   @override
   State<StatefulWidget> createState() => _StatePhotoPicker();
 }
 
 class _StatePhotoPicker extends State<PhotoPicker>{
-  var images = <AssetEntity>[];
   var isLoading = true;
+  var images = <AssetEntity>[];
   var pickedImagesId = <String>[];
 
   @override
   void initState() {
     super.initState();
     init();
+  }
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void init() async {
@@ -136,7 +225,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
     if(isLoading){
       return GridView.count(
         crossAxisCount: 3,
-        children: List.generate(9, (index){
+        children: List.generate(15, (index){
           return Skeleton(
             height: 150,
             verticalOuterPadding: 2.5,
@@ -159,10 +248,11 @@ class _StatePhotoPicker extends State<PhotoPicker>{
           },
           onTap: (){
             if(pickedImagesId.isEmpty) return;
-            if(pickedImagesId.contains(image.id))
+            if(pickedImagesId.contains(image.id)){
               pickedImagesId = pickedImagesId.where((id) => id != image.id).toList();
-            else
+            } else {
               pickedImagesId.add(image.id);
+            }
             setState((){});
           },
           child: AnimatedContainer(

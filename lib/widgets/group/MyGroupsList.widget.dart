@@ -100,75 +100,90 @@ class _StateMyGroupsList extends State<MyGroupsList>{
 }
 
 class GroupListItem extends StatelessWidget{
-  GroupListItem({
+  const GroupListItem({
     super.key,
     required this.group,
     required this.onTap,
     this.borderRadius = 0,
     this.padding = (vertical: 0, horizontal: 0),
-    this.heroTag
+    this.heroTag,
+    this.height,
+    this.createLeading = false
   });
   final Group group;
   final void Function() onTap;
   final double borderRadius;
   final ({double vertical, double horizontal}) padding;
   final String? heroTag;
+  final double? height;
+  final bool createLeading;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return ListTile(
-        onTap: onTap,
-        contentPadding: EdgeInsets.symmetric(
-            vertical: padding.vertical,
-            horizontal: padding.horizontal
-        ),
-        shape: RoundedRectangleBorder(
+    return InkWell(
+      borderRadius: BorderRadius.circular(borderRadius),
+      onTap: onTap,
+      child: Container(
+        height: height,
+        padding: EdgeInsets.symmetric(horizontal: padding.horizontal,vertical: padding.vertical),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(borderRadius)
         ),
-        leading:Hero(
-          tag: heroTag??(Random()).nextDouble().toString(),
-          child: ClipOval(
+        child: Row(
+          children: [
+            if(createLeading)
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: IconButton(
+                    onPressed: ()=>Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back)
+                ),
+              ),
+            ClipOval(
               child: (
-                  group.imageId == 0?
-                  const Icon(
-                      Icons.group,
-                      size: 50
-                  ):
-                  CachedNetworkImage(
-                      imageUrl: '$URL_MAIN/api/images/${group.imageId}',
-                      imageBuilder: (context, image){
-                        return SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: Image(
-                                image: image,
-                                fit: BoxFit.fill
-                            )
-                        );
-                      },
-                      placeholder: (context, _){
-                        return Skeleton(
-                            height: 50,
-                            width: 50,
-                            setWidthFromScreenParams: false
-                        );
-                      },
-                      errorWidget: (context, _, err){
-                        return const Icon(
-                            Icons.group,
-                            size: 50
-                        );
-                      }
+                group.imageId == 0?
+                const Icon(
+                  Icons.group,
+                  size: 50
+                ):
+                CachedNetworkImage(
+                  imageUrl: '$URL_MAIN/api/images/${group.imageId}',
+                  imageBuilder: (context, image){
+                    return SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Image(
+                          image: image,
+                          fit: BoxFit.fill
+                      )
+                    );
+                  },
+                  placeholder: (context, _){
+                    return Skeleton(
+                        height: 50,
+                        width: 50,
+                        setWidthFromScreenParams: false
+                    );
+                  },
+                  errorWidget: (context, _, err){
+                      return const Icon(
+                          Icons.group,
+                          size: 50
+                      );
+                    }
                   )
-              )
-          )
-        ),
-        title: Text(
-            group.name,
-            style: theme.textTheme.bodyMedium
+                )
+            ),
+            const SizedBox(width: 15),
+            Text(
+              group.name,
+              style: theme.textTheme.bodyMedium
+            )
+          ]
         )
+      )
     );
   }
 }

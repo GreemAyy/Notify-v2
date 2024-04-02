@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 TextTheme _textTheme = const TextTheme(
-    bodyMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-    bodyLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+  bodyMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+  bodyLarge: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
 );
 Color _primaryColor = const Color.fromARGB(255, 0, 140, 255);
 

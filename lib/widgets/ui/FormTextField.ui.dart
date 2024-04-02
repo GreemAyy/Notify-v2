@@ -15,7 +15,8 @@ class FormTextField extends StatefulWidget{
     this.errorText,
     this.maxLines = 1,
     this.textStyle = const TextStyle(fontSize: 22.5),
-    this.icon
+    this.icon,
+    this.getFocusNode
   });
   String hintText;
   double borderWidth;
@@ -30,23 +31,27 @@ class FormTextField extends StatefulWidget{
   int maxLines;
   TextStyle? textStyle;
   void Function(String text) onInput;
+  void Function(FocusNode node)? getFocusNode;
 
   @override
   State<StatefulWidget> createState() => _FormTextFieldState();
 }
 
 class _FormTextFieldState extends State<FormTextField>{
-  FocusNode focusNode = FocusNode();
+  FocusNode _focusNode = FocusNode();
   @override
   void initState() {
     super.initState();
+    if(widget.getFocusNode!=null){
+      widget.getFocusNode!(_focusNode);
+    }
     if(widget.autoOpen){
       _requestFocus();
     }
   }
   void _requestFocus() {
     Future.microtask((){
-      FocusScope.of(context).requestFocus(focusNode);
+      FocusScope.of(context).requestFocus(_focusNode);
     });
   }
 
@@ -66,7 +71,7 @@ class _FormTextFieldState extends State<FormTextField>{
       style: widget.textStyle,
       enabled: widget.enabled,
       initialValue: widget.initValue,
-      focusNode: focusNode,
+      focusNode: _focusNode,
       maxLines: widget.maxLines,
       decoration: InputDecoration(
           filled: true,

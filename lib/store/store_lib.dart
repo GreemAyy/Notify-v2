@@ -1,6 +1,5 @@
 class _EventEmitter {
     Map<String,List<Function?>> events = {};
-    _EventEmitter();
 
     int getEventsCount(String key){
       return events[key]?.length??0;

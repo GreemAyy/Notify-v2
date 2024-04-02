@@ -2,19 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/widgets/chat/BottomMessageBar.widget.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
-
 import '../custom_classes/group.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
 
-class ChatScreen extends StatelessWidget{
+class ChatScreen extends StatefulWidget{
   ChatScreen({
     super.key,
     required this.group
   });
   Group group;
+
+  @override
+  State<StatefulWidget> createState() => _StateChatScreen();
+}
+
+class _StateChatScreen extends State<ChatScreen>{
+  late Group group = widget.group;
   bool isLoading = false;
-  final double bottomBarHeight = 75.0;
-  final double topBarHeight = 75.0;
+  bool isOpen = false;
+  final double bottomBarHeight = 85;
+  final double topBarHeight = 70;
+  final double bottomBarOpenHeight = 350;
 
   @override
   Widget build(BuildContext context) {
@@ -28,19 +36,6 @@ class ChatScreen extends StatelessWidget{
           width: screenSize.width,
           child: Stack(
             children: [
-              Positioned(
-                  height: topBarHeight,
-                  width: screenSize.width,
-                  child: GroupListItem(
-                      onTap: (){
-                        Navigator.of(context)
-                            .pushNamed('/group',arguments: {"group":group});
-                      },
-                      group: group,
-                      padding: (horizontal: 15, vertical: 5),
-                      heroTag: 'hero_group_image_${group.id}'
-                  )
-              ),
               if(isLoading)
                 Align(
                     alignment: Alignment.center,
@@ -49,24 +44,41 @@ class ChatScreen extends StatelessWidget{
                     )
                 )
               else
-                Positioned(
-                  height: screenSize.height-topBarHeight-bottomBarHeight,
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 100),
+                  height: screenSize.height-topBarHeight-(!isOpen?bottomBarHeight:bottomBarOpenHeight),
                   width: screenSize.width,
-                  bottom: bottomBarHeight,
+                  bottom: (!isOpen?bottomBarHeight:bottomBarOpenHeight),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: MessagesList(messagesList: mockMessages)
                   )
                 ),
               Positioned(
+                  width: screenSize.width,
+                  height: topBarHeight,
+                  child: GroupListItem(
+                      onTap: (){
+                        Navigator.of(context)
+                            .pushNamed('/group',arguments: {"group":group});
+                      },
+                      group: group,
+                      createLeading: true,
+                      padding: (horizontal: 5, vertical: 5),
+                      heroTag: 'hero_group_image_${group.id}'
+                  )
+              ),
+              Positioned(
                 bottom: 0,
                 child: BottomMessageBar(
                     height: bottomBarHeight,
-                    openHeight: 350
+                    openHeight: bottomBarOpenHeight,
+                    onOpen: ()=>setState(() => isOpen = true),
+                    onClose: ()=>setState(() => isOpen = false),
                 )
               )
             ]
-          ),
+          )
         )
       )
     );

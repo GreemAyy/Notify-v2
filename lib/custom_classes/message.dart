@@ -5,6 +5,7 @@ class Message {
   String text;
   List<MessageMedia> media;
   int replyTo;
+  String createAt;
 
   Message({
     required this.id,
@@ -13,6 +14,7 @@ class Message {
     required this.text,
     required this.media,
     required this.replyTo,
+    required this.createAt
   });
 
   factory Message.fromJson(Map<String, dynamic> json) => Message(
@@ -22,6 +24,7 @@ class Message {
     text: json["text"],
     media: List<MessageMedia>.from(json["media"].map((x) => MessageMedia.fromJson(x))),
     replyTo: json["reply_to"],
+    createAt: json["create_at"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -31,6 +34,7 @@ class Message {
     "text": text,
     "media": List<dynamic>.from(media.map((x) => x.toJson())),
     "reply_to": replyTo,
+    "create_at":createAt
   };
 }
 
@@ -70,7 +74,8 @@ var mockMessages = [
       groupId: 6,
       text: 'Hello',
       media: [MessageMedia(type: MessageMediaDataType.photo, id: 4)],
-      replyTo: 0
+      replyTo: 0,
+      createAt: "15:23-31/03/2024"
   ),
   Message(
       id: 2,
@@ -78,7 +83,8 @@ var mockMessages = [
       groupId: 6,
       text: 'Hello 2',
       media: [],
-      replyTo: 0
+      replyTo: 0,
+      createAt: "17:23-31/03/2024"
   ),
   Message(
       id: 1,
@@ -86,6 +92,7 @@ var mockMessages = [
       groupId: 6,
       text: 'Hello 3',
       media: [MessageMedia(type: MessageMediaDataType.photo, id: 5)],
-      replyTo: 0
+      replyTo: 0,
+      createAt: "16:00-01/04/2024"
   )
 ];
