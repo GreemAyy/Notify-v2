@@ -1,6 +1,5 @@
 import 'package:notify/screens/Task.screen.dart';
 import 'package:flutter/material.dart';
-
 import '../custom_classes/task.dart';
 import '../generated/l10n.dart';
 

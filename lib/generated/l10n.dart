@@ -529,6 +529,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Add image`
+  String get add_image {
+    return Intl.message(
+      'Add image',
+      name: 'add_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send`
+  String get send {
+    return Intl.message(
+      'Send',
+      name: 'send',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Already picked`
+  String get already_picked {
+    return Intl.message(
+      'Already picked',
+      name: 'already_picked',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max`
+  String get max {
+    return Intl.message(
+      'Max',
+      name: 'max',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

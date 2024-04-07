@@ -65,6 +65,11 @@ class MessageMedia {
     "type": type.value!,
     "id": id,
   };
+
+  @override
+  bool operator == (Object other) {
+    return type.value == other;
+  }
 }
 
 var mockMessages = [
@@ -73,7 +78,11 @@ var mockMessages = [
       creatorId: 1,
       groupId: 6,
       text: 'Hello',
-      media: [MessageMedia(type: MessageMediaDataType.photo, id: 4)],
+      media: [
+        MessageMedia(type: MessageMediaDataType.photo, id: 105),
+        MessageMedia(type: MessageMediaDataType.photo, id: 107),
+        MessageMedia(type: MessageMediaDataType.photo, id: 92)
+      ],
       replyTo: 0,
       createAt: "15:23-31/03/2024"
   ),
@@ -82,7 +91,11 @@ var mockMessages = [
       creatorId: 2,
       groupId: 6,
       text: 'Hello 2',
-      media: [],
+      media: [
+        MessageMedia(type: MessageMediaDataType.task, id: 98),
+        MessageMedia(type: MessageMediaDataType.task, id: 92),
+        MessageMedia(type: MessageMediaDataType.photo, id: 92)
+      ],
       replyTo: 0,
       createAt: "17:23-31/03/2024"
   ),
@@ -91,7 +104,7 @@ var mockMessages = [
       creatorId: 1,
       groupId: 6,
       text: 'Hello 3',
-      media: [MessageMedia(type: MessageMediaDataType.photo, id: 5)],
+      media: [MessageMedia(type: MessageMediaDataType.photo, id: 104)],
       replyTo: 0,
       createAt: "16:00-01/04/2024"
   )

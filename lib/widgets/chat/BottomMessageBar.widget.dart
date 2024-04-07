@@ -1,4 +1,7 @@
+import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:notify/widgets/ui/Skeleton.ui.dart';
@@ -11,13 +14,17 @@ class BottomMessageBar extends StatefulWidget{
     super.key,
     required this.height,
     required this.openHeight,
+    required this.replyHeight,
+    this.onReply,
     this.onOpen,
     this.onClose
   });
   final double height;
   final double openHeight;
+  final double replyHeight;
   final void Function()? onOpen;
   final void Function()? onClose;
+  final void Function()? onReply;
 
   @override
   State<StatefulWidget> createState() => _StateBottomMessageBar();
@@ -25,16 +32,28 @@ class BottomMessageBar extends StatefulWidget{
 
 class _StateBottomMessageBar extends State<BottomMessageBar>{
   bool isOpen = false;
+  bool isReplyOpen = false;
   double yStart = 0;
   late double startPos = widget.openHeight;
   late double yPos = widget.openHeight;
   bool isOnDrag = false;
   final openDuration = const Duration(milliseconds: 150);
   FocusNode? _focusNode;
+  void Function()? replyWatcher;
 
   @override
   void initState() {
     super.initState();
+    replyWatcher = rxPickedReplyMessage.watch((value){
+      setState(() =>isReplyOpen = value != null);
+      if(widget.onReply!=null) widget.onReply!();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    replyWatcher!();
   }
 
   void _textFieldListener(){
@@ -97,74 +116,167 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
             }
             setState(() {});
           },
-          child: AnimatedContainer(
-              duration: isOnDrag?Duration.zero:openDuration,
-              height:isOpen ? yPos : widget.height,
-              width: MediaQuery.of(context).size.width,
-              padding:const EdgeInsets.only(top: 12.5, left: 5, right: 5),
-              decoration: BoxDecoration(
-                  color: theme.scaffoldBackgroundColor,
-                  borderRadius: isOpen? const BorderRadius.only(
-                      topRight: Radius.circular(35),
-                      topLeft: Radius.circular(35)
-                  ) : null
-              ),
-              child: Column(
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      width: !isOpen ? 0 : isOnDrag ? 100 : 75,
-                      height: isOpen ? 5 : 0,
-                      margin: const EdgeInsets.only(bottom: 5),
-                      decoration: BoxDecoration(
-                        color: theme.textTheme.bodyMedium!.color,
-                        borderRadius: BorderRadius.circular(15)
-                      )
-                    ),
-                    Row(
-                        children: [
-                          IconButton(
-                              onPressed: () => setState((){
-                                isOpen = !isOpen;
-                                yPos = widget.openHeight;
-                                if(widget.onClose!=null&&!isOpen) widget.onClose!();
-                                if(widget.onOpen!=null&&isOpen) widget.onOpen!();
-                                if(isOpen&&(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null))
-                                  widget.onClose!();
-                              }),
-                              icon: Icon(isOpen?Icons.close:Icons.attach_file)
-                          ),
-                          Expanded(
-                              child: FormTextField(
-                                  hintText: _S.write_message,
-                                  onInput: (text){
-
-                                  },
-                                  getFocusNode: (node) {
-                                    _focusNode = node;
-                                    _focusNode!.addListener(_textFieldListener);
-                                  })
-                          ),
-                          IconButton(
-                              onPressed: (){},
-                              icon: Icon(
-                                  Icons.send,
-                                  color: theme.primaryColor
-                              )
-                          )
-                        ]
-                    ),
-                    const SizedBox(height: 10),
-                    AnimatedContainer(
+          child: Column(
+              children: [
+                const TaskMessagePicker(),
+                Center(
+                    child: AnimatedContainer(
                         duration: isOnDrag ? Duration.zero : openDuration,
-                        height: isOpen ? yPos - widget.height : 0,
-                        child: const PhotoPicker()
+                        height: (isOpen ? yPos : widget.height) + (isReplyOpen ? widget.replyHeight : 0),
+                        width: MediaQuery.of(context).size.width,
+                        // padding:const EdgeInsets.only(top: 7.5),
+                        decoration: BoxDecoration(
+                          color: theme.scaffoldBackgroundColor
+                        ),
+                        child: Column(
+                            children: [
+                              SizedBox(
+                                height: widget.height+(isReplyOpen?widget.replyHeight:0),
+                                child: Column(
+                                  children: [
+                                    AnimatedContainer(
+                                        duration: isOnDrag ? Duration.zero : const Duration(milliseconds: 250),
+                                        width: !isOpen ? 0 : isOnDrag ? 100 : 75,
+                                        height: isOpen ? 5 : 0,
+                                        margin: const EdgeInsets.only(bottom: 5, top: 5),
+                                        decoration: BoxDecoration(
+                                            color: theme.textTheme.bodyMedium!.color,
+                                            borderRadius: BorderRadius.circular(15)
+                                        )
+                                    ),
+                                    if(isReplyOpen)
+                                      ReplyBlock(height: widget.replyHeight),
+                                    Row(
+                                        children: [
+                                          IconButton(
+                                              onPressed: () => setState((){
+                                                isOpen = !isOpen;
+                                                yPos = widget.openHeight;
+                                                if(widget.onClose!=null&&!isOpen) widget.onClose!();
+                                                if(widget.onOpen!=null&&isOpen) widget.onOpen!();
+                                                if(isOpen&&(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null))
+                                                  widget.onClose!();
+                                              }),
+                                              icon: Icon(isOpen?Icons.close:Icons.attach_file)
+                                          ),
+                                          Expanded(
+                                              child: FormTextField(
+                                                  hintText: _S.write_message,
+                                                  onInput: (text){
+
+                                                  },
+                                                  getFocusNode: (node) {
+                                                    _focusNode = node;
+                                                    _focusNode!.addListener(_textFieldListener);
+                                                  })
+                                          ),
+                                          IconButton(
+                                              onPressed: (){},
+                                              icon: Icon(
+                                                  Icons.send,
+                                                  color: theme.primaryColor
+                                              )
+                                          )
+                                        ]
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              AnimatedContainer(
+                                  duration: isOnDrag ? Duration.zero : openDuration,
+                                  height: isOpen ? (yPos - widget.height): 0,
+                                  child: const PhotoPicker()
+                              )
+                            ]
+                        )
                     )
-                  ]
-              )
-          ),
+                )
+              ]
+          )
         )
     );
+  }
+}
+
+class TaskMessagePicker extends StatelessWidget{
+  const TaskMessagePicker({super.key});
+  final double taskPickerSize = 75;
+
+  @override
+  Widget build(BuildContext context) {
+        final screenSize = MediaQuery.of(context).size;
+        final theme = Theme.of(context);
+        return rxPickedTasksList.toBuilder((context){
+          final taskList = rxPickedTasksList.value;
+
+          return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaY: 2,
+                            sigmaX: 2
+                          ),
+                          child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              height: taskList.isNotEmpty?taskPickerSize:0,
+                              width: screenSize.width-20,
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor.withOpacity(.75),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: taskList.length,
+                                  itemBuilder: (context, index){
+                                    return Stack(
+                                        children: [
+                                          Container(
+                                              width: screenSize.width*.6,
+                                              margin: const EdgeInsets.symmetric(vertical: 5 ,horizontal: 4),
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(10),
+                                                  color: theme.primaryColor
+                                              ),
+                                              child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                      "${S.of(context).task} №${taskList[index].id}"
+                                                  )
+                                              )
+                                          ),
+                                          Positioned(
+                                              right: 0,
+                                              top: 0,
+                                              child: IconButton(
+                                                onPressed: (){
+                                                  taskList.remove(taskList[index]);
+                                                  rxPickedTasksList.value = taskList;
+                                                },
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                                                ),
+                                                icon: Icon(
+                                                  Icons.close,
+                                                  size: 30,
+                                                  color: theme.primaryColor,
+                                                )
+                                              ))
+                                        ]
+                                    );
+                                  }
+                              )
+                          )
+                      )
+                  )
+                )
+              ]
+          );
+        });
   }
 }
 
@@ -250,26 +362,84 @@ class _StatePhotoPicker extends State<PhotoPicker>{
             if(pickedImagesId.isEmpty) return;
             if(pickedImagesId.contains(image.id)){
               pickedImagesId = pickedImagesId.where((id) => id != image.id).toList();
-            } else {
+            } else if(pickedImagesId.length<3) {
               pickedImagesId.add(image.id);
+            }else{
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    duration: const Duration(seconds: 1),
+                    content: Text(
+                      '${S.of(context).max} 3',
+                      style:theme.textTheme.bodyMedium!.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white
+                      )
+                    ),
+                    backgroundColor: Colors.red,
+                  )
+              );
             }
             setState((){});
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 100),
+            margin: const EdgeInsets.all(2.5),
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
               border: pickedImagesId.contains(image.id)?Border.all(
                 color: theme.primaryColor,
-                width: 3
+                width: 5
               ):null
             ),
-            child: Image(
-              image: AssetEntityImageProvider(image),
-              fit: BoxFit.fill,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image(
+                image: AssetEntityImageProvider(image),
+                fit: BoxFit.fill,
+              )
             )
           )
         );
-      }).toList(),
+      }).toList()
     );
+  }
+}
+
+class ReplyBlock extends StatelessWidget{
+  const ReplyBlock({
+    super.key,
+    this.height
+  });
+  final double? height;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return rxPickedReplyMessage.toBuilder((context) {
+      return InkWell(
+        onTap: (){
+          rxPickedReplyMessage.value = null;
+        },
+        child: Container(
+            margin: rxPickedReplyMessage.value == null ? EdgeInsets.zero : height!=null?const EdgeInsets.only(bottom: 10):null,
+            height: rxPickedReplyMessage.value == null ? 0 : height!=null ? height! - 10 : null,
+            decoration: BoxDecoration(
+                color: theme.primaryColor.withOpacity(.3),
+                border: Border(
+                    left: BorderSide(
+                        color: theme.primaryColor,
+                        width: 3
+                    )
+                )
+            ),
+            child: Row(
+                children: [
+                  Expanded(child: Text(rxPickedReplyMessage.value?.text??''))
+                ]
+            )
+        ),
+      );
+    });
   }
 }

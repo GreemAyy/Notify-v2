@@ -99,6 +99,19 @@ class ImagePlaceholder extends StatelessWidget{
             setWidthFromScreenParams: false
         );
       },
+      errorWidget: (context, _, __){
+        return SizedBox(
+          width: imageWidth,
+          height: imageHeight,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(
+              Icons.no_photography,
+              size: (imageWidth+imageHeight)/2/2,
+            )
+          )
+        );
+      },
     );
   }
 }
