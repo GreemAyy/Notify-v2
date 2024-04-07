@@ -12,42 +12,50 @@ class StoreConnect{
 }
 
 class Reactive<T> with ChangeNotifier{
-  Reactive(T? value, [ StoreConnect? storeConnection]){
+  Reactive(T? value, [StoreConnect? storeConnection, bool nullable = false]){
+    _nullable = nullable;
     if(storeConnection==null){
       var gkey = _generateKey();
       if((value) is! T&&value!=null) throw Exception('Value type is not matches');
-      _store = Collector({gkey:value});
+      _store = Collector({gkey:value}, strongTyped: !nullable);
       _key = gkey;
     }else{
       _store = storeConnection.store;
+      _store.strongTyped = !nullable;
       _key = storeConnection.key;
       _store.set(_key, _store.get(_key)??value, false);
     }
   }
   String _key = '';
+  bool _nullable = false;
   late Collector _store;
-  int _watchIndex = -1;
+  List<int> _watchIndex = [];
+
+  Reactive<T> get nullable{
+    _store.strongTyped = false;
+    _nullable = true;
+    return this;
+  }
 
   T get value => _store.get(_key);
   set value(T value){
-    if(value!=null){
+    if(_nullable||value!=null){
       _store.set(_key, value);
       notifyListeners();
     }else{
       throw Exception("Value is null!");
     }
   }
-  void watch(Function(T newValue) onUpdate){
-    _watchIndex = _store.watch(_key, onUpdate);
+  void Function() watch(void Function(T newValue) onUpdate){
+    final index = _store.watch(_key, onUpdate);
+    _watchIndex.add(index);
+    return () => _store.unSeeAt(_key, index);
   }
   void dispose(){
     super.dispose();
-    if(_watchIndex!=-1) _store.unSeeAt(_key, _watchIndex);
-  }
-
-  void disposeAt(int index){
-    super.dispose();
-    _store.unSeeAt(_key, index);
+    if(_watchIndex.isNotEmpty){
+      _store.destroy(_key);
+    }
   }
 
   String _generateKey(){

@@ -241,4 +241,3 @@ class Collector{
       _emitter.removeAt(key, index);
     }
 }
-

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
@@ -101,6 +102,9 @@ class _StateTaskScreen extends State<TaskScreen>{
     setState(() => isLoading = false);
   }
 
+  void replyTask(){
+
+  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -119,14 +123,15 @@ class _StateTaskScreen extends State<TaskScreen>{
         !widget.isChild&&task.creatorId==userId?
         Padding(
             padding: const EdgeInsets.only(bottom: 70),
-            child:  FloatingActionButton(
+            child: FloatingActionButton(
                 onPressed: updateTask,
                 backgroundColor: theme.primaryColor,
                 child: const Icon(
                   Icons.save,
                 )
             )
-        ):null),
+        )
+            :null),
         body: SafeArea(
           child: Stack(
             children: [
@@ -201,7 +206,7 @@ class _StateTaskScreen extends State<TaskScreen>{
                                   }
                               ),
                               itemBuilder: (BuildContext context, int index, int viewIndex) {
-                                final heroTag = 'hero_task_screen${widget.isChild?'_child':''}_image_${task.id}_${task.imagesId[index]}';
+                                final heroTag = 'hero_task_screen${widget.isChild?'_child':''}_@1_image_${task.id}_${task.imagesId[index]}';
                                 return InkWell(
                                   onTap: (){
                                     if(canPop){
@@ -225,19 +230,11 @@ class _StateTaskScreen extends State<TaskScreen>{
                                       });
                                     }
                                   },
-                                  onLongPress: (){
-                                    if(canPop&&!widget.isChild&&task.creatorId==userId){
-                                      setState((){
-                                        canPop = false;
-                                        pickedImages.add(index);
-                                      });
-                                    }
-                                  },
                                   child: Hero(
                                       tag: heroTag,
                                       child: AnimatedOpacity(
                                         duration: const Duration(milliseconds: 100),
-                                        opacity: pickedImages.contains(index)?0.25:1,
+                                        opacity: pickedImages.contains(index) ? 0.25 : 1,
                                         child: ImagePlaceholder(
                                             imageId: task.imagesId[index],
                                             imageHeight: _imageHeight,
@@ -365,146 +362,143 @@ class _StateTaskScreen extends State<TaskScreen>{
                 ]
               ),
               AnimatedPositioned(
-                  top: !canPop ? 10 : -screenSize.height,
-                  right: 10,
-                  duration: const Duration(milliseconds: 300),
-                  child: IconButton(
-                      onPressed: (){
-
-                      },
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(theme.primaryColor)
-                      ),
-                      icon: const Icon(
-                        Icons.add,
-                        size: 40,
-                        color: Colors.white,
-                      )
-                  )
-              ),
-              AnimatedPositioned(
                 duration: const Duration(milliseconds: 500),
                 bottom: showBottomBar ? 0 : -screenSize.height/2,
                 width: MediaQuery.of(context).size.width,
-                child: Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(30)),
-                      color: theme.primaryColor.withOpacity(.1)
-                    ),
-                    child: Optional(
-                      conditional: canPop,
-                      complited: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            if(task.status == TaskStatus.uncompleted)
-                              ElevatedButton(
-                                  onPressed: () {
-                                    store.updateWithData('change_task_status', (status:TaskStatus.completed, task:task));
-                                    Navigator.pop(context);
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
-                                  ),
-                                  child: Text(
-                                      _S.btn_complete,
-                                      style: theme.textTheme.bodyMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        fontSize: 17.5,
-                                      )
-                                  )
-                              )
-                            else
-                              ElevatedButton(
-                                  onPressed: () {
-                                    store.updateWithData('change_task_status', (status:TaskStatus.uncompleted, task:task));
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                      _S.btn_cancel,
-                                      style: theme.textTheme.bodyMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: theme.primaryColor,
-                                        fontSize: 17.5,
-                                      )
-                                  )
-                              ),
-                            ElevatedButton(
-                                onPressed: (){
-                                  store.updateWithData('delete_task', task);
-                                  Navigator.pop(context);
-                                },
-                                style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(Colors.red),
-                                ),
-                                child: Text(
-                                    _S.btn_delete,
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                        fontSize: 17.5
-                                    )
-                                )
-                            )
-                          ]
-                      ),
-                      uncomplited: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () async {
-                                if(pickedImages.isNotEmpty){
-                                  setState(() => isLoading = true);
-                                  var listAt = <int>[];
-                                  for (var index in pickedImages) {
-                                    listAt.add(task.imagesId[index]);
-                                  }
-                                  var deleted = await TasksHttp.deleteImages(task.id, listAt);
-                                  _controller.jumpTo(0);
-                                  if(deleted) store.update('update_tasks_list');
-                                  setState((){
-                                    var after = task.imagesId.where((image) => !listAt.contains(image)).toList();
-                                    task.imagesId = after.isNotEmpty?after:[0];
-                                    pickedImages.clear();
-                                    isLoading = false;
-                                    canPop = true;
-                                    pickedIndex = 0;
-                                  });
-                                }
-                              },
-                              style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(Colors.red)
-                              ),
-                              child: Text(
-                                  _S.btn_delete,
-                                  style: theme.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white,
-                                    fontSize: 17.5,
-                                  )
-                              )
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(30)),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(
+                            sigmaY: 2,
+                            sigmaX: 2
                           ),
-                          ElevatedButton(
-                              onPressed: () {
-                                setState((){
-                                  canPop = true;
-                                  pickedImages.clear();
-                                });
-                              },
-                              child: Text(
-                                  _S.btn_cancel,
-                                  style: theme.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: theme.primaryColor,
-                                    fontSize: 17.5,
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(30)),
+                                  color: theme.primaryColor.withOpacity(.1)
+                              ),
+                              child: Optional(
+                                  conditional: canPop,
+                                  complited: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        if(task.status == TaskStatus.uncompleted)
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                store.updateWithData('change_task_status', (status:TaskStatus.completed, task:task));
+                                                Navigator.pop(context);
+                                              },
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
+                                              ),
+                                              child: Text(
+                                                  _S.btn_complete,
+                                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white,
+                                                    fontSize: 17.5,
+                                                  )
+                                              )
+                                          )
+                                        else
+                                          ElevatedButton(
+                                              onPressed: () {
+                                                store.updateWithData('change_task_status', (status:TaskStatus.uncompleted, task:task));
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text(
+                                                  _S.btn_cancel,
+                                                  style: theme.textTheme.bodyMedium!.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: theme.primaryColor,
+                                                    fontSize: 17.5,
+                                                  )
+                                              )
+                                          ),
+                                        ElevatedButton(
+                                            onPressed: (){
+                                              store.updateWithData('delete_task', task);
+                                              Navigator.pop(context);
+                                            },
+                                            style: const ButtonStyle(
+                                              backgroundColor: MaterialStatePropertyAll(Colors.red),
+                                            ),
+                                            child: Text(
+                                                _S.btn_delete,
+                                                style: theme.textTheme.bodyMedium!.copyWith(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.white,
+                                                    fontSize: 17.5
+                                                )
+                                            )
+                                        )
+                                      ]
+                                  ),
+                                  uncomplited: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        ElevatedButton(
+                                            onPressed: () async {
+                                              if(pickedImages.isNotEmpty){
+                                                setState(() => isLoading = true);
+                                                var listAt = <int>[];
+                                                for (var index in pickedImages) {
+                                                  listAt.add(task.imagesId[index]);
+                                                }
+                                                var deleted = await TasksHttp.deleteImages(task.id, listAt);
+                                                _controller.jumpTo(0);
+                                                if(deleted) store.update('update_tasks_list');
+                                                setState((){
+                                                  var after = task.imagesId.where((image) => !listAt.contains(image)).toList();
+                                                  task.imagesId = after.isNotEmpty?after:[0];
+                                                  pickedImages.clear();
+                                                  isLoading = false;
+                                                  canPop = true;
+                                                  pickedIndex = 0;
+                                                });
+                                              }
+                                            },
+                                            style: const ButtonStyle(
+                                                backgroundColor: MaterialStatePropertyAll(Colors.red)
+                                            ),
+                                            child: Text(
+                                                _S.btn_delete,
+                                                style: theme.textTheme.bodyMedium!.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white,
+                                                  fontSize: 17.5,
+                                                )
+                                            )
+                                        ),
+                                        ElevatedButton(
+                                            onPressed: () {
+                                              setState((){
+                                                canPop = true;
+                                                pickedImages.clear();
+                                              });
+                                            },
+                                            child: Text(
+                                                _S.btn_cancel,
+                                                style: theme.textTheme.bodyMedium!.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: theme.primaryColor,
+                                                  fontSize: 17.5,
+                                                )
+                                            )
+                                        )
+                                      ]
                                   )
                               )
                           )
-                        ]
+                        )
                       )
                     )
+                  ]
                 )
               )
             ]

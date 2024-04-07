@@ -22,6 +22,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add_image":
+            MessageLookupByLibrary.simpleMessage("Добавить изображение"),
+        "already_picked": MessageLookupByLibrary.simpleMessage("Уже выбрано"),
         "auth": MessageLookupByLibrary.simpleMessage("Аутентификация"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Введите код"),
         "avatar": MessageLookupByLibrary.simpleMessage("Аватар"),
@@ -49,6 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "light_theme": MessageLookupByLibrary.simpleMessage("Светлая"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
+        "max": MessageLookupByLibrary.simpleMessage("Максимум"),
         "message": MessageLookupByLibrary.simpleMessage("Сообщение"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("Мои задачи"),
         "name": MessageLookupByLibrary.simpleMessage("Имя"),
@@ -57,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
+        "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
         "snack_bar": MessageLookupByLibrary.simpleMessage(
             "Непривильная почта или пароль!"),

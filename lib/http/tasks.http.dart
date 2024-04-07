@@ -32,6 +32,13 @@ abstract class TasksHttp{
     }
     return body;
   }
+
+  static Future<Task> getSingleTask(int id) async {
+    var url = Uri.parse('$URL_MAIN/api/tasks/single/$id');
+    var req = await http.get(url);
+    var body = Task.fromJson(jsonDecode(req.body));
+    return body;
+  }
   
   static Future<List<Task>> getGroupTasks(int groupId, DateTime date) async {
     var url = Uri.parse('$URL_MAIN/api/tasks/get-group-tasks');

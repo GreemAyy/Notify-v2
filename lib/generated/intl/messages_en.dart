@@ -22,6 +22,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add_image": MessageLookupByLibrary.simpleMessage("Add image"),
+        "already_picked":
+            MessageLookupByLibrary.simpleMessage("Already picked"),
         "auth": MessageLookupByLibrary.simpleMessage("Auth"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Write code"),
         "avatar": MessageLookupByLibrary.simpleMessage("Avatar"),
@@ -48,6 +51,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "light_theme": MessageLookupByLibrary.simpleMessage("Light"),
         "log_btn": MessageLookupByLibrary.simpleMessage("Log"),
         "logout": MessageLookupByLibrary.simpleMessage("Log out"),
+        "max": MessageLookupByLibrary.simpleMessage("Max"),
         "message": MessageLookupByLibrary.simpleMessage("Message"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -56,6 +60,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "snack_bar":
             MessageLookupByLibrary.simpleMessage("Wrong email or password!"),

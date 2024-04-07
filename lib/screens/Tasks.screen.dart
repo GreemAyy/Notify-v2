@@ -5,7 +5,9 @@ import 'package:notify/widgets/task/ShowCreateTaskModal.dart';
 import 'package:notify/widgets/task/ShowDatePickerModal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../custom_classes/task.dart';
 import '../store/store.dart';
+import 'Chat.screen.dart';
 
 class TasksScreen extends StatefulWidget{
   const TasksScreen({
@@ -48,6 +50,7 @@ class _StateTasksScreen extends State<TasksScreen>{
     super.dispose();
     store.unSeeAt('date', dateWatchIndex);
     store.set('group', 0, false);
+    rxPickedTasksList.value = <Task>[];
   }
 
   @override
@@ -125,16 +128,17 @@ class _StateTasksScreen extends State<TasksScreen>{
                                 )
                             )
                         ),
-                        IconButton(
-                            onPressed: (){
-                              Navigator.pushNamed(context, '/chat', arguments: {'group':widget.group});
-                            },
-                            padding: const EdgeInsets.all(15),
-                            icon: Icon(
-                              Icons.message,
-                              color: theme.primaryColor
-                            )
-                        )
+                        if((store.get<int>('group')!)!=0)
+                          IconButton(
+                              onPressed: (){
+                                Navigator.pushNamed(context, '/chat', arguments: {'group':widget.group});
+                              },
+                              padding: const EdgeInsets.all(15),
+                              icon: Icon(
+                                  Icons.message,
+                                  color: theme.primaryColor
+                              )
+                          )
                       ]
                   )
               )
