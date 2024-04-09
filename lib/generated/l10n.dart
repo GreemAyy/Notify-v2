@@ -569,6 +569,26 @@ class S {
       args: [],
     );
   }
+
+  /// `No access to gallery!`
+  String get no_access_to_gallery {
+    return Intl.message(
+      'No access to gallery!',
+      name: 'no_access_to_gallery',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Allow`
+  String get allow {
+    return Intl.message(
+      'Allow',
+      name: 'allow',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:notify/app_settings/const.dart';
 import 'package:notify/custom_classes/group.dart';
 import 'package:notify/sockets/notification.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../custom_classes/task.dart';

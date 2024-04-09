@@ -1,12 +1,18 @@
-import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:notify/custom_classes/message.dart';
+import 'package:notify/http/images.http.dart';
+import 'package:notify/http/messages.http.dart';
+import 'package:notify/methods/chat.dart';
 import 'package:notify/screens/Chat.screen.dart';
+import 'package:notify/store/store.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:notify/widgets/ui/Skeleton.ui.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../../generated/l10n.dart';
 
 class BottomMessageBar extends StatefulWidget{
@@ -33,19 +39,22 @@ class BottomMessageBar extends StatefulWidget{
 class _StateBottomMessageBar extends State<BottomMessageBar>{
   bool isOpen = false;
   bool isReplyOpen = false;
+  bool isUploading = false;
   double yStart = 0;
+  late TextEditingController _controller;
   late double startPos = widget.openHeight;
   late double yPos = widget.openHeight;
   bool isOnDrag = false;
   final openDuration = const Duration(milliseconds: 150);
   FocusNode? _focusNode;
   void Function()? replyWatcher;
+  var pickedImages = <AssetEntity>[];
 
   @override
   void initState() {
     super.initState();
     replyWatcher = rxPickedReplyMessage.watch((value){
-      setState(() =>isReplyOpen = value != null);
+      setState(() => isReplyOpen = value != null);
       if(widget.onReply!=null) widget.onReply!();
     });
   }
@@ -54,6 +63,42 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   void dispose() {
     super.dispose();
     replyWatcher!();
+  }
+
+  void sendMessage() async {
+    setState(() => isUploading = true);
+    final imagesIds = [];
+
+    if(pickedImages.isNotEmpty) {
+      for (var image in pickedImages) {
+        final create = await ImagesHttp.sendSingleFile((await image.file)!);
+        if ((create['added'] as bool)) imagesIds.add(create['id']);
+      }
+    }
+
+    final media = <MessageMedia>[
+      ...rxPickedTasksList.value.map((e) => MessageMedia(type: MessageMediaDataType.task, id: e.id)),
+      ...imagesIds.map((e) => MessageMedia(type: MessageMediaDataType.photo, id: e))
+    ];
+    final newMessage = Message(
+        id: 0,
+        creatorId: store.get<int>('id')!,
+        groupId: store.get<int>('group')!,
+        text: _controller.text,
+        media: media,
+        replyTo: rxPickedReplyMessage.value!=null?rxPickedReplyMessage.value!.id:0,
+        createAt: convertDateToMessageFormat(DateTime.now())
+    );
+    final socket = store.get<Socket>('socket')!;
+    _controller.clear();
+    rxPickedReplyMessage.value = null;
+    rxImageFiles.value = <AssetEntity>[];
+    final messageId = await MessagesHttp.createMessage(newMessage);
+    if(messageId!=0){
+      newMessage.id = messageId;
+      socket.emit('message', newMessage);
+    }
+    setState(() => isUploading = false);
   }
 
   void _textFieldListener(){
@@ -162,30 +207,37 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                           Expanded(
                                               child: FormTextField(
                                                   hintText: _S.write_message,
-                                                  onInput: (text){
-
-                                                  },
+                                                  onInput: (text) {},
                                                   getFocusNode: (node) {
                                                     _focusNode = node;
                                                     _focusNode!.addListener(_textFieldListener);
-                                                  })
-                                          ),
-                                          IconButton(
-                                              onPressed: (){},
-                                              icon: Icon(
-                                                  Icons.send,
-                                                  color: theme.primaryColor
+                                                  },
+                                                  getController: (controller) => _controller = controller
                                               )
-                                          )
+                                          ),
+                                          if(!isUploading)
+                                            IconButton(
+                                                onPressed: sendMessage,
+                                                icon: Icon(
+                                                    Icons.send,
+                                                    color: theme.primaryColor
+                                                )
+                                            )
+                                          else
+                                            CircularProgressIndicator(
+                                              color: theme.primaryColor
+                                            )
                                         ]
-                                    ),
-                                  ],
-                                ),
+                                    )
+                                  ]
+                                )
                               ),
                               AnimatedContainer(
                                   duration: isOnDrag ? Duration.zero : openDuration,
                                   height: isOpen ? (yPos - widget.height): 0,
-                                  child: const PhotoPicker()
+                                  child: PhotoPicker(
+                                    onChangePick: (images) => pickedImages = images
+                                  )
                               )
                             ]
                         )
@@ -283,7 +335,11 @@ class TaskMessagePicker extends StatelessWidget{
 final rxImageFiles = Reactive(<AssetEntity>[]);
 
 class PhotoPicker extends StatefulWidget{
-  const PhotoPicker({super.key});
+  PhotoPicker({
+    super.key,
+    required this.onChangePick
+  });
+  final Function(List<AssetEntity>) onChangePick;
 
   @override
   State<StatefulWidget> createState() => _StatePhotoPicker();
@@ -291,23 +347,21 @@ class PhotoPicker extends StatefulWidget{
 
 class _StatePhotoPicker extends State<PhotoPicker>{
   var isLoading = true;
+  var haveAccess = true;
   var images = <AssetEntity>[];
   var pickedImagesId = <String>[];
+  var pickedImages = <AssetEntity>[];
 
   @override
   void initState() {
     super.initState();
     init();
   }
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   void init() async {
-    PhotoManager.setIgnorePermissionCheck(false);
     final req = await PhotoManager.requestPermissionExtend();
     if(req.isAuth){
+      setState(() => haveAccess = true);
       if(rxImageFiles.value.isNotEmpty){
         images = rxImageFiles.value;
         isLoading = false;
@@ -326,7 +380,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
       print('has');
     }
     else{
-      print('else');
+      setState(() => haveAccess = false);
     }
   }
 
@@ -334,6 +388,46 @@ class _StatePhotoPicker extends State<PhotoPicker>{
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
+    if(haveAccess==false){
+      return Align(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Text(
+              S.of(context).no_access_to_gallery,
+            ),
+            ElevatedButton(
+                onPressed: () async {
+                  final status = await Permission.photos.request();
+                  if(status.isGranted) init();
+                  else{
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                       duration: const Duration(seconds: 1),
+                       backgroundColor:Colors.red,
+                       content: Text(
+                        S.of(context).no_access_to_gallery,
+                        style: theme.textTheme.bodyMedium!.copyWith(
+                          color: Colors.white
+                        )
+                      ))
+                    );
+                  }
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(theme.primaryColor),
+                ),
+                child: Text(
+                  S.of(context).allow,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                      color: Colors.white
+                  )
+                )
+            )
+          ]
+        )
+      );
+    }
     if(isLoading){
       return GridView.count(
         crossAxisCount: 3,
@@ -356,14 +450,18 @@ class _StatePhotoPicker extends State<PhotoPicker>{
           splashColor: Colors.transparent,
           onLongPress: (){
             pickedImagesId.add(image.id);
+            pickedImages = [image];
+            widget.onChangePick(pickedImages);
             setState(() {});
           },
           onTap: (){
             if(pickedImagesId.isEmpty) return;
             if(pickedImagesId.contains(image.id)){
               pickedImagesId = pickedImagesId.where((id) => id != image.id).toList();
+              pickedImages.remove(image);
             } else if(pickedImagesId.length<3) {
               pickedImagesId.add(image.id);
+              pickedImages.add(image);
             }else{
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -379,6 +477,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
                   )
               );
             }
+            widget.onChangePick(pickedImages);
             setState((){});
           },
           child: AnimatedContainer(
@@ -438,7 +537,7 @@ class ReplyBlock extends StatelessWidget{
                   Expanded(child: Text(rxPickedReplyMessage.value?.text??''))
                 ]
             )
-        ),
+        )
       );
     });
   }

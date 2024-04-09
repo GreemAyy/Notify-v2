@@ -51,16 +51,12 @@ class _StateSecondTasksList extends State<SecondTasksList>{
       loadTasks(store.get<DateTime>('date')!);
     });
     deleteTaskWatchIndex = store.watch<Task>('delete_task', (task) async {
-      setState(() => isLoading = true);
       var isDeleted = await TasksHttp.deleteTask(task.id);
       if(isDeleted){
         setState(() {
           tasksList = tasksList.where((e) => e.id != task.id).toList();
-          isLoading = false;
         });
         updateSocket(task, SocketCommand.delete);
-      }else{
-        setState(() => isLoading = false);
       }
     });
     changeStatusWatchIndex = store.watch<({int status, Task task})>('change_task_status', (data) async {
@@ -144,7 +140,10 @@ class _StateSecondTasksList extends State<SecondTasksList>{
               childCount: tasksList.length,
               (context, index) {
                 var task = tasksList[index];
-                return TaskItem(task: task);
+                return TaskItem(
+                  key: Key(task.id.toString()),
+                  task: task
+                );
               }
           )
       );
@@ -153,7 +152,10 @@ class _StateSecondTasksList extends State<SecondTasksList>{
           itemCount: tasksList.length,
           itemBuilder: (context, index) {
             var task = tasksList[index];
-            return TaskItem(task: task);
+            return TaskItem(
+              key: Key(task.id.toString()),
+              task: task
+            );
           }
       );
     }

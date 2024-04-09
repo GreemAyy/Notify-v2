@@ -123,50 +123,40 @@ class GridMessageMedia extends StatelessWidget{
       child: Column(
         children: [
           Column(
-            children: media.where((e) => e.type == MessageMediaDataType.task).map((item){
+            children: media.where((e) => e.type.value == MessageMediaDataType.task.value).map((item){
               return TaskGridItem(id: item.id);
             }).toList()
           ),
           Row(
             mainAxisAlignment: media.length>1?MainAxisAlignment.spaceBetween:MainAxisAlignment.center,
-            children: media.where((e) => e.type != MessageMediaDataType.task).map((item){
-              final wherePhoto = media.where((e) => e.type != MessageMediaDataType.task).toList();
+            children: media.where((e) => e.type.value == MessageMediaDataType.photo.value).map((item){
+              final wherePhoto = media.where((e) => e.type.value == MessageMediaDataType.photo.value).toList();
+              heroCounter++;
+              final heroTag = "hero_chat_image_${item.id}_$heroCounter";
 
-              if(item.type == MessageMediaDataType.photo) {
-                heroCounter++;
-                final heroTag = "hero_chat_image_${item.id}_$heroCounter";
-
-                return InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: (){
-                    Navigator.pushNamed(context, '/image' ,arguments: {
-                      'hero': heroTag,
-                      'image':ImagePlaceholder(
-                          imageId: item.id,
-                          imageHeight: screenSize.height,
-                          imageWidth: screenSize.width,
-                          fit: BoxFit.contain,
-                        )
-                    });
-                  },
-                  child: Hero(
-                    tag: heroTag,
-                    child: ImagePlaceholder(
-                      imageId: item.id,
-                      imageHeight: 150,
-                      imageWidth: imageMaxWidth/wherePhoto.length,
-                      fit: wherePhoto.length<3?BoxFit.fitWidth:BoxFit.fill,
-                    )
-                  ),
-                );
-              } else {
-                return ImagePlaceholder(
-                  imageId: item.id,
-                  imageHeight: 150,
-                  imageWidth: imageMaxWidth/media.length,
-                  fit: BoxFit.fitWidth,
-                );
-              }
+              return InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: (){
+                  Navigator.pushNamed(context, '/image' ,arguments: {
+                    'hero': heroTag,
+                    'image':ImagePlaceholder(
+                        imageId: item.id,
+                        imageHeight: screenSize.height,
+                        imageWidth: screenSize.width,
+                        fit: BoxFit.contain,
+                      )
+                  });
+                },
+                child: Hero(
+                  tag: heroTag,
+                  child: ImagePlaceholder(
+                    imageId: item.id,
+                    imageHeight: 150,
+                    imageWidth: imageMaxWidth/wherePhoto.length,
+                    fit: wherePhoto.length<3?BoxFit.fitWidth:BoxFit.fill
+                  )
+                ),
+              );
             }).toList()
           ),
         ],
@@ -198,7 +188,7 @@ class _StateTaskGridItem extends State<TaskGridItem>{
     .then((value){
       task = value;
       isLoading = false;
-      setState((){});
+        setState((){});
     });
   }
 

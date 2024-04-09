@@ -16,7 +16,8 @@ class FormTextField extends StatefulWidget{
     this.maxLines = 1,
     this.textStyle = const TextStyle(fontSize: 22.5),
     this.icon,
-    this.getFocusNode
+    this.getFocusNode,
+    this.getController
   });
   String hintText;
   double borderWidth;
@@ -32,6 +33,7 @@ class FormTextField extends StatefulWidget{
   TextStyle? textStyle;
   void Function(String text) onInput;
   void Function(FocusNode node)? getFocusNode;
+  void Function(TextEditingController controller)? getController;
 
   @override
   State<StatefulWidget> createState() => _FormTextFieldState();
@@ -39,11 +41,15 @@ class FormTextField extends StatefulWidget{
 
 class _FormTextFieldState extends State<FormTextField>{
   FocusNode _focusNode = FocusNode();
+  late final TextEditingController _controller = TextEditingController(text: widget.initValue??'');
   @override
   void initState() {
     super.initState();
     if(widget.getFocusNode!=null){
       widget.getFocusNode!(_focusNode);
+    }
+    if(widget.getController!=null){
+      widget.getController!(_controller);
     }
     if(widget.autoOpen){
       _requestFocus();
@@ -69,8 +75,8 @@ class _FormTextFieldState extends State<FormTextField>{
 
     return  TextFormField(
       style: widget.textStyle,
+      controller: _controller,
       enabled: widget.enabled,
-      initialValue: widget.initValue,
       focusNode: _focusNode,
       maxLines: widget.maxLines,
       decoration: InputDecoration(

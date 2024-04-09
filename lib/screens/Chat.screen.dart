@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:notify/widgets/chat/BottomMessageBar.widget.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../custom_classes/group.dart';
+import '../store/store.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
 
 class ChatScreen extends StatefulWidget{
@@ -34,9 +38,16 @@ class _StateChatScreen extends State<ChatScreen>{
   final double bottomReplyHeight = 50;
 
   @override
+  void initState() {
+    super.initState();
+    store.get<Socket>('socket')!.emit('connect-to-chat', {'group_id':group.id});
+  }
+
+  @override
   void dispose() {
     super.dispose();
     rxPickedReplyMessage.value = null;
+    store.get<Socket>('socket')!.emit('disconnect-from-chat', {'group_id':group.id});
   }
 
   @override

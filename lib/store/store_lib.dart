@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class _EventEmitter {
     Map<String,List<Function?>> events = {};
 
@@ -50,13 +52,15 @@ class _EventEmitter {
 class Collector{
     Collector(this._states, {
       this.strongTyped = true,
-      this.debug = false
+      this.debug = false,
+      this.logMessages = false
     });
     Map<String, dynamic> _states;
     ({String key, dynamic data}) _lastUpdate = (key: '', data: null);
     var _logs = <String>[];
     bool debug;
     bool strongTyped;
+    bool logMessages;
     final Map<String, dynamic> _localHolder = {};
     late final _emitter = _EventEmitter();
 
@@ -77,17 +81,25 @@ class Collector{
       return this;
     }
 
+    void _log(String _){
+      if(debug){
+        _logs.add(_);
+      }
+      if(logMessages){
+        log(_, name: 'Collector debug mode');
+
+      }
+    }
+
     void set(String key, dynamic value, [bool shouldUpdate = true]){
       var valueAt = _states[key];
       if(valueAt == value) return;
       if(valueAt!=null&&!identical(value.runtimeType, valueAt.runtimeType)&&strongTyped){
         throw Exception('New value type at key :$key is not matches to setted value');
       }
-      if(debug){
-        var _ = 'set: $key value: $value';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'set: $key value: $value';
+      _log(_);
+
       _states[key] = value;
       if(shouldUpdate){
         _emitter.emit(key);
@@ -104,11 +116,7 @@ class Collector{
         if(valueAt!=null&&!identical(value.runtimeType, valueAt.runtimeType)&&strongTyped){
           throw Exception('New value type at key :$key is not matches to setted value');
         }
-        if(debug) {
-          var _ = 'set: $key value: $value';
-          print(_);
-          _logs.add(_);
-        }
+        _log('set: $key value: $value');
         if(value is Map<String, dynamic> && value["--update"] != null){
             _states[key] = value["--update"];
         }else{
@@ -126,11 +134,10 @@ class Collector{
           if(valueAt!=null&&!identical(value.runtimeType, valueAt.runtimeType)&&strongTyped){
             throw Exception('New value type at key :$key is not matches to setted value');
           }
-          if(debug){
-            var _ = 'set: $key value: $value';
-            print(_);
-            _logs.add(_);
-          }
+
+          var _ = 'set: $key value: $value';
+          _log(_);
+
           _states[key] = value;
           if(keys.length == shouldUpdate.length && shouldUpdate[i]){
               _emitter.emit(key);
@@ -149,36 +156,28 @@ class Collector{
     }
 
     void update(String key){
-      if(debug) {
-        var _ = 'update: $key events -> ${_emitter.events[key]}';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'update: $key events -> ${_emitter.events[key]}';
+      _log(_);
+
       _emitter.emit(key);
     }
 
     void updateWithData(String key, dynamic data){
-      if(debug){
-        var _ = 'update: $key value: $data events -> ${_emitter.events[key]}';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'update: $key value: $data events -> ${_emitter.events[key]}';
+      _log(_);
+
       _localHolder[key] = data;
       _emitter.emit(key);
     }
 
     int watch<CallbackType>(String key, void Function(CallbackType data) callback){
-      if(debug){
-        var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+      _log(_);
+
       _emitter.on(key, (){
-        if(debug){
-          var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
-          print(_);
-          _logs.add(_);
-        }
+        var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+        _log(_);
+
         callback(_states[key]??_localHolder[key]);
         _lastUpdate = (key: key, data: _states[key]??_localHolder[key]);
         _emitter.emit('__ANY__WATCH__');
@@ -199,11 +198,9 @@ class Collector{
 
     void remove(String key){
       try{
-        if(debug){
-          var _ = 'remove: $key';
-          print(_);
-          _logs.add(_);
-        }
+       var _ = 'remove: $key';
+       _log(_);
+
         _states.remove(key);
       }catch(e){
         rethrow;
@@ -212,11 +209,9 @@ class Collector{
 
     void destroy(String key){
       try{
-        if(debug){
-          var _ = 'remove: $key';
-          print(_);
-          _logs.add(_);
-        }
+        var _ = 'remove: $key';
+        _log(_);
+
         _states.remove(key);
         _emitter.remove(key);
       }catch(e){
@@ -225,19 +220,15 @@ class Collector{
     }
 
     void unSee(String key){
-      if(debug){
-        var _ = 'remove: $key';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'remove: $key';
+      _log(_);
+
       _emitter.remove(key);
     }
     void unSeeAt(String key, int index){
-      if(debug){
-        var _ = 'remove: $key at: $index';
-        print(_);
-        _logs.add(_);
-      }
+      var _ = 'remove: $key at: $index';
+      _log(_);
+
       _emitter.removeAt(key, index);
     }
 }

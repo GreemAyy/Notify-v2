@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "add_image":
             MessageLookupByLibrary.simpleMessage("Добавить изображение"),
+        "allow": MessageLookupByLibrary.simpleMessage("Разрешить"),
         "already_picked": MessageLookupByLibrary.simpleMessage("Уже выбрано"),
         "auth": MessageLookupByLibrary.simpleMessage("Аутентификация"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Введите код"),
@@ -56,6 +57,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "message": MessageLookupByLibrary.simpleMessage("Сообщение"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("Мои задачи"),
         "name": MessageLookupByLibrary.simpleMessage("Имя"),
+        "no_access_to_gallery":
+            MessageLookupByLibrary.simpleMessage("Нет доступа к галерее"),
         "no_photo": MessageLookupByLibrary.simpleMessage("Нет фото"),
         "password": MessageLookupByLibrary.simpleMessage("Пароль"),
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),

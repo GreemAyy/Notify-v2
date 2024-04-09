@@ -8,5 +8,5 @@ DateTime convertDateFromFormatString(String dateFormat){
 }
 
 String convertDateToMessageFormat(DateTime dateToFormat){
-  return DateFormat('mm:HH dd/MM/yyyy').format(dateToFormat);
+  return DateFormat('HH:mm-dd/MM/yyyy').format(dateToFormat);
 }

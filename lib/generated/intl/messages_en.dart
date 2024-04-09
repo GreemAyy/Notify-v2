@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "add_image": MessageLookupByLibrary.simpleMessage("Add image"),
+        "allow": MessageLookupByLibrary.simpleMessage("Allow"),
         "already_picked":
             MessageLookupByLibrary.simpleMessage("Already picked"),
         "auth": MessageLookupByLibrary.simpleMessage("Auth"),
@@ -55,6 +56,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "message": MessageLookupByLibrary.simpleMessage("Message"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "no_access_to_gallery":
+            MessageLookupByLibrary.simpleMessage("No access to gallery!"),
         "no_photo": MessageLookupByLibrary.simpleMessage("No photo"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
