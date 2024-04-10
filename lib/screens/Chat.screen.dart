@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
@@ -24,6 +22,7 @@ class ChatScreen extends StatefulWidget{
 
 final rxPickedTasksList = Reactive(<Task>[]);
 final rxPickedReplyMessage = Reactive<Message?>(null).nullable;
+final rxGroupMessages = Reactive<Map<int, List<Message>>>({});
 
 class _StateChatScreen extends State<ChatScreen>{
   late Group group = widget.group;
@@ -62,15 +61,7 @@ class _StateChatScreen extends State<ChatScreen>{
           width: screenSize.width,
           child: Stack(
             children: [
-              if(isLoading)
-                Align(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(
-                        color: theme.primaryColor
-                    )
-                )
-              else
-                AnimatedPositioned(
+              AnimatedPositioned(
                   duration: const Duration(milliseconds: 100),
                   height: screenSize.height-
                       topBarHeight-
@@ -79,12 +70,12 @@ class _StateChatScreen extends State<ChatScreen>{
                       (isReplyOpen?bottomReplyHeight:0),
                   width: screenSize.width,
                   bottom: (!isOpen?bottomBarHeight:bottomBarOpenHeight)+
-                          (isReplyOpen?bottomReplyHeight:0),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: MessagesList(messagesList: mockMessages)
+                      (isReplyOpen?bottomReplyHeight:0),
+                  child: const Align(
+                      alignment: Alignment.bottomCenter,
+                      child: MessagesList()
                   )
-                ),
+              ),
               Positioned(
                   width: screenSize.width,
                   height: topBarHeight,

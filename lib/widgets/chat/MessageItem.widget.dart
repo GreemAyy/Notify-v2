@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
@@ -26,81 +27,103 @@ class MessageItem extends StatefulWidget{
 class _StateMessageItem extends State<MessageItem>{
   late final message = widget.message;
   bool isThisMessageOpen = false;
+  bool isOnDrag = false;
+  double xStart = 0;
+  double xPos = 0;
+  final int duration = 100;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     
-    return Align(
-        alignment: widget.self ? Alignment.centerLeft : Alignment.centerRight,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 5),
-          child: InkWell(
-            onLongPress: (){
+    return GestureDetector(
+      onHorizontalDragStart: (details){
+        setState(() {
+          isOnDrag = true;
+          xStart = details.globalPosition.dx;
+        });
+      },
+      onHorizontalDragUpdate: (details){
+        setState(() {
+          final calc = (details.globalPosition.dx-xStart);
+          if(calc>0) isOnDrag = false;
+          if(calc<0&&calc.abs()<25) xPos = calc.abs();
+        });
+      },
+      onHorizontalDragEnd: (details){
+        setState(() {
+          if(isOnDrag) rxPickedReplyMessage.value = message;
+          isOnDrag = false;
+        });
+      },
+      child: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: isOnDrag ? Duration.zero : const Duration(milliseconds: 100),
+            child: InkWell(
+                onLongPress: (){
 
-            },
-            borderRadius: BorderRadius.only(
-                topLeft:const Radius.circular(15),
-                topRight:const Radius.circular(15),
-                bottomRight:!widget.self?Radius.zero:const Radius.circular(15),
-                bottomLeft: widget.self?Radius.zero:const Radius.circular(15)
-            ),
-            child: Stack(
-              children: [
-                AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: MediaQuery.of(context).size.width*(isThisMessageOpen?1:.8),
-                    padding: const EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 50),
-                    decoration: BoxDecoration(
-                        color: theme.textTheme.bodyMedium!.color!.withOpacity(.05),
-                        borderRadius: BorderRadius.only(
-                            topLeft:const Radius.circular(15),
-                            topRight:const Radius.circular(15),
-                            bottomRight:!widget.self?Radius.zero:const Radius.circular(15),
-                            bottomLeft: widget.self?Radius.zero:const Radius.circular(15)
-                        ),
-                        border: isThisMessageOpen?Border.all(color: theme.primaryColor, width: 2):null
-                    ),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if(message.media.isNotEmpty)
-                            GridMessageMedia(media:message.media),
-                          Text(
-                              message.text,
-                              style: theme.textTheme.bodyMedium!.copyWith(
-                                  fontSize: theme.textTheme.bodyMedium!.fontSize!-5
-                              )
-                          ),
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                  convertDateToMessageFormat(convertDateFromFormatString(message.createAt)),
-                                  style: theme.textTheme.bodyMedium!.copyWith(
-                                      fontSize: theme.textTheme.bodyMedium!.fontSize!-7,
-                                      fontWeight: FontWeight.w300
+                },
+                child: AnimatedAlign(
+                    alignment: widget.self ? Alignment.centerLeft : (isOnDrag ? Alignment.centerLeft : Alignment.centerRight),
+                    duration: const Duration(milliseconds: 100),
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 5, top: 10, right: 10, bottom: 5),
+                        child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 100),
+                            width: MediaQuery.of(context).size.width*(isThisMessageOpen?1:.8),
+                            padding: const EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 5),
+                            decoration: BoxDecoration(
+                                color: theme.textTheme.bodyMedium!.color!.withOpacity(.05),
+                                borderRadius: BorderRadius.only(
+                                    topLeft:const Radius.circular(15),
+                                    topRight:const Radius.circular(15),
+                                    bottomRight:!widget.self?Radius.zero:const Radius.circular(15),
+                                    bottomLeft: widget.self?Radius.zero:const Radius.circular(15)
+                                ),
+                                border: isThisMessageOpen?Border.all(color: theme.primaryColor, width: 2):null
+                            ),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if(message.media.isNotEmpty)
+                                    GridMessageMedia(media:message.media),
+                                  Text(
+                                      message.text,
+                                      style: theme.textTheme.bodyMedium!.copyWith(
+                                          fontSize: theme.textTheme.bodyMedium!.fontSize!-5
+                                      )
+                                  ),
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Text(
+                                          convertDateToMessageFormat(convertDateFromFormatString(message.createAt)),
+                                          style: theme.textTheme.bodyMedium!.copyWith(
+                                              fontSize: theme.textTheme.bodyMedium!.fontSize!-7,
+                                              fontWeight: FontWeight.w300
+                                          )
+                                      )
                                   )
-                              )
-                          )
-                        ]
+                                ]
+                            )
+                        )
+
+
                     )
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: widget.self ? 0 : null,
-                  left: widget.self ? null : 0,
-                  child: IconButton(
-                    onPressed: () => rxPickedReplyMessage.value = message,
-                    style: IconButton.styleFrom(
-                      backgroundColor: theme.primaryColor
-                    ),
-                    icon: Icon(Icons.reply),
-                  ),
                 )
-              ]
+            )
+          ),
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 100),
+            right: !isOnDrag ? -50 : xPos,
+            child: Icon(
+              Icons.reply,
+              color: theme.primaryColor,
+              size: 30
             )
           )
-        )
+        ]
+      )
     );
   }
 }
@@ -152,24 +175,25 @@ class GridMessageMedia extends StatelessWidget{
                   child: ImagePlaceholder(
                     imageId: item.id,
                     imageHeight: 150,
-                    imageWidth: imageMaxWidth/wherePhoto.length,
-                    fit: wherePhoto.length<3?BoxFit.fitWidth:BoxFit.fill
+                    imageWidth: imageMaxWidth / wherePhoto.length,
+                    fit: wherePhoto.length<3 ? BoxFit.fitWidth : BoxFit.fill
                   )
-                ),
+                )
               );
             }).toList()
-          ),
-        ],
+          )
+        ]
       )
     );
   }
 }
 
+final Map<int, Task> _loadedTasks = {};
+
 class TaskGridItem extends StatefulWidget{
   TaskGridItem({
     super.key,
-    required this.id,
-
+    required this.id
   });
   int id;
 
@@ -184,12 +208,20 @@ class _StateTaskGridItem extends State<TaskGridItem>{
   @override
   void initState() {
     super.initState();
-    TasksHttp.getSingleTask(widget.id)
-    .then((value){
-      task = value;
-      isLoading = false;
+    if(_loadedTasks[widget.id]==null){
+      TasksHttp.getSingleTask(widget.id)
+          .then((value){
+        task = value;
+        _loadedTasks[widget.id] = value;
+        isLoading = false;
         setState((){});
-    });
+      });
+    }else{
+      setState((){
+        task = _loadedTasks[widget.id];
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -221,13 +253,14 @@ class _StateTaskGridItem extends State<TaskGridItem>{
                   Text(
                       '${_S.task} №${widget.id}',
                       style: theme.textTheme.bodyMedium!.copyWith(
-                          fontWeight: FontWeight.w600
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white
                       )
                   )
                 )
             )
-        ),
-      ),
+        )
+      )
     );
   }
 }

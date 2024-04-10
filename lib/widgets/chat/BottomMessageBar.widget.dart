@@ -224,8 +224,11 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                                 )
                                             )
                                           else
-                                            CircularProgressIndicator(
-                                              color: theme.primaryColor
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                                              child: CircularProgressIndicator(
+                                                  color: theme.primaryColor
+                                              )
                                             )
                                         ]
                                     )
