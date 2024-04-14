@@ -3,6 +3,7 @@ import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/store/store_flutter_lib.dart';
 import 'package:notify/widgets/chat/BottomMessageBar.widget.dart';
+import 'package:notify/widgets/chat/MessageFullscreen.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../custom_classes/group.dart';
@@ -22,6 +23,7 @@ class ChatScreen extends StatefulWidget{
 
 final rxPickedTasksList = Reactive(<Task>[]);
 final rxPickedReplyMessage = Reactive<Message?>(null).nullable;
+final rxPickedMessage = Reactive<Message?>(null).nullable;
 final rxGroupMessages = Reactive<Map<int, List<Message>>>({});
 
 class _StateChatScreen extends State<ChatScreen>{
@@ -39,14 +41,14 @@ class _StateChatScreen extends State<ChatScreen>{
   @override
   void initState() {
     super.initState();
-    store.get<Socket>('socket')!.emit('connect-to-chat', {'group_id':group.id});
+    store.set('on_chat', true, false);
   }
 
   @override
   void dispose() {
     super.dispose();
+    store.set('on_chat', false, false);
     rxPickedReplyMessage.value = null;
-    store.get<Socket>('socket')!.emit('disconnect-from-chat', {'group_id':group.id});
   }
 
   @override
@@ -103,7 +105,8 @@ class _StateChatScreen extends State<ChatScreen>{
                     onOpen: () => setState(() => isOpen = true),
                     onClose: () => setState(() => isOpen = false),
                 )
-              )
+              ),
+              MessageFullscreen()
             ]
           )
         )

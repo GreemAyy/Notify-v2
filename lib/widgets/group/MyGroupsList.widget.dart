@@ -24,7 +24,7 @@ class _StateMyGroupsList extends State<MyGroupsList>{
   void initState() {
     super.initState();
     init();
-    groupListWatchIndex = store.watch('groups', (_) { // Home.screen
+    groupListWatchIndex = store.watch('groups', (_) {
       setState(() => isLoading = true);
       init();
     });
@@ -33,10 +33,12 @@ class _StateMyGroupsList extends State<MyGroupsList>{
   void init() async {
     var groups = await GroupsHttp.getUsersGroups(store.get('id'));
     store.set('groups', groups, false);
-    setState(() {
-      groupsList = groups;
-      isLoading = false;
-    });
+    try{
+      setState(() {
+        groupsList = groups;
+        isLoading = false;
+      });
+    }catch(_){}
   }
 
   @override

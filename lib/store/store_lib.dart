@@ -1,4 +1,7 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
+import 'dart:io';
+import 'dart:math';
+import 'package:intl/intl.dart';
 
 class _EventEmitter {
     Map<String,List<Function?>> events = {};
@@ -49,6 +52,76 @@ class _EventEmitter {
     }
 }
 
+class Updater{
+  Updater({
+    this.debug = false,
+    this.logMessages = false
+  });
+  bool debug;
+  bool logMessages;
+  final _logs = <String>[];
+  final _emitter = _EventEmitter();
+  final Map<String, dynamic> _localHolder = {};
+  ({String key, dynamic data}) _lastUpdate = (key: '', data: null);
+
+  void _log(String _){
+    if(debug){
+      _logs.add(_);
+    }
+    if(logMessages){
+      dev.log(_, name: 'Updater debug mode');
+    }
+  }
+
+  void update(String key){
+    var _ = 'update: $key events -> ${_emitter.events[key]}';
+    _log(_);
+
+    _emitter.emit(key);
+  }
+  void updateWithData(String key, dynamic data){
+    var _ = 'update: $key value: $data events -> ${_emitter.events[key]}';
+    _log(_);
+
+    _localHolder[key] = data;
+    _emitter.emit(key);
+  }
+  int watch<CallbackType>(String key, void Function(CallbackType data) callback){
+    var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+    _log(_);
+
+    _emitter.on(key, (){
+      var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+      _log(_);
+
+      callback(_localHolder[key]);
+      _lastUpdate = (key: key, data:_localHolder[key]);
+      _emitter.emit('__ANY__WATCH__');
+    });
+    if(_localHolder[key]!=null){
+      _localHolder.remove(key);
+    }
+    return _emitter.getEventsCount(key)-1;
+  }
+  void anyWatch(void Function(String key, dynamic data) callback){
+    _emitter.on('__ANY__WATCH__', () {
+      callback(_lastUpdate.key, _lastUpdate.data);
+    });
+  }
+  void unSee(String key){
+    var _ = 'remove: $key';
+    _log(_);
+
+    _emitter.remove(key);
+  }
+  void unSeeAt(String key, int index){
+    var _ = 'remove: $key at: $index';
+    _log(_);
+
+    _emitter.removeAt(key, index);
+  }
+}
+
 class Collector{
     Collector(this._states, {
       this.strongTyped = true,
@@ -57,12 +130,12 @@ class Collector{
     });
     Map<String, dynamic> _states;
     ({String key, dynamic data}) _lastUpdate = (key: '', data: null);
-    var _logs = <String>[];
     bool debug;
     bool strongTyped;
     bool logMessages;
     final Map<String, dynamic> _localHolder = {};
-    late final _emitter = _EventEmitter();
+    final _emitter = _EventEmitter();
+    final _logs = <String>[];
 
     Map<String, dynamic> get ${
       return _states;
@@ -86,8 +159,7 @@ class Collector{
         _logs.add(_);
       }
       if(logMessages){
-        log(_, name: 'Collector debug mode');
-
+        dev.log(_, name: 'Collector debug mode');
       }
     }
 

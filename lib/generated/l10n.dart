@@ -589,6 +589,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Reply`
+  String get reply {
+    return Intl.message(
+      'Reply',
+      name: 'reply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connecting to chat. Please wait!`
+  String get connecting_to_chat {
+    return Intl.message(
+      'Connecting to chat. Please wait!',
+      name: 'connecting_to_chat',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Message deleted`
+  String get message_deleted {
+    return Intl.message(
+      'Message deleted',
+      name: 'message_deleted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

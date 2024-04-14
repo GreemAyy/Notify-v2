@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Complete"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "connecting_to_chat": MessageLookupByLibrary.simpleMessage(
+            "Connecting to chat. Please wait!"),
         "create": MessageLookupByLibrary.simpleMessage("Create"),
         "create_group": MessageLookupByLibrary.simpleMessage("Create group"),
         "dark_theme": MessageLookupByLibrary.simpleMessage("Dark"),
@@ -50,10 +52,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "home_task_header": MessageLookupByLibrary.simpleMessage("Tasks"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "light_theme": MessageLookupByLibrary.simpleMessage("Light"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "log_btn": MessageLookupByLibrary.simpleMessage("Log"),
         "logout": MessageLookupByLibrary.simpleMessage("Log out"),
         "max": MessageLookupByLibrary.simpleMessage("Max"),
         "message": MessageLookupByLibrary.simpleMessage("Message"),
+        "message_deleted":
+            MessageLookupByLibrary.simpleMessage("Message deleted"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "no_access_to_gallery":
@@ -61,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_photo": MessageLookupByLibrary.simpleMessage("No photo"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
+        "reply": MessageLookupByLibrary.simpleMessage("Reply"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "send": MessageLookupByLibrary.simpleMessage("Send"),

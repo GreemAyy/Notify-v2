@@ -1,6 +1,8 @@
+import 'package:notify/sockets/chatSockets.dart';
 import 'package:notify/store/store.dart';
 import 'package:notify/widgets/group/ShowGroupCreateModal.dart';
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../generated/l10n.dart';
 import '../sockets/sockets.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
@@ -18,7 +20,14 @@ class _StateHomeScreen extends State<HomeScreen>{
   void initState() {
     super.initState();
     startSocketUpdateWatcher();
+    startChatSockets();
     connectSocket();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // store.get<Socket>('socket')!.disconnect();
   }
 
   @override

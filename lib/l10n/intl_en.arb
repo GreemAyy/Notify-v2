@@ -52,5 +52,9 @@
   "already_picked": "Already picked",
   "max": "Max",
   "no_access_to_gallery": "No access to gallery!",
-  "allow": "Allow"
+  "allow": "Allow",
+  "reply": "Reply",
+  "connecting_to_chat": "Connecting to chat. Please wait!",
+  "loading": "Loading...",
+  "message_deleted": "Message deleted"
 }

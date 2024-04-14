@@ -52,5 +52,9 @@
   "already_picked": "Уже выбрано",
   "max": "Максимум",
   "no_access_to_gallery": "Нет доступа к галерее",
-  "allow": "Разрешить"
+  "allow": "Разрешить",
+  "reply": "Ответить",
+  "connecting_to_chat": "Подключение к чату. Ожидайте",
+  "loading": "Загрузка...",
+  "message_deleted": "Сообщение удалено"
 }

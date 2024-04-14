@@ -5,8 +5,10 @@ import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
 import 'package:notify/screens/Chat.screen.dart';
+import 'package:notify/store/store.dart';
 import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
 import '../../generated/l10n.dart';
+import '../../http/messages.http.dart';
 import '../../methods/chat.dart';
 
 class MessageItem extends StatefulWidget{
@@ -14,10 +16,12 @@ class MessageItem extends StatefulWidget{
     super.key,
     required this.message,
     this.onMessageOpen,
-    this.self = true
+    this.self = true,
+    this.fullscreen = false
   });
   Message message;
   bool self;
+  bool fullscreen;
   void Function(Message message)? onMessageOpen;
 
   @override
@@ -37,20 +41,20 @@ class _StateMessageItem extends State<MessageItem>{
     final theme = Theme.of(context);
     
     return GestureDetector(
-      onHorizontalDragStart: (details){
+      onHorizontalDragStart: widget.fullscreen ? null : (details){
         setState(() {
           isOnDrag = true;
           xStart = details.globalPosition.dx;
         });
       },
-      onHorizontalDragUpdate: (details){
+      onHorizontalDragUpdate: widget.fullscreen ? null : (details){
         setState(() {
           final calc = (details.globalPosition.dx-xStart);
           if(calc>0) isOnDrag = false;
           if(calc<0&&calc.abs()<25) xPos = calc.abs();
         });
       },
-      onHorizontalDragEnd: (details){
+      onHorizontalDragEnd: widget.fullscreen ? null : (details){
         setState(() {
           if(isOnDrag) rxPickedReplyMessage.value = message;
           isOnDrag = false;
@@ -61,8 +65,9 @@ class _StateMessageItem extends State<MessageItem>{
           AnimatedPositioned(
             duration: isOnDrag ? Duration.zero : const Duration(milliseconds: 100),
             child: InkWell(
-                onLongPress: (){
-
+                onLongPress: widget.fullscreen ? null : (){
+                  FocusScope.of(context).unfocus();
+                  rxPickedMessage.value = message;
                 },
                 child: AnimatedAlign(
                     alignment: widget.self ? Alignment.centerLeft : (isOnDrag ? Alignment.centerLeft : Alignment.centerRight),
@@ -86,6 +91,11 @@ class _StateMessageItem extends State<MessageItem>{
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  if(message.replyTo!=0)
+                                    ...[
+                                      ReplyMessageItem(id: message.replyTo),
+                                      const SizedBox(height: 5),
+                                    ],
                                   if(message.media.isNotEmpty)
                                     GridMessageMedia(media:message.media),
                                   Text(
@@ -131,9 +141,11 @@ class _StateMessageItem extends State<MessageItem>{
 class GridMessageMedia extends StatelessWidget{
   GridMessageMedia({
     super.key,
-    required this.media
+    required this.media,
+    this.second = false
   });
   List<MessageMedia> media;
+  bool second;
   int heroCounter = 0;
 
   @override
@@ -141,7 +153,7 @@ class GridMessageMedia extends StatelessWidget{
     final screenSize = MediaQuery.of(context).size;
     final imageMaxWidth = screenSize.width*.75;
 
-    return Container(
+    return SizedBox(
       width: screenSize.width*.8,
       child: Column(
         children: [
@@ -155,7 +167,7 @@ class GridMessageMedia extends StatelessWidget{
             children: media.where((e) => e.type.value == MessageMediaDataType.photo.value).map((item){
               final wherePhoto = media.where((e) => e.type.value == MessageMediaDataType.photo.value).toList();
               heroCounter++;
-              final heroTag = "hero_chat_image_${item.id}_$heroCounter";
+              final heroTag = "hero_chat_image_${item.id}_${heroCounter}_${second?1:0}";
 
               return InkWell(
                 borderRadius: BorderRadius.circular(10),
@@ -261,6 +273,70 @@ class _StateTaskGridItem extends State<TaskGridItem>{
             )
         )
       )
+    );
+  }
+}
+
+final Map<int, Message?> _loadedReplyMessages = {};
+
+class ReplyMessageItem extends StatefulWidget{
+  ReplyMessageItem({
+    super.key,
+    required this.id
+  });
+  int id;
+
+  @override
+  State<StatefulWidget> createState() => _StateReplyMessageItem();
+}
+
+class _StateReplyMessageItem extends State<ReplyMessageItem>{
+  bool isLoading = true;
+  Message? message;
+
+  initState(){
+    if(widget.id == -1){
+      setState(() => isLoading = false);
+    }
+    else if(_loadedReplyMessages[widget.id]==null){
+      MessagesHttp.getSingle(widget.id)
+      .then((value){
+        setState(() {
+          message = value;
+          isLoading = false;
+        });
+        _loadedReplyMessages[widget.id] = value;
+      });
+    }else{
+      setState(() {
+        message = _loadedReplyMessages[widget.id];
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){
+        store.updateWithData('scroll_to_message', widget.id);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 3
+            )
+          ),
+          color: Theme.of(context).primaryColor.withOpacity(.3)
+        ),
+        child: Text(
+          isLoading ? S.of(context).loading: message==null ? S.of(context).message_deleted : message!.text,
+          overflow: TextOverflow.ellipsis
+        )
+      ),
     );
   }
 }

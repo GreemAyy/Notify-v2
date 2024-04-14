@@ -6,6 +6,7 @@ import 'package:notify/sockets/notification.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../custom_classes/task.dart';
+import '../http/groups.http.dart';
 import '../store/store.dart';
 
 void connectSocket(){
@@ -14,17 +15,31 @@ void connectSocket(){
       IO.OptionBuilder()
       .setTransports(['websocket'])
       .setPath('/socket.io')
+      .enableReconnection()
       .build()
   );
+
+  socket.connect().connect().connect();
+
   store.set('socket', socket);
+
   socket.onDisconnect((data){
-    socket.disconnect();
-    socket.dispose();
     Timer? timer;
     timer = Timer(const Duration(seconds: 10), (){
-      connectSocket();
+      socket.connect();
       timer!.cancel();
     });
+  });
+  socket.onConnect((data) async {
+    List<Group> groups;
+    if(store.get('groups') == null) {
+      groups = await GroupsHttp.getUsersGroups(store.get<int>('id')!);
+    } else {
+      groups = store.get<List<Group>>('groups')!;
+    }
+    for(var group in groups) {
+      socket.emit('connect-to-chat', {'group_id':group.id});
+    }
   });
 }
 
@@ -33,7 +48,7 @@ abstract class SocketCommand{
   static const delete = 'delete';
   static const change = 'change';
 }
-//SocketCommand
+
 void updateSocket(Task task, String command){
   DateTime dateFrom = DateTime(task.yearFrom,task.monthFrom, task.dayFrom);
   DateTime dateTo = DateTime(task.yearTo,task.monthTo, task.dayTo);

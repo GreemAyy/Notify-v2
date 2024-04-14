@@ -11,4 +11,5 @@ var store = Collector({
    'group':0,
    'groups':<Group>[],
    'task_is_loading':false,
-}, logMessages: true);
+   'on_chat':false
+});

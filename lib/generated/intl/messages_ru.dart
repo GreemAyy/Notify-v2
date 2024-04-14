@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Отменить"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Выполнить"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Удалить"),
+        "connecting_to_chat": MessageLookupByLibrary.simpleMessage(
+            "Подключение к чату. Ожидайте"),
         "create": MessageLookupByLibrary.simpleMessage("Создать"),
         "create_group": MessageLookupByLibrary.simpleMessage("Создать группу"),
         "dark_theme": MessageLookupByLibrary.simpleMessage("Тёмная"),
@@ -51,10 +53,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "home_task_header": MessageLookupByLibrary.simpleMessage("Задачи"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
         "light_theme": MessageLookupByLibrary.simpleMessage("Светлая"),
+        "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
         "log_btn": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
         "max": MessageLookupByLibrary.simpleMessage("Максимум"),
         "message": MessageLookupByLibrary.simpleMessage("Сообщение"),
+        "message_deleted":
+            MessageLookupByLibrary.simpleMessage("Сообщение удалено"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("Мои задачи"),
         "name": MessageLookupByLibrary.simpleMessage("Имя"),
         "no_access_to_gallery":
@@ -62,6 +67,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_photo": MessageLookupByLibrary.simpleMessage("Нет фото"),
         "password": MessageLookupByLibrary.simpleMessage("Пароль"),
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),
+        "reply": MessageLookupByLibrary.simpleMessage("Ответить"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),

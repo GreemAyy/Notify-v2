@@ -14,6 +14,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../generated/l10n.dart';
+import '../../store/store_lib.dart';
 
 class BottomMessageBar extends StatefulWidget{
   const BottomMessageBar({
@@ -40,6 +41,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   bool isOpen = false;
   bool isReplyOpen = false;
   bool isUploading = false;
+  bool showSendButton = false;
   double yStart = 0;
   late TextEditingController _controller;
   late double startPos = widget.openHeight;
@@ -63,9 +65,30 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   void dispose() {
     super.dispose();
     replyWatcher!();
+    _controller.removeListener(_textFieldListener);
+  }
+
+  void _textFieldListener(){
+    setState(() => showSendButton = _controller.text.isNotEmpty);
   }
 
   void sendMessage() async {
+    if(!(store.get<Socket>('socket')!.connected)){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: Text(
+            S.of(context).connecting_to_chat,
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: Colors.white,
+              fontWeight: FontWeight.w600
+            )
+          )
+        )
+      );
+      return;
+    }
+
     setState(() => isUploading = true);
     final imagesIds = [];
 
@@ -92,7 +115,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
     final socket = store.get<Socket>('socket')!;
     _controller.clear();
     rxPickedReplyMessage.value = null;
-    rxImageFiles.value = <AssetEntity>[];
+    photoUpdater.update('clear');
     final messageId = await MessagesHttp.createMessage(newMessage);
     if(messageId!=0){
       newMessage.id = messageId;
@@ -101,7 +124,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
     setState(() => isUploading = false);
   }
 
-  void _textFieldListener(){
+  void _focusNodeListener(){
     if(_focusNode!.hasFocus&&yPos>widget.openHeight){
       yPos = widget.openHeight;
     }
@@ -210,26 +233,34 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                                   onInput: (text) {},
                                                   getFocusNode: (node) {
                                                     _focusNode = node;
-                                                    _focusNode!.addListener(_textFieldListener);
+                                                    _focusNode!.addListener(_focusNodeListener);
                                                   },
-                                                  getController: (controller) => _controller = controller
+                                                  getController: (controller){
+                                                    _controller = controller;
+                                                    _controller.addListener(_textFieldListener);
+                                                  }
                                               )
                                           ),
-                                          if(!isUploading)
+                                          if(!isUploading&&showSendButton)
                                             IconButton(
                                                 onPressed: sendMessage,
                                                 icon: Icon(
                                                     Icons.send,
+                                                    size: 25,
                                                     color: theme.primaryColor
                                                 )
-                                            )
-                                          else
+                                            ),
+                                          if(isUploading)
                                             Padding(
                                               padding: const EdgeInsets.symmetric(horizontal: 10),
                                               child: CircularProgressIndicator(
                                                   color: theme.primaryColor
                                               )
-                                            )
+                                            ),
+                                          if(!showSendButton)
+                                          const SizedBox(
+                                            width: 10
+                                          )
                                         ]
                                     )
                                   ]
@@ -336,6 +367,7 @@ class TaskMessagePicker extends StatelessWidget{
 }
 
 final rxImageFiles = Reactive(<AssetEntity>[]);
+final photoUpdater = Updater();
 
 class PhotoPicker extends StatefulWidget{
   PhotoPicker({
@@ -359,6 +391,19 @@ class _StatePhotoPicker extends State<PhotoPicker>{
   void initState() {
     super.initState();
     init();
+    photoUpdater.watch('clear', (_) {
+      setState(() {
+        pickedImagesId = [];
+        pickedImages = [];
+        widget.onChangePick([]);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    photoUpdater.unSee('clear');
   }
 
   void init() async {
@@ -380,7 +425,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
       rxImageFiles.value = images;
       setState(() {});
     }else if(req.hasAccess){
-      print('has');
+
     }
     else{
       setState(() => haveAccess = false);
@@ -402,8 +447,9 @@ class _StatePhotoPicker extends State<PhotoPicker>{
             ElevatedButton(
                 onPressed: () async {
                   final status = await Permission.photos.request();
-                  if(status.isGranted) init();
-                  else{
+                  if(status.isGranted) {
+                    init();
+                  } else{
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                        duration: const Duration(seconds: 1),
@@ -537,7 +583,8 @@ class ReplyBlock extends StatelessWidget{
             ),
             child: Row(
                 children: [
-                  Expanded(child: Text(rxPickedReplyMessage.value?.text??''))
+                  const SizedBox(width: 5),
+                  Expanded(child: Text(rxPickedReplyMessage.value?.text??'', overflow: TextOverflow.ellipsis))
                 ]
             )
         )
