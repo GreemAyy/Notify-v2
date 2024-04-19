@@ -33,10 +33,11 @@ abstract class TasksHttp{
     return body;
   }
 
-  static Future<Task> getSingleTask(int id) async {
+  static Future<Task?> getSingleTask(int id) async {
     var url = Uri.parse('$URL_MAIN/api/tasks/single/$id');
     var req = await http.get(url);
-    var body = Task.fromJson(jsonDecode(req.body));
+    if(jsonDecode(req.body)['task']==null) return null;
+    var body = Task.fromJson(jsonDecode(req.body)['task']);
     return body;
   }
   

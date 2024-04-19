@@ -629,6 +629,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Task deleted`
+  String get task_deleted {
+    return Intl.message(
+      'Task deleted',
+      name: 'task_deleted',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -69,7 +69,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   }
 
   void _textFieldListener(){
-    setState(() => showSendButton = _controller.text.isNotEmpty);
+    setState(() => showSendButton = _controller.text.isNotEmpty||pickedImages.isNotEmpty);
   }
 
   void sendMessage() async {
@@ -95,7 +95,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
     if(pickedImages.isNotEmpty) {
       for (var image in pickedImages) {
         final create = await ImagesHttp.sendSingleFile((await image.file)!);
-        if ((create['added'] as bool)) imagesIds.add(create['id']);
+        if (create['added'] as bool) imagesIds.add(create['id']);
       }
     }
 
@@ -115,6 +115,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
     final socket = store.get<Socket>('socket')!;
     _controller.clear();
     rxPickedReplyMessage.value = null;
+    rxPickedTasksList.value = [];
     photoUpdater.update('clear');
     final messageId = await MessagesHttp.createMessage(newMessage);
     if(messageId!=0){
@@ -122,6 +123,10 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
       socket.emit('message', newMessage);
     }
     setState(() => isUploading = false);
+    store.updateWithData(
+        'scroll_to_message',
+        (rxGroupMessages.value[store.get<int>('group')!]??[]).first.id
+    );
   }
 
   void _focusNodeListener(){
@@ -270,7 +275,12 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                   duration: isOnDrag ? Duration.zero : openDuration,
                                   height: isOpen ? (yPos - widget.height): 0,
                                   child: PhotoPicker(
-                                    onChangePick: (images) => pickedImages = images
+                                    onChangePick: (images) {
+                                      setState(() {
+                                        pickedImages = images;
+                                        showSendButton = images.isNotEmpty||_controller.text.isNotEmpty;
+                                      });
+                                    }
                                   )
                               )
                             ]
@@ -424,9 +434,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
       isLoading = false;
       rxImageFiles.value = images;
       setState(() {});
-    }else if(req.hasAccess){
-
-    }
+    }else if(req.hasAccess){}
     else{
       setState(() => haveAccess = false);
     }
@@ -537,7 +545,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
               border: pickedImagesId.contains(image.id)?Border.all(
                 color: theme.primaryColor,
                 width: 5
-              ):null
+              ) : null
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),

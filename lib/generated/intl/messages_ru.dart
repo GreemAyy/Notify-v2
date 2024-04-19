@@ -80,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "system_theme": MessageLookupByLibrary.simpleMessage("Системная"),
         "task": MessageLookupByLibrary.simpleMessage("Задача"),
         "task_date": MessageLookupByLibrary.simpleMessage("Дата"),
+        "task_deleted": MessageLookupByLibrary.simpleMessage("Задача удалена"),
         "task_description": MessageLookupByLibrary.simpleMessage("Описание"),
         "task_from": MessageLookupByLibrary.simpleMessage("С"),
         "task_time": MessageLookupByLibrary.simpleMessage("Время"),

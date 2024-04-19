@@ -260,6 +260,11 @@ class Collector{
       return _emitter.getEventsCount(key)-1;
     }
 
+    void Function() watchWithDeleteCallback<CallbackType>(String key, void Function(CallbackType data) callback){
+      final watchIndex = watch(key, callback);
+      return () => unSeeAt(key, watchIndex);
+    }
+
     void anyWatch(void Function(String key, dynamic data) callback){
       _emitter.on('__ANY__WATCH__', () {
         callback(_lastUpdate.key, _lastUpdate.data);

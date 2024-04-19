@@ -100,6 +100,7 @@ class _StateMessagesList extends State<MessagesList>{
     super.dispose();
     messageUpdater.unSee('new');
     messageUpdater.unSee('delete');
+    store.unSee('scroll_to_message');
     _itemPositionListener.itemPositions.removeListener(_itemPositionListenerListener);
   }
 
@@ -117,8 +118,8 @@ class _StateMessagesList extends State<MessagesList>{
     });
   }
 
-  int _scrollToListener(){
-     return store.watch<int>('scroll_to_message', (id) async {
+  void _scrollToListener(){
+     store.watch<int>('scroll_to_message', (id) async {
       var index = -1;
       for (var i = 0; i < messagesList.length; i++) {
        if(messagesList[i].id==id) {
@@ -127,12 +128,19 @@ class _StateMessagesList extends State<MessagesList>{
       }
       if(index==-1){
         await getMessagesUntil(id);
-        index = messagesList.length - 1;
+        for (var i = 0; i < messagesList.length; i++) {
+          if(messagesList[i].id==id) {
+            index = i;
+          }
+        }
       }
-      _itemScrollController.scrollTo(
-          index: index,
-          duration: const Duration(milliseconds: 300)
-      );
+      if(index<0) return;
+      try{
+        _itemScrollController.scrollTo(
+            index: index,
+            duration: const Duration(milliseconds: 300)
+        );
+      }catch(_){}
     });
   }
 

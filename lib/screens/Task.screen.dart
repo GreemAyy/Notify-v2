@@ -97,14 +97,11 @@ class _StateTaskScreen extends State<TaskScreen>{
     );
     if(jsonEncode(updatedTask.toJson()) != jsonEncode(task.toJson())){
       var update = await TasksHttp.updateTask(updatedTask);
-      if(update) store.update('update_tasks_list');
+      if(update) store.updateWithData('update_tasks_list', updatedTask);
     }
     setState(() => isLoading = false);
   }
 
-  void replyTask(){
-
-  }
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

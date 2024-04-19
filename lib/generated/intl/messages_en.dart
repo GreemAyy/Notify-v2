@@ -79,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "system_theme": MessageLookupByLibrary.simpleMessage("System"),
         "task": MessageLookupByLibrary.simpleMessage("Task"),
         "task_date": MessageLookupByLibrary.simpleMessage("Date"),
+        "task_deleted": MessageLookupByLibrary.simpleMessage("Task deleted"),
         "task_description": MessageLookupByLibrary.simpleMessage("Description"),
         "task_from": MessageLookupByLibrary.simpleMessage("From"),
         "task_time": MessageLookupByLibrary.simpleMessage("Time"),

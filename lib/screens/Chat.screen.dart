@@ -58,10 +58,7 @@ class _StateChatScreen extends State<ChatScreen>{
 
     return Scaffold(
       body: SafeArea(
-        child: SizedBox(
-          height: screenSize.height,
-          width: screenSize.width,
-          child: Stack(
+        child: Stack(
             children: [
               AnimatedPositioned(
                   duration: const Duration(milliseconds: 100),
@@ -82,33 +79,32 @@ class _StateChatScreen extends State<ChatScreen>{
                   width: screenSize.width,
                   height: topBarHeight,
                   child: Container(
-                    color: theme.scaffoldBackgroundColor,
-                    child: GroupListItem(
-                        onTap: (){
-                          Navigator.of(context)
-                              .pushNamed('/group',arguments: {"group":group});
-                        },
-                        group: group,
-                        createLeading: true,
-                        padding: (horizontal: 5, vertical: 5),
-                        heroTag: 'hero_group_image_${group.id}'
-                    )
+                      color: theme.scaffoldBackgroundColor,
+                      child: GroupListItem(
+                          onTap: (){
+                            Navigator.of(context)
+                                .pushNamed('/group',arguments: {"group":group});
+                          },
+                          group: group,
+                          createLeading: true,
+                          padding: (horizontal: 5, vertical: 5),
+                          heroTag: 'hero_group_image_${group.id}'
+                      )
                   )
               ),
               Positioned(
-                bottom: 0,
-                child: BottomMessageBar(
+                  bottom: 0,
+                  child: BottomMessageBar(
                     height: bottomBarHeight,
                     openHeight: bottomBarOpenHeight,
                     replyHeight: bottomReplyHeight,
                     onReply: () => setState(() => isReplyOpen = rxPickedReplyMessage.value != null),
                     onOpen: () => setState(() => isOpen = true),
                     onClose: () => setState(() => isOpen = false),
-                )
+                  )
               ),
               MessageFullscreen()
             ]
-          )
         )
       )
     );

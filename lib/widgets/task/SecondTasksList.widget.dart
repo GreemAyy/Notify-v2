@@ -28,18 +28,14 @@ class _StateSecondTasksList extends State<SecondTasksList>{
   late final _S = S.of(context);
   late var tasksList = widget.tasks;
   late bool isLoading = widget.initLoad;
-  int dateWatchIndex = 0;
-  int createTaskWatchIndex = 0;
-  int deleteTaskWatchIndex = 0;
-  int changeStatusWatchIndex = 0;
-  int updateListWatchIndex = 0;
+  Map<String, int> watchersIndexes = {};
 
   @override
   void initState() {
     super.initState();
     if(widget.initLoad){
       loadTasks(store.get('date'));
-      dateWatchIndex = store.watch<DateTime>('date', (date){
+      watchersIndexes['date'] = store.watch<DateTime>('date', (date){
         loadTasks(date);
       });
     }else{
@@ -47,10 +43,20 @@ class _StateSecondTasksList extends State<SecondTasksList>{
         setState(() => tasksList = tasks);
       });
     }
-    updateListWatchIndex = store.watch('update_tasks_list', (_) {
-      loadTasks(store.get<DateTime>('date')!);
+    watchersIndexes['update_tasks_list'] = store.watch<Task?>('update_tasks_list', (task) {
+      if(task is Task){
+        setState(() {
+          if(tasksList.where((e) => e.id==task.id).isNotEmpty){
+            tasksList = tasksList.map((i) => i.id==task.id ? task : i).toList();
+          }else{
+            tasksList.add(task);
+          }
+        });
+      }else{
+        loadTasks(store.get<DateTime>('date')!);
+      }
     });
-    deleteTaskWatchIndex = store.watch<Task>('delete_task', (task) async {
+    watchersIndexes['delete_task'] = store.watch<Task>('delete_task', (task) async {
       var isDeleted = await TasksHttp.deleteTask(task.id);
       if(isDeleted){
         setState(() {
@@ -59,7 +65,7 @@ class _StateSecondTasksList extends State<SecondTasksList>{
         updateSocket(task, SocketCommand.delete);
       }
     });
-    changeStatusWatchIndex = store.watch<({int status, Task task})>('change_task_status', (data) async {
+    watchersIndexes['change_task_status'] = store.watch<({int status, Task task})>('change_task_status', (data) async {
       var task = data.task;
       var isChanged = await TasksHttp.changeTaskStatus(data.task.id, data.status);
       if(isChanged){
@@ -99,11 +105,8 @@ class _StateSecondTasksList extends State<SecondTasksList>{
   @override
   void dispose() {
     super.dispose();
-    if(widget.initLoad) store.unSeeAt('date', dateWatchIndex);
-    else store.unSee('search_tasks');
-    store.unSeeAt('delete_task', deleteTaskWatchIndex);
-    store.unSeeAt('change_task_status', changeStatusWatchIndex);
-    store.unSeeAt('update_tasks_list', updateListWatchIndex);
+    if(!widget.initLoad) store.unSee('search_tasks');
+    watchersIndexes.forEach((key, value) => store.unSeeAt(key, value));
   }
 
   @override

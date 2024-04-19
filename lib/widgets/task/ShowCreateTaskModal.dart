@@ -106,7 +106,7 @@ class _StateCreateTask extends State<_CreateTask>{
     try{
       final createTask = await TasksHttp.createTask(task);
       if(createTask['created'] as bool){
-        store.update('update_tasks_list');
+        store.updateWithData('update_tasks_list', task);
         if(store.get<int>('group')!=0){
           task.id = createTask['id'];
           updateSocket(task, SocketCommand.update);

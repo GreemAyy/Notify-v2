@@ -56,5 +56,6 @@
   "reply": "Ответить",
   "connecting_to_chat": "Подключение к чату. Ожидайте",
   "loading": "Загрузка...",
-  "message_deleted": "Сообщение удалено"
+  "message_deleted": "Сообщение удалено",
+  "task_deleted": "Задача удалена"
 }

@@ -200,7 +200,8 @@ class GridMessageMedia extends StatelessWidget{
   }
 }
 
-final Map<int, Task> _loadedTasks = {};
+final Map<int, Task?> _loadedTasks = {};
+final Map<int, bool?> _isLoadedTasks = {};
 
 class TaskGridItem extends StatefulWidget{
   TaskGridItem({
@@ -215,16 +216,29 @@ class TaskGridItem extends StatefulWidget{
 
 class _StateTaskGridItem extends State<TaskGridItem>{
   bool isLoading = true;
+  final deleteCallbacks = <void Function()>[];
   Task? task;
 
   @override
   void initState() {
     super.initState();
-    if(_loadedTasks[widget.id]==null){
-      TasksHttp.getSingleTask(widget.id)
-          .then((value){
+    deleteCallbacks.addAll([
+      store.watchWithDeleteCallback<Task>('delete_task', (deleteTask) {
+        if(deleteTask.id==(task!=null?task!.id:0)){
+          setState(() => task = null);
+        }
+      }),
+      store.watchWithDeleteCallback<Task?>('update_tasks_list', (updatedTask) {
+        setState(() => task = updatedTask);
+        _loadedTasks[widget.id] = updatedTask;
+      })
+    ]);
+
+    if(_loadedTasks[widget.id]==null&&_isLoadedTasks[widget.id]==null){
+      TasksHttp.getSingleTask(widget.id).then((value){
         task = value;
         _loadedTasks[widget.id] = value;
+        _isLoadedTasks[widget.id] = true;
         isLoading = false;
         setState((){});
       });
@@ -237,6 +251,12 @@ class _StateTaskGridItem extends State<TaskGridItem>{
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    deleteCallbacks.forEach((cb) => cb());
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final imageMaxWidth = screenSize.width*.75;
@@ -246,7 +266,11 @@ class _StateTaskGridItem extends State<TaskGridItem>{
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: InkWell(
-        onTap: () => Navigator.pushNamed(context, '/task', arguments: {"task":task!}),
+        onTap: (){
+          if(task!=null) {
+            Navigator.pushNamed(context, '/task', arguments: {"task": task!});
+          }
+        },
         borderRadius: BorderRadius.circular(10),
         child: AnimatedContainer(
             duration: const Duration(milliseconds: 100),
@@ -263,6 +287,8 @@ class _StateTaskGridItem extends State<TaskGridItem>{
                   isLoading?
                   const CircularProgressIndicator(color: Colors.white):
                   Text(
+                      task==null?
+                      _S.task_deleted:
                       '${_S.task} №${widget.id}',
                       style: theme.textTheme.bodyMedium!.copyWith(
                           fontWeight: FontWeight.w600,
@@ -319,7 +345,7 @@ class _StateReplyMessageItem extends State<ReplyMessageItem>{
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        store.updateWithData('scroll_to_message', widget.id);
+        if(message!=null) store.updateWithData('scroll_to_message', widget.id);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
