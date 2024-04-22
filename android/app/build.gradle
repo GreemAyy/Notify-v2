@@ -24,7 +24,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.dart_flutter"
-    compileSdkVersion flutter.targetSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     defaultConfig {

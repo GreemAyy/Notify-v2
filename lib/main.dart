@@ -4,20 +4,18 @@ import 'package:notify/store/store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'generated/l10n.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(const InitApp());
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class InitApp extends StatefulWidget {
+  const InitApp({super.key});
 
   @override
-  State<MyApp> createState() => _StateMyApp();
+  State<InitApp> createState() => _StateInitApp();
 }
 
-class _StateMyApp extends State<MyApp> {
-  late final AppLifecycleListener _listener;
+class _StateInitApp extends State<InitApp> {
   var themeMode = store.get<ThemeMode>('theme_mode')!;
   var currentLocale = store.get<Locale>('locale')!;
 
@@ -32,16 +30,6 @@ class _StateMyApp extends State<MyApp> {
       setState(() => currentLocale = locale);
       (await SharedPreferences.getInstance()).setString('locale', locale.languageCode);
     });
-
-    _listener = AppLifecycleListener(
-      onDetach: () => store.get<IO.Socket>('socket')!.close()
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _listener.dispose();
   }
 
   @override
@@ -60,7 +48,7 @@ class _StateMyApp extends State<MyApp> {
       themeMode: themeMode,
       initialRoute: initialRoute,
       // routes: routes,
-      onGenerateRoute: myOnGenerateRoute
+      onGenerateRoute: generateRoute
     );
   }
 }

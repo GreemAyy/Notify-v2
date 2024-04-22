@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
@@ -70,12 +68,12 @@ class _StateMessageItem extends State<MessageItem>{
                   rxPickedMessage.value = message;
                 },
                 child: AnimatedAlign(
-                    alignment: widget.self ? Alignment.centerLeft : (isOnDrag ? Alignment.centerLeft : Alignment.centerRight),
+                    alignment: !widget.self ? Alignment.centerLeft : (isOnDrag ? Alignment.centerLeft : Alignment.centerRight),
                     duration: const Duration(milliseconds: 100),
                     child: Padding(
                         padding: const EdgeInsets.only(left: 5, top: 10, right: 10, bottom: 5),
                         child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 100),
+                            duration: const Duration(milliseconds: 250),
                             width: MediaQuery.of(context).size.width*(isThisMessageOpen?1:.8),
                             padding: const EdgeInsets.only(left: 5, top: 10, right: 5, bottom: 5),
                             decoration: BoxDecoration(
@@ -83,8 +81,8 @@ class _StateMessageItem extends State<MessageItem>{
                                 borderRadius: BorderRadius.only(
                                     topLeft:const Radius.circular(15),
                                     topRight:const Radius.circular(15),
-                                    bottomRight:!widget.self?Radius.zero:const Radius.circular(15),
-                                    bottomLeft: widget.self?Radius.zero:const Radius.circular(15)
+                                    bottomRight:(widget.self&&!isOnDrag)?Radius.zero:const Radius.circular(15),
+                                    bottomLeft: (!widget.self&&!isOnDrag)?Radius.zero:const Radius.circular(15)
                                 ),
                                 border: isThisMessageOpen?Border.all(color: theme.primaryColor, width: 2):null
                             ),

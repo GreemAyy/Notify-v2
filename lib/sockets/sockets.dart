@@ -90,8 +90,8 @@ void startSocketUpdateWatcher() {
 bool _update(Map<String, dynamic> data, String command){
   final task = Task.fromJson(data);
   if(task.creatorId == store.get<int>('id')!) return false;
-  int groupId = task.groupId;
-  int group = store.get<int>('group')!;
+  final groupId = task.groupId;
+  final group = store.get<int>('group')!;
   List<int> groupsIds = (store.get<List<Group>>('groups')!).map((e) => e.id).toList();
   if(groupsIds.contains(groupId)){
     if(group==0) return true;

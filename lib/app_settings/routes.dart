@@ -13,70 +13,11 @@ import 'package:notify/screens/Tasks.screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Route<dynamic> myOnGenerateRoute(RouteSettings settings){
-  switch(settings.name){
-    case '/init':
-      return CupertinoPageRoute(
-          builder:  routes['/init']!,
-          settings: settings
-      );
-    case '/auth':
-      return CupertinoPageRoute(
-          builder:  routes['/auth']!,
-          settings: settings
-      );
-    case '/home':
-      return MaterialPageRoute(
-          builder:  routes['/home']!,
-          settings: settings
-      );
-    case '/my-tasks':
-      return CupertinoPageRoute(
-          builder:  routes['/my-tasks']!,
-          settings: settings
-      );
-    case '/image':
-      return MaterialPageRoute(
-          builder: routes['/image']!,
-          settings: settings
-      );
-    case '/image-with-task':
-      return MaterialPageRoute(
-          builder: routes['/image-with-task']!,
-          settings: settings
-      );
-    case '/group-tasks':
-      return CupertinoPageRoute(
-          builder: routes['/group-tasks']!,
-          settings: settings
-      );
-    case '/group':
-      return CupertinoPageRoute(
-          builder: routes['/group']!,
-          settings: settings
-      );
-    case '/search':
-      return CupertinoPageRoute(
-          builder: routes['/search']!,
-          settings: settings
-      );
-    case '/task':
-      return CupertinoPageRoute(
-          builder: routes['/task']!,
-          settings: settings
-      );
-    case '/chat':
-      return CupertinoPageRoute(
-          builder: routes['/chat']!,
-          settings: settings
-      );
-    default:
-      return CupertinoPageRoute(
-      builder: routes['/init']!,
+Route<dynamic> generateRoute(RouteSettings settings) =>
+    CupertinoPageRoute(
+      builder:  routes[settings.name]??routes['/init']!,
       settings: settings
     );
-  }
-}
 
 Map<String, Widget Function(BuildContext)> routes = {
   '/init':(context) => const InitScreen(),

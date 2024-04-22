@@ -17,7 +17,7 @@ final focusEmitter = Reactive(0);
 
 class _StateAuthScreen extends State<AuthScreen>{
   late final _S = S.of(context);
-  int currentIndex = 0;
+  int currentIndex = focusEmitter.value;
   String email = '';
   String password = '';
   bool isLoading = false;
@@ -30,6 +30,7 @@ class _StateAuthScreen extends State<AuthScreen>{
       var auth = await UsersHttp.authUser(email,password);
       if(auth){
         setState(() => currentIndex = 1);
+        focusEmitter.value = 1;
       }else{
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -44,7 +45,6 @@ class _StateAuthScreen extends State<AuthScreen>{
         );
       }
       setState(() => isLoading = false);
-      focusEmitter.value = 1;
     }
   }
 

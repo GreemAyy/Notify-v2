@@ -61,7 +61,7 @@ class _StateInitScreen extends State<InitScreen>{
     if(!access) cleanUser();
 
     if(id==null||hash==null||!access){
-      Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+      Navigator.of(context).pushReplacementNamed('/auth');
     }else{
         store.mapMultiSet({
           "id":id,

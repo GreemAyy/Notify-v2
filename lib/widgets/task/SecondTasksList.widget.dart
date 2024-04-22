@@ -151,15 +151,20 @@ class _StateSecondTasksList extends State<SecondTasksList>{
           )
       );
     }else{
-      return ListView.builder(
-          itemCount: tasksList.length,
-          itemBuilder: (context, index) {
-            var task = tasksList[index];
-            return TaskItem(
-              key: Key(task.id.toString()),
-              task: task
-            );
-          }
+      return RefreshIndicator(
+        onRefresh: () async {
+          loadTasks(DateTime.now());
+        },
+        child: ListView.builder(
+            itemCount: tasksList.length,
+            itemBuilder: (context, index) {
+              var task = tasksList[index];
+              return TaskItem(
+                key: Key(task.id.toString()),
+                task: task
+              );
+            }
+        ),
       );
     }
   }

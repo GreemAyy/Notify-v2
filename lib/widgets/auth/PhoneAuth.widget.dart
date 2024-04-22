@@ -25,6 +25,7 @@ class _StatePhoneAuth extends State<PhoneAuth>{
   @override
   void initState() {
     super.initState();
+    if(focusEmitter.value == 0) _focus.requestFocus();
     focusEmitter.watch((index){
       if(index==0) _focus.requestFocus();
     });
@@ -55,7 +56,7 @@ class _StatePhoneAuth extends State<PhoneAuth>{
     final borderTheme = OutlineInputBorder(
         borderSide: BorderSide(
             color: theme.primaryColor,
-            width: 3
+            width: 1
         ),
         borderRadius: BorderRadius.circular(10),
         gapPadding: 0
@@ -63,7 +64,7 @@ class _StatePhoneAuth extends State<PhoneAuth>{
     final borderTheme2 = OutlineInputBorder(
         borderSide: BorderSide(
             color: theme.primaryColor,
-            width: 3
+            width: 1
         ),
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10),
@@ -128,7 +129,7 @@ class _StatePhoneAuth extends State<PhoneAuth>{
                       ),
                       IconButton(
                           onPressed: ()=>setState(()=>isPasswordShow=!isPasswordShow),
-                          icon: Icon(
+                          icon:Icon(
                             !isPasswordShow ? Icons.visibility : Icons.visibility_off,
                             color: theme.primaryColor,
                           )
