@@ -4,23 +4,24 @@ import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
+import 'package:notify/widgets/chat/MessagesList.widget.dart';
 import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
 import '../../generated/l10n.dart';
 import '../../http/messages.http.dart';
 import '../../methods/chat.dart';
 
 class MessageItem extends StatefulWidget{
-  MessageItem({
+  const MessageItem({
     super.key,
     required this.message,
     this.onMessageOpen,
     this.self = true,
     this.fullscreen = false
   });
-  Message message;
-  bool self;
-  bool fullscreen;
-  void Function(Message message)? onMessageOpen;
+  final Message message;
+  final bool self;
+  final bool fullscreen;
+  final void Function(Message message)? onMessageOpen;
 
   @override
   State<StatefulWidget> createState() => _StateMessageItem();
@@ -142,8 +143,8 @@ class GridMessageMedia extends StatelessWidget{
     required this.media,
     this.second = false
   });
-  List<MessageMedia> media;
-  bool second;
+  final List<MessageMedia> media;
+  final bool second;
   int heroCounter = 0;
 
   @override
@@ -198,15 +199,14 @@ class GridMessageMedia extends StatelessWidget{
   }
 }
 
-final Map<int, Task?> _loadedTasks = {};
-final Map<int, bool?> _isLoadedTasks = {};
+final Map<int, ({bool isLoaded, Task? task})> _loadedTasks = {};
 
 class TaskGridItem extends StatefulWidget{
-  TaskGridItem({
+  const TaskGridItem({
     super.key,
     required this.id
   });
-  int id;
+  final int id;
 
   @override
   State<StatefulWidget> createState() => _StateTaskGridItem();
@@ -228,21 +228,20 @@ class _StateTaskGridItem extends State<TaskGridItem>{
       }),
       store.watchWithDeleteCallback<Task?>('update_tasks_list', (updatedTask) {
         setState(() => task = updatedTask);
-        _loadedTasks[widget.id] = updatedTask;
+        _loadedTasks[widget.id] = (isLoaded: true, task: updatedTask);
       })
     ]);
 
-    if(_loadedTasks[widget.id]==null&&_isLoadedTasks[widget.id]==null){
+    if(_loadedTasks[widget.id]==null){
       TasksHttp.getSingleTask(widget.id).then((value){
         task = value;
-        _loadedTasks[widget.id] = value;
-        _isLoadedTasks[widget.id] = true;
+        _loadedTasks[widget.id] = (isLoaded: true, task: value);
         isLoading = false;
         setState((){});
       });
     }else{
       setState((){
-        task = _loadedTasks[widget.id];
+        task = _loadedTasks[widget.id]!.task;
         isLoading = false;
       });
     }
@@ -301,14 +300,14 @@ class _StateTaskGridItem extends State<TaskGridItem>{
   }
 }
 
-final Map<int, Message?> _loadedReplyMessages = {};
+final Map<int, (Message?,)> _loadedReplyMessages = {};
 
 class ReplyMessageItem extends StatefulWidget{
-  ReplyMessageItem({
+  const ReplyMessageItem({
     super.key,
     required this.id
   });
-  int id;
+  final int id;
 
   @override
   State<StatefulWidget> createState() => _StateReplyMessageItem();
@@ -317,8 +316,11 @@ class ReplyMessageItem extends StatefulWidget{
 class _StateReplyMessageItem extends State<ReplyMessageItem>{
   bool isLoading = true;
   Message? message;
+  List<void Function()> deleters = [];
 
+  @override
   initState(){
+    super.initState();
     if(widget.id == -1){
       setState(() => isLoading = false);
     }
@@ -329,14 +331,36 @@ class _StateReplyMessageItem extends State<ReplyMessageItem>{
           message = value;
           isLoading = false;
         });
-        _loadedReplyMessages[widget.id] = value;
+        _loadedReplyMessages[widget.id] = (value,);
       });
     }else{
       setState(() {
-        message = _loadedReplyMessages[widget.id];
+        message = _loadedReplyMessages[widget.id]!.$1;
         isLoading = false;
       });
     }
+    deleters = [
+      messageUpdater.watchWithDeleteCallback<Message>('update-reply', (data) {
+        if(data.id == widget.id) {
+          try{
+            setState(() => message = data);
+          }catch(_){}
+          _loadedReplyMessages[widget.id] = (data,);
+        }
+      }),
+      messageUpdater.watchWithDeleteCallback<int>('update-reply-delete', (id) {
+        setState((){
+          if(widget.id == id) message = null;
+        });
+        _loadedReplyMessages[id] = (null,);
+      })
+    ];
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    deleters.forEach((cb) => cb());
   }
 
   @override

@@ -12,19 +12,9 @@ void setUser(int id, String hash) async {
   });
   store.onType;
 }
-
+//Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
 void cleanUser() async {
   var prefs = await SharedPreferences.getInstance();
-  prefs.remove('id');
-  prefs.remove('hash');
-  store.mapMultiSet({
-    "id": null,
-    "hash": null
-  });
-}
-
-void logout(BuildContext context) async {
-  final prefs = await SharedPreferences.getInstance();
   prefs.remove('id');
   prefs.remove('hash');
   store.unType.mapMultiSet({
@@ -32,5 +22,4 @@ void logout(BuildContext context) async {
     "hash": null
   });
   store.onType;
-  Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
 }

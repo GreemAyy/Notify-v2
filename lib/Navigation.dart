@@ -12,7 +12,7 @@ class Navigation extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return rxPickedIndex.toBuilder(
-        (context){
+        (context, _){
           final _S = S.of(context);
 
           return Scaffold(

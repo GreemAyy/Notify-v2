@@ -143,7 +143,6 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     final _S = S.of(context);
 
@@ -302,7 +301,7 @@ class TaskMessagePicker extends StatelessWidget{
   Widget build(BuildContext context) {
         final screenSize = MediaQuery.of(context).size;
         final theme = Theme.of(context);
-        return rxPickedTasksList.toBuilder((context){
+        return rxPickedTasksList.toBuilder((context, _){
           final taskList = rxPickedTasksList.value;
 
           return Stack(
@@ -572,7 +571,7 @@ class ReplyBlock extends StatelessWidget{
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return rxPickedReplyMessage.toBuilder((context) {
+    return rxPickedReplyMessage.toBuilder((context, _) {
       return InkWell(
         onTap: (){
           rxPickedReplyMessage.value = null;

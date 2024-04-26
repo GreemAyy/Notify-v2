@@ -50,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Email`
+  /// `E-Mail`
   String get email {
     return Intl.message(
-      'Email',
+      'E-Mail',
       name: 'email',
       desc: '',
       args: [],
@@ -90,10 +90,10 @@ class S {
     );
   }
 
-  /// `Wrong email or password!`
+  /// `Wrong E-Mail or password!`
   String get snack_bar {
     return Intl.message(
-      'Wrong email or password!',
+      'Wrong E-Mail or password!',
       name: 'snack_bar',
       desc: '',
       args: [],
@@ -647,6 +647,11 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'de'),
+      Locale.fromSubtags(languageCode: 'es'),
+      Locale.fromSubtags(languageCode: 'fr'),
+      Locale.fromSubtags(languageCode: 'it'),
+      Locale.fromSubtags(languageCode: 'pt'),
       Locale.fromSubtags(languageCode: 'ru'),
     ];
   }

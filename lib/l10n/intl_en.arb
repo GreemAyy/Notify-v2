@@ -1,9 +1,9 @@
 {
-  "email": "Email",
+  "email": "E-Mail",
   "password": "Password",
   "auth": "Auth",
   "auth_code": "Write code",
-  "snack_bar": "Wrong email or password!",
+  "snack_bar": "Wrong E-Mail or password!",
   "log_btn": "Log",
   "home_header": "Groups",
   "my_tasks_text": "My tasks",

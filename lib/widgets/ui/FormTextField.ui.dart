@@ -40,7 +40,7 @@ class FormTextField extends StatefulWidget{
 }
 
 class _FormTextFieldState extends State<FormTextField>{
-  FocusNode _focusNode = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   late final TextEditingController _controller = TextEditingController(text: widget.initValue??'');
   @override
   void initState() {

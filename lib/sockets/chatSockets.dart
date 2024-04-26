@@ -31,5 +31,21 @@ void startChatSockets() {
         'group_id': groupId
       });
     });
+    socket.on('update-message', (data) {
+      final message = Message.fromJson(data);
+      final groupMessages = rxGroupMessages.value;
+      int index = 0;
+      for (var i = 0; i < groupMessages[message.groupId]!.length; i++) {
+        final item = groupMessages[message.groupId]![i];
+        if(item.id == message.id){
+          index = i;
+        }
+      }
+      rxGroupMessages.value = groupMessages;
+      messageUpdater.updateWithData('update', {
+        "message":message,
+        "index": index
+      });
+    });
   });
 }

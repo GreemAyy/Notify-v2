@@ -13,6 +13,13 @@ class MessagesHttp {
     return body['id'] as int;
   }
 
+   static Future<bool> updateMessage(Message message) async {
+     final url = Uri.parse('$URL_MAIN/api/messages/update');
+     final req = await http.post(url, body: jsonEncode(message.toJson()), headers: {"Content-Type": "application/json"});
+     final body = Map<String, bool>.from(jsonDecode(req.body));
+     return body['updated'] as bool;
+   }
+
   static Future<List<Message>> getMessagesAfterId(int groupId, int messageId) async {
     final url = Uri.parse('$URL_MAIN/api/messages/get-after-id');
     final req = await http.post(url, body: jsonEncode({

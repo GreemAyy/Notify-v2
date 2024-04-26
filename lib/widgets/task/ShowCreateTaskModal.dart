@@ -14,7 +14,7 @@ import '../../sockets/sockets.dart';
 import '../../store/store.dart';
 import '../ui/DatePicker.ui.dart';
 
-var ImagesList = Reactive(<({String type, File file})>[]);
+var rxImagesList = Reactive(<({String type, File file})>[]);
 
 bool moreThen(TimeOfDay from, TimeOfDay to) =>
     (from.hour==to.hour&&from.minute>to.minute)||from.hour>to.hour;
@@ -33,10 +33,10 @@ void showCreateTaskModal(BuildContext context, void Function(int id) onCreate, [
 }
 
 class _CreateTask extends StatefulWidget{
-  _CreateTask({
+  const _CreateTask({
     required this.groupId
   });
-  int groupId;
+  final int groupId;
 
   @override
   State<StatefulWidget> createState() => _StateCreateTask();
@@ -49,13 +49,13 @@ class _StateCreateTask extends State<_CreateTask>{
   String description = '';
   DateTime dateFrom = store.get<DateTime>('date')!;
   DateTime dateTo = store.get<DateTime>('date')!;
-  TimeOfDay timeFrom = const TimeOfDay(hour: 0, minute: 0);
-  TimeOfDay timeTo = const TimeOfDay(hour: 0, minute: 30);
+  TimeOfDay timeFrom = TimeOfDay.now();
+  TimeOfDay timeTo = TimeOfDay.now();
 
   @override
   void dispose() {
     super.dispose();
-    ImagesList.value = [];
+    rxImagesList.value = [];
   }
 
   void showMessage(){
@@ -75,9 +75,9 @@ class _StateCreateTask extends State<_CreateTask>{
   void createTask() async {
     setState(() => isLoading = true);
     var imagesId = [0];
-    if(ImagesList.value.isNotEmpty){
+    if(rxImagesList.value.isNotEmpty){
       imagesId.clear();
-      for(var file in ImagesList.value){
+      for(var file in rxImagesList.value){
         var imageReq = await ImagesHttp.sendSingleFile(file.file);
         if(imageReq['added'] as bool){
           imagesId.add(imageReq['id']);
@@ -211,9 +211,9 @@ class _StateCreateTask extends State<_CreateTask>{
                                CameraFilePicker(
                                    size: 40,
                                    onPick: (path){
-                                     var files = ImagesList.value;
+                                     var files = rxImagesList.value;
                                      if(files.length<=8){
-                                       ImagesList.value = [...files, (file: File(path!), type: FileType.photo)];
+                                       rxImagesList.value = [...files, (file: File(path!), type: FileType.photo)];
                                      }else{
 
                                      }
@@ -221,11 +221,11 @@ class _StateCreateTask extends State<_CreateTask>{
                                ),
                                FilePicker(
                                    onPick: (paths, fileType){
-                                     var files = ImagesList.value;
+                                     var files = rxImagesList.value;
                                      if(files.length+paths.length<=9){
                                        var generated = List.generate(paths.length, (index) =>
                                        (type: fileType, file:File(paths[index])));
-                                       ImagesList.value = [ ...files, ...generated];
+                                       rxImagesList.value = [ ...files, ...generated];
                                      }else{
 
                                      }
@@ -298,9 +298,9 @@ class _StateImages extends State<ImagesGrid>{
   @override
   Widget build(BuildContext context) {
     return ReactiveBuilder(
-        reactive: ImagesList,
-        builder: (context){
-          var files = ImagesList.value;
+        reactive: rxImagesList,
+        builder: (context, reactive){
+          var files = reactive.value;
 
           return Column(
             children: [
@@ -313,8 +313,8 @@ class _StateImages extends State<ImagesGrid>{
                     children: [
                       IconButton(
                           onPressed: (){
-                            var list = ImagesList.value;
-                            ImagesList.value = (() sync* {
+                            var list = rxImagesList.value;
+                            rxImagesList.value = (() sync* {
                               for(var i=0; i<list.length; i++){
                                 if(!indexes.contains(i)) yield list[i];
                               }
@@ -370,9 +370,9 @@ class _StateImages extends State<ImagesGrid>{
                                 opacity: indexes.contains(index)?0.5:1,
                                 child: InkWell(
                                   onLongPress: (){
-                                    // var list = ImagesList.value;
+                                    // var list = rxImagesList.value;
                                     // list.removeAt(index);
-                                    // ImagesList.value = list;
+                                    // rxImagesList.value = list;
                                     indexes.add(index);
                                     setState(() {});
                                   },

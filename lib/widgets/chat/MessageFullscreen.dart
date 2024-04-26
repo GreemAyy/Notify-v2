@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
 import 'package:notify/widgets/chat/MessageItem.widget.dart';
+import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../custom_classes/message.dart';
 import '../../generated/l10n.dart';
 import '../../http/messages.http.dart';
 
 class MessageFullscreen extends StatefulWidget {
+  const MessageFullscreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _StateMessageFullscreen();
 }
@@ -35,7 +38,7 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return rxPickedMessage.toBuilder((context) {
+    return rxPickedMessage.toBuilder((context, _) {
       final screenSize = MediaQuery.of(context).size;
 
       if(rxPickedMessage.value != null) {
@@ -79,12 +82,9 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
                     )
                   ),
                   if(show&&rxPickedMessage.value != null)
-                    Padding(
-                        padding: const EdgeInsets.only(top: 100),
-                        child: MessageFullscreenItem(
-                          message: rxPickedMessage.value!,
-                          self: rxPickedMessage.value!.creatorId == store.get<int>('id')!,
-                        )
+                    MessageFullscreenItem(
+                      message: rxPickedMessage.value!,
+                      self: rxPickedMessage.value!.creatorId == store.get<int>('id')!,
                     )
                 ]
               )
@@ -112,6 +112,9 @@ class MessageFullscreenItem extends StatefulWidget {
 class _StateMessageFullscreenItem extends State<MessageFullscreenItem> {
   late final message = widget.message;
   bool show = false;
+  bool showOnlySave = false;
+  double bottomPadding = 100;
+  String text = rxPickedMessage.value?.text ?? '';
 
   @override
   void initState() {
@@ -135,8 +138,9 @@ class _StateMessageFullscreenItem extends State<MessageFullscreenItem> {
       alignment: Alignment.center,
       child: Column(
         children: [
-         SizedBox(
-           height: MediaQuery.of(context).padding.top
+         AnimatedContainer(
+           duration: const Duration(milliseconds: 500),
+           height: bottomPadding
          ),
          Container(
            padding: const EdgeInsets.all(10),
@@ -148,12 +152,33 @@ class _StateMessageFullscreenItem extends State<MessageFullscreenItem> {
            child: Column(
              children: [
                GridMessageMedia(media: message.media, second: true),
-               Text(
-                 message.text,
-                 style: theme.textTheme.bodyMedium!.copyWith(
-                  fontSize: theme.textTheme.bodyMedium!.fontSize!-5
+               if(widget.self)
+                 ...[
+                   const SizedBox(height: 10),
+                   FormTextField(
+                       onInput: (text) => this.text = text,
+                       getFocusNode: (node){
+                         node.addListener(() {
+                           setState(() {
+                             bottomPadding = node.hasFocus ? MediaQuery.of(context).size.height/3 : 100;
+                             showOnlySave = node.hasFocus;
+                           });
+                         });
+                       },
+                       borderRadius: 7.5,
+                       initValue: message.text,
+                       textStyle: theme.textTheme.bodyMedium!.copyWith(
+                           fontSize: theme.textTheme.bodyMedium!.fontSize!-5
+                       )
+                   )
+                 ]
+               else
+                 Text(
+                     message.text,
+                     style: theme.textTheme.bodyMedium!.copyWith(
+                         fontSize: theme.textTheme.bodyMedium!.fontSize!-5
+                     )
                  )
-               )
              ]
            )
          ),
@@ -169,6 +194,7 @@ class _StateMessageFullscreenItem extends State<MessageFullscreenItem> {
                ),
                child: Column(
                  children: [
+                  if(!showOnlySave)
                   InkWell(
                        onTap: (){
                         rxPickedReplyMessage.value = message;
@@ -192,6 +218,31 @@ class _StateMessageFullscreenItem extends State<MessageFullscreenItem> {
                        )
                   ),
                   if(widget.self)
+                    InkWell(
+                        onTap: () async {
+                          final message = rxPickedMessage.value!;
+                          message.text = text;
+                          await MessagesHttp.updateMessage(message);
+                          store.get<Socket>('socket')!.emit('update-message', message);
+                          rxPickedMessage.value = null;
+                        },
+                        child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.save),
+                                  Text(
+                                      _S.save,
+                                      style: theme.textTheme.bodyMedium!.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                  )
+                                ]
+                            )
+                        )
+                    ),
+                  if(widget.self&&!showOnlySave)
                   ...[
                       InkWell(
                           onTap: () async {

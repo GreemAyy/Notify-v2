@@ -10,7 +10,6 @@ void main() => runApp(const InitApp());
 
 class InitApp extends StatefulWidget {
   const InitApp({super.key});
-
   @override
   State<InitApp> createState() => _StateInitApp();
 }

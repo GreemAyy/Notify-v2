@@ -39,7 +39,10 @@ class _StateSettingsScreen extends State<SettingsScreen>{
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ElevatedButton(
-                    onPressed: () => logout(context),
+                    onPressed: (){
+                      cleanUser();
+                      Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
+                    },
                     style: const ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.red)
                     ),
@@ -67,7 +70,7 @@ class ThemePicker extends StatelessWidget{
   Widget build(BuildContext context) {
     return ReactiveBuilder(
         reactive: rxTheme,
-        builder: (context){
+        builder: (context, _){
           final theme = Theme.of(context);
           final _S = S.of(context);
           final themes = {
@@ -126,7 +129,7 @@ class LanguagePicker extends StatelessWidget{
   Widget build(BuildContext context) {
     return ReactiveBuilder(
         reactive: rxLocale, 
-        builder: (context){
+        builder: (context, _){
           final theme = Theme.of(context);
           final _S = S.of(context);
 

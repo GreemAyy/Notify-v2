@@ -39,7 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "dark_theme": MessageLookupByLibrary.simpleMessage("Dark"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "edit_task": MessageLookupByLibrary.simpleMessage("Edit task"),
-        "email": MessageLookupByLibrary.simpleMessage("Email"),
+        "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
         "empty": MessageLookupByLibrary.simpleMessage("Empty"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
         "find": MessageLookupByLibrary.simpleMessage("Find"),
@@ -72,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "snack_bar":
-            MessageLookupByLibrary.simpleMessage("Wrong email or password!"),
+            MessageLookupByLibrary.simpleMessage("Wrong E-Mail or password!"),
         "status_completed": MessageLookupByLibrary.simpleMessage("Completed"),
         "status_uncompleted":
             MessageLookupByLibrary.simpleMessage("Uncompleted"),

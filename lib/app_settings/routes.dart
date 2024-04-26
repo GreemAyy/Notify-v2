@@ -14,9 +14,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) =>
-    CupertinoPageRoute(
-      builder:  routes[settings.name]??routes['/init']!,
-      settings: settings
+    (
+      settings.name!.contains('/image')?
+      MaterialPageRoute(
+          builder: routes[settings.name]!,
+          settings: settings
+      )
+      :
+      CupertinoPageRoute(
+          builder:  routes[settings.name]??routes['/init']!,
+          settings: settings
+      )
     );
 
 Map<String, Widget Function(BuildContext)> routes = {

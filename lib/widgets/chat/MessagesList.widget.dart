@@ -51,6 +51,13 @@ class _StateMessagesList extends State<MessagesList>{
           }
         });
       }
+      messageUpdater.updateWithData('update-reply-delete', id);
+    });
+    messageUpdater.watch<Map<String, dynamic>>('update', (data) {
+      final message = data['message'] as Message;
+      final index = data['index'] as int;
+      setState(()=> messagesList[index] = message);
+      messageUpdater.updateWithData('update-reply', message);
     });
     if(messagesList.isEmpty) getMessagesAfter();
     _itemPositionListener.itemPositions.addListener(_itemPositionListenerListener);
@@ -100,6 +107,8 @@ class _StateMessagesList extends State<MessagesList>{
     super.dispose();
     messageUpdater.unSee('new');
     messageUpdater.unSee('delete');
+    messageUpdater.unSee('update');
+    messageUpdater.unSee('update-reply');
     store.unSee('scroll_to_message');
     _itemPositionListener.itemPositions.removeListener(_itemPositionListenerListener);
   }

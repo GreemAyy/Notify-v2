@@ -50,7 +50,6 @@ class _StateInitScreen extends State<InitScreen>{
     final themeMode = prefs.getString('theme_mode');
     final access = await UsersHttp.checkUserAccess(id??0, hash??'');
     final locale = WidgetsBinding.instance.platformDispatcher.locale;
-
     store.mapMultiSet({
       "locale":localeCode!=null?Locale(localeCode):locale,
       "theme_mode":getThemeMode(themeMode)
