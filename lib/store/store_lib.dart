@@ -56,6 +56,7 @@ class _EventEmitter {
 }
 
 typedef CallbackInputType<CallbackType> = void Function(CallbackType data);
+typedef $D = void Function();
 
 class Updater{
   Updater({

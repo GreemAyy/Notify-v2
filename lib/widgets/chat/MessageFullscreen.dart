@@ -18,7 +18,7 @@ class MessageFullscreen extends StatefulWidget {
 }
 
 class _StateMessageFullscreen extends State<MessageFullscreen> {
-  dynamic deleter;
+  late void Function() deleter;
   var canPop = true;
   var show = false;
 
@@ -38,10 +38,10 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return rxPickedMessage.toBuilder((context, _) {
+    return rxPickedMessage.toBuilder((context, reactive) {
       final screenSize = MediaQuery.of(context).size;
 
-      if(rxPickedMessage.value != null) {
+      if(reactive.value != null) {
         Timer(const Duration(milliseconds: 100), (){
           setState(() => show = rxPickedMessage.value != null);
         });
@@ -51,7 +51,7 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
         canPop: canPop,
         onPopInvoked: (_){
           setState(() {
-            rxPickedMessage.value = null;
+            reactive.value = null;
             canPop = true;
           });
         },
@@ -60,12 +60,12 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
           children: [
             AnimatedPositioned(
               width: screenSize.width,
-              height: rxPickedMessage.value != null ? screenSize.height : 0,
+              height: reactive.value != null ? screenSize.height : 0,
               duration: const Duration(milliseconds: 100),
               child: Stack(
                 children: [
                   InkWell(
-                    onTap: () => rxPickedMessage.value = null,
+                    onTap: () => reactive.value = null,
                     child: Stack(
                       children: [
                         ClipRect(
@@ -81,10 +81,10 @@ class _StateMessageFullscreen extends State<MessageFullscreen> {
                       ]
                     )
                   ),
-                  if(show&&rxPickedMessage.value != null)
+                  if(show&&reactive.value != null)
                     MessageFullscreenItem(
-                      message: rxPickedMessage.value!,
-                      self: rxPickedMessage.value!.creatorId == store.get<int>('id')!,
+                      message: reactive.value!,
+                      self: reactive.value!.creatorId == store.get<int>('id')!,
                     )
                 ]
               )

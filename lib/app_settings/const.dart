@@ -1,4 +1,4 @@
-String URL_MAIN = "https://e68e-77-222-104-18.ngrok-free.app";
+String URL_MAIN = "https://7d4a-77-222-104-18.ngrok-free.app";
 
 var langs = {
   "en":"English",

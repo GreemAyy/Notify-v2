@@ -88,17 +88,14 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
       );
       return;
     }
-
     setState(() => isUploading = true);
     final imagesIds = [];
-
     if(pickedImages.isNotEmpty) {
       for (var image in pickedImages) {
         final create = await ImagesHttp.sendSingleFile((await image.file)!);
         if (create['added'] as bool) imagesIds.add(create['id']);
       }
     }
-
     final media = <MessageMedia>[
       ...rxPickedTasksList.value.map((e) => MessageMedia(type: MessageMediaDataType.task, id: e.id)),
       ...imagesIds.map((e) => MessageMedia(type: MessageMediaDataType.photo, id: e))
@@ -133,12 +130,13 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
     if(_focusNode!.hasFocus&&yPos>widget.openHeight){
       yPos = widget.openHeight;
     }
-    if(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null)
+    if(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null) {
       widget.onClose!();
-    else if(!_focusNode!.hasFocus&&yPos==widget.openHeight&&isOpen&&widget.onOpen!=null)
+    } else if(!_focusNode!.hasFocus&&yPos==widget.openHeight&&isOpen&&widget.onOpen!=null) {
       widget.onOpen!();
-    else if(!_focusNode!.hasFocus&&!isOpen&&widget.onClose!=null)
+    } else if(!_focusNode!.hasFocus&&!isOpen&&widget.onClose!=null) {
       widget.onClose!();
+    }
   }
 
   @override
@@ -216,8 +214,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                             borderRadius: BorderRadius.circular(15)
                                         )
                                     ),
-                                    if(isReplyOpen)
-                                      ReplyBlock(height: widget.replyHeight),
+                                    ReplyBlock(height: widget.replyHeight),
                                     Row(
                                         children: [
                                           IconButton(
@@ -226,8 +223,9 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
                                                 yPos = widget.openHeight;
                                                 if(widget.onClose!=null&&!isOpen) widget.onClose!();
                                                 if(widget.onOpen!=null&&isOpen) widget.onOpen!();
-                                                if(isOpen&&(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null))
+                                                if(isOpen&&(_focusNode!.hasFocus&&yPos==widget.openHeight&&widget.onClose!=null)) {
                                                   widget.onClose!();
+                                                }
                                               }),
                                               icon: Icon(isOpen?Icons.close:Icons.attach_file)
                                           ),
@@ -301,8 +299,8 @@ class TaskMessagePicker extends StatelessWidget{
   Widget build(BuildContext context) {
         final screenSize = MediaQuery.of(context).size;
         final theme = Theme.of(context);
-        return rxPickedTasksList.toBuilder((context, _){
-          final taskList = rxPickedTasksList.value;
+        return rxPickedTasksList.toBuilder((context, reactive){
+          final taskList = reactive.value;
 
           return Stack(
               children: [
@@ -379,7 +377,7 @@ final rxImageFiles = Reactive(<AssetEntity>[]);
 final photoUpdater = Updater();
 
 class PhotoPicker extends StatefulWidget{
-  PhotoPicker({
+  const PhotoPicker({
     super.key,
     required this.onChangePick
   });
@@ -571,14 +569,15 @@ class ReplyBlock extends StatelessWidget{
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return rxPickedReplyMessage.toBuilder((context, _) {
+    return rxPickedReplyMessage.toBuilder((context, reactive) {
       return InkWell(
         onTap: (){
-          rxPickedReplyMessage.value = null;
+          reactive.value = null;
         },
-        child: Container(
-            margin: rxPickedReplyMessage.value == null ? EdgeInsets.zero : height!=null?const EdgeInsets.only(bottom: 10):null,
-            height: rxPickedReplyMessage.value == null ? 0 : height!=null ? height! - 10 : null,
+        child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: reactive.value == null ? EdgeInsets.zero : height!=null?const EdgeInsets.only(bottom: 10):null,
+            height: reactive.value == null ? 0 : height!=null ? height! - 10 : null,
             decoration: BoxDecoration(
                 color: theme.primaryColor.withOpacity(.3),
                 border: Border(
@@ -591,7 +590,7 @@ class ReplyBlock extends StatelessWidget{
             child: Row(
                 children: [
                   const SizedBox(width: 5),
-                  Expanded(child: Text(rxPickedReplyMessage.value?.text??'', overflow: TextOverflow.ellipsis))
+                  Expanded(child: Text(reactive.value?.text??'', overflow: TextOverflow.ellipsis))
                 ]
             )
         )

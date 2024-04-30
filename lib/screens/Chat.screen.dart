@@ -10,11 +10,11 @@ import '../store/store.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
 
 class ChatScreen extends StatefulWidget{
-  ChatScreen({
+  const ChatScreen({
     super.key,
     required this.group
   });
-  Group group;
+  final Group group;
 
   @override
   State<StatefulWidget> createState() => _StateChatScreen();

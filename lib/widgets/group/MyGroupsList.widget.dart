@@ -106,6 +106,7 @@ class GroupListItem extends StatelessWidget{
     super.key,
     required this.group,
     required this.onTap,
+    this.onLeadingTap,
     this.borderRadius = 0,
     this.padding = (vertical: 0, horizontal: 0),
     this.heroTag,
@@ -114,6 +115,7 @@ class GroupListItem extends StatelessWidget{
   });
   final Group group;
   final void Function() onTap;
+  final void Function()? onLeadingTap;
   final double borderRadius;
   final ({double vertical, double horizontal}) padding;
   final String? heroTag;
@@ -139,7 +141,13 @@ class GroupListItem extends StatelessWidget{
               Padding(
                 padding: const EdgeInsets.only(right: 5),
                 child: IconButton(
-                    onPressed: ()=>Navigator.pop(context),
+                    onPressed: (){
+                      if(onLeadingTap!=null){
+                        onLeadingTap!();
+                      }else{
+                        Navigator.pop(context);
+                      }
+                    },
                     icon: const Icon(Icons.arrow_back)
                 ),
               ),

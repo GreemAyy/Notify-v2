@@ -6,11 +6,11 @@ import '../../generated/l10n.dart';
 import '../../store/store.dart';
 
 class TaskItem extends StatefulWidget{
-  TaskItem({
+  const TaskItem({
     super.key,
-    required this.task
+    required this.task,
   });
-  Task task;
+  final Task task;
 
   @override
   State<StatefulWidget> createState() => _StateTaskItem();
@@ -18,13 +18,13 @@ class TaskItem extends StatefulWidget{
 
 class _StateTaskItem extends State<TaskItem>{
   late final _S = S.of(context);
-  late final task = widget.task;
-  static const _imageHeight = 200.0;
-  static const _imageWidth = 150.0;
+  static const double _imageHeight = 200;
+  static const double _imageWidth = 150;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final task = widget.task;
 
     return Opacity(
       opacity: task.status==TaskStatus.uncompleted ? 1 : .5,
@@ -32,7 +32,7 @@ class _StateTaskItem extends State<TaskItem>{
         padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
         child: InkWell(
           onTap: (){
-             Navigator.pushNamed(context,'/task',arguments: {'task':task});
+            Navigator.pushNamed(context,'/task', arguments: {'task': task});
           },
           onLongPress: (){
             var group = store.get('group');

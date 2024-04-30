@@ -15,13 +15,13 @@ import '../generated/l10n.dart';
 import '../store/store.dart';
 
 class TaskScreen extends StatefulWidget{
-  TaskScreen({
+  const TaskScreen({
     super.key,
     required this.task,
     this.isChild = false
   });
-  Task task;
-  bool isChild;
+  final Task task;
+  final bool isChild;
 
   @override
   State<StatefulWidget> createState() => _StateTaskScreen();
@@ -29,35 +29,33 @@ class TaskScreen extends StatefulWidget{
 
 class _StateTaskScreen extends State<TaskScreen>{
   late final _S = S.of(context);
-  late final task = widget.task;
   late var dateFrom = DateTime(task.yearFrom, task.monthFrom, task.dayFrom);
   late var dateTo = DateTime(task.yearTo, task.monthTo, task.dayTo);
   late var timeFrom = TimeOfDay(hour: task.hourFrom, minute: task.minuteFrom);
   late var timeTo = TimeOfDay(hour: task.hourTo, minute: task.minuteTo);
-  late String title = task.title;
-  late String description = task.description;
+  late var task = widget.task;
+  late var title = task.title;
+  late var description = task.description;
   final ScrollController _controller = ScrollController();
+  final pickedImages = <int>[];
   static const _imageWidth = 200.0;
   static const _imageHeight = 275.0;
-  List<int> pickedImages = [];
-  int userId = store.get('id')!;
-  int pickedIndex = 0;
+  var userId = store.get('id')!;
+  var pickedIndex = 0;
   bool isLoading = false;
   bool showBottomBar = false;
   bool canPop = true;
-
 
   @override
   void initState() {
     super.initState();
     Timer? timer;
     timer = Timer(const Duration(milliseconds: 100), (){
+      if(widget.isChild) return;
       setState((){
-        if(widget.isChild) return;
         if(store.get('group')==0){
           showBottomBar = true;
-        }
-        else if(task.creatorId==userId){
+        } else if(task.creatorId==userId){
           showBottomBar = true;
         }
       });
@@ -75,7 +73,6 @@ class _StateTaskScreen extends State<TaskScreen>{
     if(isLoading) return;
     setState(() => isLoading = true);
     _controller.jumpTo(0);
-
     var updatedTask = Task(
         id: task.id,
         dayFrom: dateFrom.day,
@@ -116,19 +113,17 @@ class _StateTaskScreen extends State<TaskScreen>{
       },
       canPop: canPop,
       child: Scaffold(
-        floatingActionButton: (
+        floatingActionButton:
         !widget.isChild&&task.creatorId==userId?
-        Padding(
-            padding: const EdgeInsets.only(bottom: 70),
+        AnimatedPadding(
+            duration: const Duration(milliseconds: 200),
+            padding: EdgeInsets.only(bottom: showBottomBar ? 70 : 0),
             child: FloatingActionButton(
                 onPressed: updateTask,
                 backgroundColor: theme.primaryColor,
-                child: const Icon(
-                  Icons.save,
-                )
+                child: const Icon(Icons.save)
             )
-        )
-            :null),
+        ):null,
         body: SafeArea(
           child: Stack(
             children: [
@@ -137,10 +132,7 @@ class _StateTaskScreen extends State<TaskScreen>{
                 slivers: [
                   SliverAppBar(
                     pinned: true,
-                    floating: false,
-                    elevation: 0,
                     automaticallyImplyLeading: !widget.isChild,
-                    forceElevated: true,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(15),
@@ -179,6 +171,11 @@ class _StateTaskScreen extends State<TaskScreen>{
                             ),
                             FormTextField(
                               onInput: (String text) => title = text,
+                              getFocusNode: (node){
+                                node.addListener(() {
+                                  setState(() => showBottomBar = !node.hasFocus);
+                                });
+                              },
                               initValue: task.title,
                               enabled: !widget.isChild,
                               hintText: "${_S.write} ${_S.task_title.toLowerCase()}",
@@ -280,6 +277,11 @@ class _StateTaskScreen extends State<TaskScreen>{
                                 textStyle: theme.textTheme.bodyMedium!.copyWith(
                                     fontSize: 15
                                 ),
+                                getFocusNode: (node){
+                                  node.addListener(() {
+                                    setState(() => showBottomBar = !node.hasFocus);
+                                  });
+                                },
                                 enabled: !widget.isChild,
                                 maxLines: 3,
                                 borderRadius: 10,
@@ -501,7 +503,7 @@ class _StateTaskScreen extends State<TaskScreen>{
             ]
           )
         )
-      ),
+      )
     );
   }
 }

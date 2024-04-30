@@ -111,9 +111,9 @@ class _StateImageScreen extends State<ImageScreen> with TickerProviderStateMixin
                     child: Stack(
                       children: [
                         AnimatedPositioned(
-                            duration: const Duration(milliseconds: 100),
-                            top: !isZoomed?(yCurrent-yStart):0,
-                            child: widget.image
+                          duration: const Duration(milliseconds: 100),
+                          top: !isZoomed?(yCurrent-yStart):0,
+                          child: widget.image
                         )
                       ]
                     )
@@ -122,21 +122,21 @@ class _StateImageScreen extends State<ImageScreen> with TickerProviderStateMixin
               )
             )
           )
-        ),
+        )
       );
   }
 }
 
 class ImageWithTaskScreen extends StatelessWidget{
-  ImageWithTaskScreen({
+  const ImageWithTaskScreen({
     super.key,
     required this.heroTag,
     required this.image,
     required this.task
   });
-  String heroTag;
-  Widget image;
-  Task task;
+  final String heroTag;
+  final Widget image;
+  final Task task;
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +153,53 @@ class ImageWithTaskScreen extends StatelessWidget{
               children: [
                 ImageScreen(heroTag: heroTag, image: image),
                 Positioned(
-                    bottom: 0,
-                    child: GestureDetector(
-                        onTap: (){
-                          showModalBottomSheet(
+                    bottom: 10,
+                    child: SizedBox(
+                      width: screenSize.width,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: ElevatedButton(
+                          onPressed: (){
+                            showModalBottomSheet(
+                                context: context,
+                                enableDrag: false,
+                                showDragHandle: true,
+                                isScrollControlled: true,
+                                builder: (context){
+                                  return SizedBox(
+                                      height: screenSize.height*.85,
+                                      child: TaskScreen(task: task, isChild: true)
+                                  );
+                                }
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: theme.scaffoldBackgroundColor
+                          ),
+                          child: Text(
+                              '${_S.task} №${task.id}',
+                              style: theme.textTheme.bodyLarge
+                          )
+                        ),
+                      ),
+                    )
+                )
+              ]
+          )
+      )
+    );
+  }
+}
+
+/*
+* Text(
+                                '${_S.task} №${task.id}',
+                                style: theme.textTheme.bodyLarge
+                            )
+* */
+
+/*
+* showModalBottomSheet(
                               context: context,
                               enableDrag: false,
                               showDragHandle: true,
@@ -168,28 +211,4 @@ class ImageWithTaskScreen extends StatelessWidget{
                                 );
                               }
                           );
-                        },
-                        child: Container(
-                            height: 50,
-                            width: screenSize.width,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: theme.scaffoldBackgroundColor,
-                              borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(20),
-                                topLeft: Radius.circular(20)
-                              )
-                            ),
-                            child: Text(
-                                '${_S.task} №${task.id}',
-                                style: theme.textTheme.bodyLarge
-                            )
-                        )
-                    )
-                )
-              ]
-          )
-      )
-    );
-  }
-}
+* */

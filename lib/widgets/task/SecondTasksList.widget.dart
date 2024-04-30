@@ -18,7 +18,7 @@ class SecondTasksList extends StatefulWidget{
   bool display;
   List<Task> tasks;
   bool initLoad;
-  bool isSliver;
+  final bool isSliver;
 
   @override
   State<StatefulWidget> createState() => _StateSecondTasksList();
@@ -45,13 +45,12 @@ class _StateSecondTasksList extends State<SecondTasksList>{
     }
     watchersIndexes['update_tasks_list'] = store.watch<Task?>('update_tasks_list', (task) {
       if(task is Task){
-        setState(() {
-          if(tasksList.where((e) => e.id==task.id).isNotEmpty){
-            tasksList = tasksList.map((i) => i.id==task.id ? task : i).toList();
-          }else{
-            tasksList.add(task);
-          }
-        });
+        if(tasksList.where((e) => e.id==task.id).isNotEmpty){
+          tasksList = tasksList.map((i) => i.id==task.id ? task : i).toList();
+        }else{
+          tasksList.add(task);
+        }
+        setState(() {});
       }else{
         loadTasks(store.get<DateTime>('date')!);
       }

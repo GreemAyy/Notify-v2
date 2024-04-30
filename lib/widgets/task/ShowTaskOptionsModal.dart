@@ -5,7 +5,7 @@ import 'package:notify/store/store.dart';
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 
-void showTaskOptionsModal(BuildContext context,Task task){
+void showTaskOptionsModal(BuildContext context, Task task){
   showModalBottomSheet(
       context: context,
       builder: (context){
@@ -17,7 +17,7 @@ void showTaskOptionsModal(BuildContext context,Task task){
         return Container(
           width: screenSize.width,
           padding: const EdgeInsets.only(top: 15),
-          height: 200,
+          height: task.groupId!=0?200:150,
           child: Column(
             children: [
               Text(
@@ -26,6 +26,7 @@ void showTaskOptionsModal(BuildContext context,Task task){
                   fontWeight: FontWeight.w600
                 )
               ),
+              if(task.groupId!=0)
               ElevatedButton(
                   onPressed: (){
                     if(isPicked) {

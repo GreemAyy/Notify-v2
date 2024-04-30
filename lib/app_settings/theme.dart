@@ -20,7 +20,6 @@ ThemeData themeDefault = ThemeData(
   fontFamily: 'Montserrat',
   appBarTheme: const AppBarTheme(
       backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
   ),
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.black,

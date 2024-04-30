@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
@@ -24,6 +25,7 @@ class _StateMessagesList extends State<MessagesList>{
   var messagesList = <Message>[];
   var isLoading = false;
   var haveMore = true;
+  var showToStartArrow = false;
   final _itemScrollController = ItemScrollController();
   final _itemPositionListener = ItemPositionsListener.create();
 
@@ -31,8 +33,7 @@ class _StateMessagesList extends State<MessagesList>{
   initState() {
     final groupId = store.get<int>('group')!;
     if(rxGroupMessages.value[groupId]!=null) {
-      messagesList = rxGroupMessages.value[groupId]!;
-      setState(() {});
+      setState(() => messagesList = rxGroupMessages.value[groupId]!);
     }
     super.initState();
     messageUpdater.watch<List<Message>>('new', (messages) {
@@ -44,19 +45,15 @@ class _StateMessagesList extends State<MessagesList>{
       final groupId = store.get<int>('group')!;
       final id = data['message_id'];
       final groupIdData = data['group_id'];
-      if(store.get<bool>('on_chat')!){
-        setState((){
-          if(groupId == groupIdData) {
-            messagesList.removeWhere((e) => e.id == id);
-          }
-        });
+      if(store.get<bool>('on_chat')!&&groupId == groupIdData){
+        setState(() => messagesList.removeWhere((e) => e.id == id));
       }
       messageUpdater.updateWithData('update-reply-delete', id);
     });
     messageUpdater.watch<Map<String, dynamic>>('update', (data) {
       final message = data['message'] as Message;
       final index = data['index'] as int;
-      setState(()=> messagesList[index] = message);
+      setState(() => messagesList[index] = message);
       messageUpdater.updateWithData('update-reply', message);
     });
     if(messagesList.isEmpty) getMessagesAfter();
@@ -66,10 +63,16 @@ class _StateMessagesList extends State<MessagesList>{
 
   void _itemPositionListenerListener () {
     if(
-    _itemPositionListener.itemPositions.value.last.index == messagesList.length-1&&
-    !isLoading && haveMore
+      _itemPositionListener.itemPositions.value.last.index == messagesList.length-1&&
+      !isLoading && haveMore
     ){
       getMessagesBefore();
+    }
+    if(_itemPositionListener.itemPositions.value.first.index == 0&&showToStartArrow){
+      setState(() => showToStartArrow = false);
+    }
+    if(_itemPositionListener.itemPositions.value.first.index != 0&&!showToStartArrow){
+      setState(() => showToStartArrow = true);
     }
   }
 
@@ -80,7 +83,7 @@ class _StateMessagesList extends State<MessagesList>{
         .getMessagesBeforeId(groupId, messagesList.last.id);
     setState(() {
       haveMore = messageReq.haveMore;
-      messagesList = [...messagesList, ...messageReq.messages];
+      messagesList.addAll(messageReq.messages);
       final groupMessages = rxGroupMessages.value;
       groupMessages[groupId] = messagesList;
       rxGroupMessages.value = groupMessages;
@@ -164,7 +167,6 @@ class _StateMessagesList extends State<MessagesList>{
             itemPositionsListener: _itemPositionListener,
             itemBuilder: (context, index){
               final message = messagesList[index];
-
               return MessageItem(
                   key: Key(message.id.toString()),
                   message: message,
@@ -173,7 +175,7 @@ class _StateMessagesList extends State<MessagesList>{
             }
         ),
         AnimatedPositioned(
-          top: isLoading ? 25: -100,
+          top: isLoading ? 25 : -100,
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           duration: const Duration(milliseconds: 200),
@@ -204,6 +206,28 @@ class _StateMessagesList extends State<MessagesList>{
               ]
             )
           )
+        ),
+        Positioned(
+            bottom: 10,
+            right: 10,
+            child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 200),
+                opacity: showToStartArrow?1:0,
+                child: IconButton(
+                  onPressed: () =>
+                    _itemScrollController.scrollTo(
+                        index: 0,
+                        duration: const Duration(milliseconds: 300)
+                    ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: Theme.of(context).scaffoldBackgroundColor.withOpacity(.75)
+                  ),
+                  icon: const Icon(
+                    Icons.arrow_downward_sharp,
+                    size: 35
+                  )
+                )
+            )
         )
       ]
     );

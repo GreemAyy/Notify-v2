@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../custom_classes/task.dart';
 import '../store/store.dart';
+import '../store/store_lib.dart';
 import 'Chat.screen.dart';
 
 class TasksScreen extends StatefulWidget{
@@ -21,11 +22,11 @@ class TasksScreen extends StatefulWidget{
 }
 
 class _StateTasksScreen extends State<TasksScreen>{
-  final headerHeight = (60).toDouble();
-  final tabHeight = (150).toDouble();
-  late final groupBarHeight = (widget.group!=null?67.5:0).toDouble();
-  var date = DateTime.now();
-  var dateWatchIndex = 0;
+  final double headerHeight = 60;
+  final double tabHeight = 150;
+  late final double groupBarHeight = widget.group!=null ? 67.5 : 0;
+  DateTime date = DateTime.now();
+  late $D deleter;
 
   void go(int days){
     setState((){
@@ -40,7 +41,7 @@ class _StateTasksScreen extends State<TasksScreen>{
   @override
   void initState() {
     super.initState();
-    dateWatchIndex = store.watch<DateTime>('date', (newDate) {
+    deleter = store.watchWithDeleteCallback<DateTime>('date', (newDate) {
       setState(() => date = newDate);
     });
   }
@@ -48,7 +49,7 @@ class _StateTasksScreen extends State<TasksScreen>{
   @override
   void dispose() {
     super.dispose();
-    store.unSeeAt('date', dateWatchIndex);
+    deleter();
     store.set('group', 0, false);
     rxPickedTasksList.value = <Task>[];
   }
@@ -67,90 +68,84 @@ class _StateTasksScreen extends State<TasksScreen>{
       ),
       body: SafeArea(
         child: CustomScrollView(
-          slivers: [
-            if(widget.group != null)
-              SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: groupBarHeight,
-                    child: GroupListItem(
-                      onTap: (){
-                        Navigator.of(context)
-                            .pushNamed('/group',arguments: {"group":widget.group});
-                      },
-                      group: widget.group!,
-                      padding: (horizontal: 20, vertical: 5),
-                      heroTag: 'hero_group_image_${widget.group!.id}'
+            slivers: [
+              if(widget.group != null)
+                SliverToBoxAdapter(
+                    child: SizedBox(
+                        height: groupBarHeight,
+                        child: GroupListItem(
+                            onTap: ()=>
+                              Navigator.of(context)
+                                  .pushNamed('/group',arguments: {"group":widget.group}),
+                            group: widget.group!,
+                            padding: (horizontal: 20, vertical: 5),
+                            heroTag: 'hero_group_image_${widget.group!.id}'
+                        )
                     )
-                  )
-              ),
-            SliverAppBar(
-              pinned: true,
-              automaticallyImplyLeading: false,
-              flexibleSpace: SizedBox(
-                  height: headerHeight,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                            onPressed: (){
-                              Navigator.pop(context);
-                            },
-                            padding: const EdgeInsets.all(15),
-                            icon: const Icon(Icons.arrow_back)
-                        ),
-                        IconButton(
-                            onPressed: (){
-                              Navigator.pushNamed(context, '/search');
-                            },
-                            padding: const EdgeInsets.all(15),
-                            icon: const Hero(
-                                tag: 'hero_search',
-                                child: Icon(Icons.search)
-                            )
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(right: 10),
-                            child: ElevatedButton(
-                                onPressed: () =>
-                                    showDatePickerModal(context, date, (newDate){
-                                      setState(() => date = newDate);
-                                      store.set('date', newDate);
-                                    }),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStatePropertyAll(theme.primaryColor)
-                                ),
-                                child: Text(
-                                    DateFormat('dd.MM.yyyy').format(date),
-                                    style: theme.textTheme.bodyMedium!.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600
+                ),
+              SliverAppBar(
+                  pinned: true,
+                  automaticallyImplyLeading: false,
+                  flexibleSpace: SizedBox(
+                      height: headerHeight,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                                onPressed: () => Navigator.pop(context),
+                                padding: const EdgeInsets.all(15),
+                                icon: const Icon(Icons.arrow_back)
+                            ),
+                            IconButton(
+                                onPressed: () => Navigator.pushNamed(context, '/search'),
+                                padding: const EdgeInsets.all(15),
+                                icon: const Hero(
+                                  tag: 'hero_search',
+                                  child: Icon(Icons.search)
+                                )
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: ElevatedButton(
+                                    onPressed: () =>
+                                        showDatePickerModal(context, date, (newDate){
+                                          setState(() => date = newDate);
+                                          store.set('date', newDate);
+                                        }),
+                                    style: ButtonStyle(
+                                        backgroundColor: MaterialStatePropertyAll(theme.primaryColor)
+                                    ),
+                                    child: Text(
+                                        DateFormat('dd.MM.yyyy').format(date),
+                                        style: theme.textTheme.bodyMedium!.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600
+                                        )
                                     )
                                 )
-                            )
-                        ),
-                        if((store.get<int>('group')!)!=0)
-                          IconButton(
-                              onPressed: (){
-                                Navigator.pushNamed(context, '/chat', arguments: {'group':widget.group});
-                              },
-                              padding: const EdgeInsets.all(15),
-                              icon: Icon(
-                                  Icons.message,
-                                  color: theme.primaryColor
+                            ),
+                            if(store.get<int>('group') != 0)
+                              IconButton(
+                                  onPressed: () =>
+                                    Navigator.pushNamed(context, '/chat', arguments: {'group':widget.group}),
+                                  padding: const EdgeInsets.all(15),
+                                  icon: Icon(
+                                    Icons.message,
+                                    color: theme.primaryColor
+                                  )
                               )
-                          )
-                      ]
+                          ]
+                      )
+                  )
+              ),
+              SliverToBoxAdapter(
+                  child: SecondTaskSlider(
+                      height: screenSize.height - headerHeight - safeAreaSize - groupBarHeight,
+                      onNext:() => go(1),
+                      onPrevious:() => go(-1)
                   )
               )
-            ),
-            SliverToBoxAdapter(
-              child: SecondTaskSlider(
-                  height: screenSize.height - headerHeight - safeAreaSize - groupBarHeight,
-                  onNext:() => go(1),
-                  onPrevious:() => go(-1)
-              )
-            )
-          ]
+            ]
         )
       )
     );
