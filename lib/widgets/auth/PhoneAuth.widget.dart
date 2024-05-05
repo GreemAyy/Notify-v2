@@ -1,13 +1,12 @@
 import 'package:notify/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import '../../screens/Auth.screen.dart';
 
 class PhoneAuth extends StatefulWidget{
-  PhoneAuth({
+  const PhoneAuth({
     super.key,
     required this.onSubmit
   });
-  void Function(Map<String, String> authData) onSubmit;
+  final void Function(Map<String, String> authData) onSubmit;
 
   @override
   State<StatefulWidget> createState() => _StatePhoneAuth();
@@ -25,10 +24,7 @@ class _StatePhoneAuth extends State<PhoneAuth>{
   @override
   void initState() {
     super.initState();
-    if(focusEmitter.value == 0) _focus.requestFocus();
-    focusEmitter.watch((index){
-      if(index==0) _focus.requestFocus();
-    });
+    _focus.requestFocus();
   }
 
   void onSubmit(){

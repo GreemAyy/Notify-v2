@@ -6,7 +6,6 @@ class _EventEmitter {
     int getEventsCount(String key){
       return events[key]?.length??0;
     }
-
     void on(String eventName, void Function() callback){
       var event = events[eventName];
       if(event==null){
@@ -40,23 +39,21 @@ class _EventEmitter {
 
     void removeAt(String eventName, int index){
       try{
-        if(events[eventName]!.length==1){
+        if(events[eventName]?.length==1){
           events[eventName]!.clear();
         }else{
-          events[eventName]![index] = null;
+          events[eventName]?[index] = null;
         }
-        var isEveryNull = events[eventName]!.where((element) => element!=null).isEmpty;
+        var isEveryNull = events[eventName]?.where((element) => element!=null).isEmpty??true;
         if(isEveryNull){
-          events[eventName]!.clear();
+          events[eventName]?.clear();
         }
-      }catch(e){
-        rethrow;
-      }
+      }catch(e){rethrow;}
     }
 }
 
 typedef CallbackInputType<CallbackType> = void Function(CallbackType data);
-typedef $D = void Function();
+typedef Deleter = void Function();
 
 class Updater{
   Updater({
@@ -69,58 +66,60 @@ class Updater{
   final _emitter = _EventEmitter();
   final Map<String, dynamic> _localHolder = {};
   ({String key, dynamic data}) _lastUpdate = (key: '', data: null);
+  static const _anyWatchKey = '@_/#_ANY_/#_WATCH_/#_@';
 
   void _log(String _){
-    if(debug){
-      _logs.add(_);
-    }
-    if(logMessages){
-      dev.log(_, name: 'Updater debug mode');
-    }
+    if(debug) _logs.add(_);
+    if(logMessages) dev.log(_, name: 'Updater debug mode');
   }
 
   void update(String key){
-    var _ = 'update: $key events -> ${_emitter.events[key]}';
+    final _ = 'update: $key events -> ${_emitter.events[key]}';
     _log(_);
     _emitter.emit(key);
   }
   void updateWithData(String key, dynamic data){
-    var _ = 'update: $key value: $data events -> ${_emitter.events[key]}';
+    final _ = 'update: $key value: $data events -> ${_emitter.events[key]}';
     _log(_);
     _localHolder[key] = data;
     _emitter.emit(key);
   }
   int watch<CallbackType>(String key, CallbackInputType<CallbackType> callback){
-    var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+    final _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
     _log(_);
     _emitter.on(key, (){
-      var _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
+      final _ = 'watch_created: $key watchers_count: ${_emitter.getEventsCount(key)+1}';
       _log(_);
       callback(_localHolder[key]);
       _lastUpdate = (key: key, data:_localHolder[key]);
-      _emitter.emit('__ANY__WATCH__');
+      _emitter.emit(_anyWatchKey);
     });
     if(_localHolder[key]!=null){
       _localHolder.remove(key);
     }
     return _emitter.getEventsCount(key)-1;
   }
-  void Function() watchWithDeleteCallback<CallbackType>(String key, CallbackInputType<CallbackType> callback){
+  Deleter watchWithDeleteCallback<CallbackType>(String key, CallbackInputType<CallbackType> callback){
     final watchIndex = watch(key, callback);
     return () => unSeeAt(key, watchIndex);
   }
   void anyWatch(void Function(String key, dynamic data) callback){
-    _emitter.on('__ANY__WATCH__', () {
+    _emitter.on(_anyWatchKey, () {
       callback(_lastUpdate.key, _lastUpdate.data);
     });
   }
   void unSee(String key){
-    var _ = 'remove: $key';
+    final _ = 'remove: $key';
     _log(_);
     _emitter.remove(key);
   }
+  void multiUnSee(List<String> keys){
+    for (var key in keys) {
+      unSee(key);
+    }
+  }
   void unSeeAt(String key, int index){
-    var _ = 'remove: $key at: $index';
+    final _ = 'remove: $key at: $index';
     _log(_);
     _emitter.removeAt(key, index);
   }
@@ -134,7 +133,7 @@ class Collector extends Updater {
     this.strongTyped = true,
     super.debug,
     super.logMessages
-  }): _states = states;
+  }) : _states = states;
   late final Map<String, dynamic> _states;
   bool strongTyped;
 
@@ -144,12 +143,12 @@ class Collector extends Updater {
   bool isNotNull(String key) => !isNull(key);
 
   Collector get unType{
-    strongTyped=false;
+    strongTyped = false;
     return this;
   }
 
   Collector get onType{
-    strongTyped=true;
+    strongTyped = true;
     return this;
   }
 
@@ -159,7 +158,7 @@ class Collector extends Updater {
     if(valueAt!=null&&!identical(value.runtimeType, valueAt.runtimeType)&&strongTyped){
       throw Exception('New value type at key :$key is not matches to setted value');
     }
-    var _ = 'set: $key value: $value';
+    final _ = 'set: $key value: $value';
     _log(_);
 
     _states[key] = value;
@@ -199,7 +198,7 @@ class Collector extends Updater {
         throw Exception('New value type at key :$key is not matches to setted value');
       }
 
-      var _ = 'set: $key value: $value';
+      final _ = 'set: $key value: $value';
       _log(_);
 
       _states[key] = value;
@@ -223,19 +222,9 @@ class Collector extends Updater {
   T? get<T>(String key) => _states[key];
   T getNotNull<T>(String key) => get(key)!;
 
-  void remove(String key){
-    try{
-      var _ = 'remove: $key';
-      _log(_);
-      _states.remove(key);
-    }catch(e){
-      rethrow;
-    }
-  }
-
   void destroy(String key){
     try{
-      var _ = 'remove: $key';
+      final _ = 'remove: $key';
       _log(_);
       _states.remove(key);
       _emitter.remove(key);

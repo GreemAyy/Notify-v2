@@ -9,6 +9,7 @@
   "my_tasks_text": "Mis tareas",
   "home_task_header": "Tareas",
   "task":"Tarea",
+  "back": "Atrás",
   "name": "Nombre",
   "avatar": "Avatar",
   "photo": "Foto",
@@ -57,5 +58,6 @@
   "connecting_to_chat": "Conectando al chat. Por favor, espera.",
   "loading": "Cargando...",
   "message_deleted": "Mensaje eliminado",
-  "task_deleted": "Tarea eliminada"
+  "task_deleted": "Tarea eliminada",
+  "empty_message": "Vacío"
 }

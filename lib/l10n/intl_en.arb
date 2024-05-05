@@ -5,6 +5,7 @@
   "auth_code": "Write code",
   "snack_bar": "Wrong E-Mail or password!",
   "log_btn": "Log",
+  "back": "Back",
   "home_header": "Groups",
   "my_tasks_text": "My tasks",
   "home_task_header": "Tasks",
@@ -57,5 +58,8 @@
   "connecting_to_chat": "Connecting to chat. Please wait!",
   "loading": "Loading...",
   "message_deleted": "Message deleted",
-  "task_deleted": "Task deleted"
+  "task_deleted": "Task deleted",
+  "empty_message": "Empty",
+  "name_error": "Name length should be more or equals 2",
+  "nobody": "Nobody"
 }

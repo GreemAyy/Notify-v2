@@ -13,7 +13,7 @@ void setUser(int id, String hash) async {
   store.onType;
 }
 //Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
-void cleanUser() async {
+void clearUser() async {
   var prefs = await SharedPreferences.getInstance();
   prefs.remove('id');
   prefs.remove('hash');

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:notify/Navigation.dart';
 import 'package:notify/http/users.http.dart';
 import 'package:flutter/material.dart';
+import 'package:notify/screens/Auth.screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../methods/workWithUser.dart';
 import '../store/store.dart';
@@ -56,18 +57,22 @@ class _StateInitScreen extends State<InitScreen>{
     });
     
     if(localeCode==null) prefs.setString('locale', locale.languageCode);
-
-    if(!access) cleanUser();
-
+    if(!access) clearUser();
     if(id==null||hash==null||!access){
-      Navigator.of(context).pushReplacementNamed('/auth');
+      Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
     }else{
+        final userInfo = (await UsersHttp.getSingle(id))!;
         store.mapMultiSet({
           "id":id,
           "hash":hash
         });
-        rxPickedIndex.value = 0;
-        Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        if(userInfo.name.length>=2){
+          rxPickedIndex.value = 0;
+          Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+        }else{
+          rxFocusEmitter.value = 2;
+          Navigator.of(context).pushNamedAndRemoveUntil('/auth', (route) => false);
+        }
     }
   }
 

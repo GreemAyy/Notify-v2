@@ -1,9 +1,8 @@
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
-import 'package:notify/store/store_lib.dart';
+import 'package:notify/store/collector.dart';
 import 'package:notify/widgets/chat/MessageItem.widget.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -97,7 +96,7 @@ class _StateMessagesList extends State<MessagesList>{
     final messages = await MessagesHttp
         .getMessagesUntil(groupId, messagesList.last.id, id);
     setState(() {
-      messagesList = [...messagesList, ...messages];
+      messagesList.addAll(messages);
       final groupMessages = rxGroupMessages.value;
       if(groupMessages[groupId]==null) groupMessages[groupId] = messagesList;
       rxGroupMessages.value = groupMessages;
@@ -108,11 +107,7 @@ class _StateMessagesList extends State<MessagesList>{
   @override
   void dispose() {
     super.dispose();
-    messageUpdater.unSee('new');
-    messageUpdater.unSee('delete');
-    messageUpdater.unSee('update');
-    messageUpdater.unSee('update-reply');
-    store.unSee('scroll_to_message');
+    messageUpdater.multiUnSee(['new', 'delete', 'update', 'update-reply', 'scroll_to_message']);
     _itemPositionListener.itemPositions.removeListener(_itemPositionListenerListener);
   }
 
@@ -131,20 +126,12 @@ class _StateMessagesList extends State<MessagesList>{
   }
 
   void _scrollToListener(){
-     store.watch<int>('scroll_to_message', (id) async {
+    messageUpdater.watch<int>('scroll_to_message', (id) async {
       var index = -1;
       for (var i = 0; i < messagesList.length; i++) {
        if(messagesList[i].id==id) {
          index = i;
        }
-      }
-      if(index==-1){
-        await getMessagesUntil(id);
-        for (var i = 0; i < messagesList.length; i++) {
-          if(messagesList[i].id==id) {
-            index = i;
-          }
-        }
       }
       if(index<0) return;
       try{
@@ -212,7 +199,7 @@ class _StateMessagesList extends State<MessagesList>{
             right: 10,
             child: AnimatedOpacity(
                 duration: const Duration(milliseconds: 200),
-                opacity: showToStartArrow?1:0,
+                opacity: showToStartArrow ? 1 : 0,
                 child: IconButton(
                   onPressed: () =>
                     _itemScrollController.scrollTo(

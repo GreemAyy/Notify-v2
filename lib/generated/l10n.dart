@@ -110,6 +110,16 @@ class S {
     );
   }
 
+  /// `Back`
+  String get back {
+    return Intl.message(
+      'Back',
+      name: 'back',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Groups`
   String get home_header {
     return Intl.message(
@@ -635,6 +645,36 @@ class S {
     return Intl.message(
       'Task deleted',
       name: 'task_deleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Empty`
+  String get empty_message {
+    return Intl.message(
+      'Empty',
+      name: 'empty_message',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Name length should be more or equals 2`
+  String get name_error {
+    return Intl.message(
+      'Name length should be more or equals 2',
+      name: 'name_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nobody`
+  String get nobody {
+    return Intl.message(
+      'Nobody',
+      name: 'nobody',
       desc: '',
       args: [],
     );

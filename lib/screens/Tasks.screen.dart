@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../custom_classes/task.dart';
 import '../store/store.dart';
-import '../store/store_lib.dart';
+import '../store/collector.dart';
 import 'Chat.screen.dart';
 
 class TasksScreen extends StatefulWidget{
@@ -26,7 +26,7 @@ class _StateTasksScreen extends State<TasksScreen>{
   final double tabHeight = 150;
   late final double groupBarHeight = widget.group!=null ? 67.5 : 0;
   DateTime date = DateTime.now();
-  late $D deleter;
+  late Deleter deleter;
 
   void go(int days){
     setState((){

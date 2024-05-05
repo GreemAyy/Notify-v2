@@ -1,4 +1,4 @@
-import 'package:notify/store/store_lib.dart';
+import 'package:notify/store/collector.dart';
 import 'package:flutter/material.dart';
 import '../custom_classes/group.dart';
 

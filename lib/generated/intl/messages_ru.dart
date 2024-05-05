@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "auth": MessageLookupByLibrary.simpleMessage("Аутентификация"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Введите код"),
         "avatar": MessageLookupByLibrary.simpleMessage("Аватар"),
+        "back": MessageLookupByLibrary.simpleMessage("Назад"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Отменить"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Выполнить"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Удалить"),
@@ -42,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Редактировать задачу"),
         "email": MessageLookupByLibrary.simpleMessage("Электронная почта"),
         "empty": MessageLookupByLibrary.simpleMessage("Пусто"),
+        "empty_message": MessageLookupByLibrary.simpleMessage("Пусто"),
         "error": MessageLookupByLibrary.simpleMessage("Ошибка"),
         "find": MessageLookupByLibrary.simpleMessage("Найти"),
         "group_name_error":

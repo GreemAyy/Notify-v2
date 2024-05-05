@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/tasks.http.dart';
-import 'package:notify/store/store_flutter_lib.dart';
+import 'package:notify/store/collector_flutter.dart';
 import 'package:notify/widgets/FilePicker.widget.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:notify/widgets/ui/Optional.dart';

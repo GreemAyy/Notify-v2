@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:notify/store/store_lib.dart';
+import 'package:notify/store/collector.dart';
 import 'package:flutter/material.dart';
 
 class StoreConnect{
@@ -12,11 +12,11 @@ class StoreConnect{
 }
 
 class Reactive<T> with ChangeNotifier{
-  Reactive(T? value, [StoreConnect? storeConnection, bool nullable = false]){
-    _nullable = nullable;
+  Reactive(T? value, {StoreConnect? storeConnection, bool nullable = false, bool log = false}){
+    _nullable = nullable||value==null;
     if(storeConnection==null){
       var gkey = _generateKey();
-      _store = Collector({gkey:value}, strongTyped: !nullable);
+      _store = Collector({gkey:value}, strongTyped: !_nullable);
       _key = gkey;
     }else{
       _store = storeConnection.store;
@@ -24,6 +24,7 @@ class Reactive<T> with ChangeNotifier{
       _key = storeConnection.key;
       _store.set(_key, _store.get(_key)??value, false);
     }
+    _store.logMessages = log;
   }
 
   String _key = '';
@@ -31,7 +32,7 @@ class Reactive<T> with ChangeNotifier{
   late Collector _store;
   final List<int> _watchIndex = [];
 
-  Reactive<T> get nullable{
+  Reactive<T> get setNullable{
     _store.strongTyped = false;
     _nullable = true;
     return this;
@@ -41,15 +42,13 @@ class Reactive<T> with ChangeNotifier{
   set value(T value){
     if(_nullable||value!=null){
       _store.set(_key, value);
-      _store.updateWithData("${_key}_@FOLLOW@_", value);
-      _store.unSee("${_key}_@FOLLOW@_");
       notifyListeners();
     }else{
       throw Exception("Value is null!");
     }
   }
-  void follow(CallbackInputType<T> onUpdate){
-    _store.watch("${_key}_@FOLLOW@_", onUpdate);
+  void unSee(){
+    _store.unSee(_key);
   }
   void Function() watch(CallbackInputType<T> onUpdate){
     final index = _store.watch(_key, onUpdate);
@@ -74,7 +73,8 @@ class Reactive<T> with ChangeNotifier{
   ReactiveBuilder<T> toBuilder(Widget Function(BuildContext context, Reactive<T> reactive) builder) =>
       ReactiveBuilder<T>(reactive: this, builder: builder);
 
-  factory Reactive.withStore(StoreConnect store, [T? optionalValue]) => Reactive(optionalValue, store);
+  factory Reactive.withStore(StoreConnect store, [T? optionalValue]) => Reactive(optionalValue, storeConnection: store);
+  factory Reactive.Null() => Reactive(null);
 }
 
 class ReactiveBuilder<T> extends StatelessWidget{

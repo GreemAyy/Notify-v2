@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "auth": MessageLookupByLibrary.simpleMessage("Autenticazione"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Scrivi codice"),
         "avatar": MessageLookupByLibrary.simpleMessage("Avatar"),
+        "back": MessageLookupByLibrary.simpleMessage("Indietro"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Annulla"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Completa"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Elimina"),
@@ -41,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_task": MessageLookupByLibrary.simpleMessage("Modifica attività"),
         "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
         "empty": MessageLookupByLibrary.simpleMessage("Vuoto"),
+        "empty_message": MessageLookupByLibrary.simpleMessage("Vuoto"),
         "error": MessageLookupByLibrary.simpleMessage("Errore"),
         "find": MessageLookupByLibrary.simpleMessage("Trova"),
         "group_name_error": MessageLookupByLibrary.simpleMessage(

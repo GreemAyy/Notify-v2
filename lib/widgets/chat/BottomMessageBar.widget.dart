@@ -6,7 +6,7 @@ import 'package:notify/http/messages.http.dart';
 import 'package:notify/methods/chat.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
-import 'package:notify/store/store_flutter_lib.dart';
+import 'package:notify/store/collector_flutter.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:notify/widgets/ui/Skeleton.ui.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,7 +14,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../generated/l10n.dart';
-import '../../store/store_lib.dart';
+import '../../store/collector.dart';
 
 class BottomMessageBar extends StatefulWidget{
   const BottomMessageBar({
@@ -46,10 +46,10 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   late TextEditingController _controller;
   late double startPos = widget.openHeight;
   late double yPos = widget.openHeight;
+  late Deleter replyWatcher;
   bool isOnDrag = false;
   final openDuration = const Duration(milliseconds: 150);
   FocusNode? _focusNode;
-  void Function()? replyWatcher;
   var pickedImages = <AssetEntity>[];
 
   @override
@@ -64,7 +64,7 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
   @override
   void dispose() {
     super.dispose();
-    replyWatcher!();
+    replyWatcher();
     _controller.removeListener(_textFieldListener);
   }
 
@@ -548,7 +548,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
               borderRadius: BorderRadius.circular(10),
               child: Image(
                 image: AssetEntityImageProvider(image),
-                fit: BoxFit.fill,
+                fit: BoxFit.cover
               )
             )
           )

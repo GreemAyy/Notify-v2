@@ -6,6 +6,7 @@
   "snack_bar": "E-Mail o password errati!",
   "log_btn": "Accedi",
   "home_header": "Gruppi",
+  "back": "Indietro",
   "my_tasks_text": "Le mie attività",
   "home_task_header": "Attività",
   "task":"Attività",
@@ -57,5 +58,6 @@
   "connecting_to_chat": "Connessione alla chat in corso. Attendere!",
   "loading": "Caricamento...",
   "message_deleted": "Messaggio eliminato",
-  "task_deleted": "Attività eliminata"
+  "task_deleted": "Attività eliminata",
+  "empty_message": "Vuoto"
 }

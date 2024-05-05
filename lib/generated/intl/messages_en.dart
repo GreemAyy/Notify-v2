@@ -29,6 +29,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "auth": MessageLookupByLibrary.simpleMessage("Auth"),
         "auth_code": MessageLookupByLibrary.simpleMessage("Write code"),
         "avatar": MessageLookupByLibrary.simpleMessage("Avatar"),
+        "back": MessageLookupByLibrary.simpleMessage("Back"),
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Complete"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Delete"),
@@ -41,6 +42,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "edit_task": MessageLookupByLibrary.simpleMessage("Edit task"),
         "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
         "empty": MessageLookupByLibrary.simpleMessage("Empty"),
+        "empty_message": MessageLookupByLibrary.simpleMessage("Empty"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
         "find": MessageLookupByLibrary.simpleMessage("Find"),
         "group_name_error":
@@ -61,9 +63,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Message deleted"),
         "my_tasks_text": MessageLookupByLibrary.simpleMessage("My tasks"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "name_error": MessageLookupByLibrary.simpleMessage(
+            "Name length should be more or equals 2"),
         "no_access_to_gallery":
             MessageLookupByLibrary.simpleMessage("No access to gallery!"),
         "no_photo": MessageLookupByLibrary.simpleMessage("No photo"),
+        "nobody": MessageLookupByLibrary.simpleMessage("Nobody"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
         "reply": MessageLookupByLibrary.simpleMessage("Reply"),

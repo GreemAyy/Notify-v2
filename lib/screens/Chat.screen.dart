@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
-import 'package:notify/store/store_flutter_lib.dart';
+import 'package:notify/http/users.http.dart';
+import 'package:notify/store/collector_flutter.dart';
 import 'package:notify/widgets/chat/BottomMessageBar.widget.dart';
 import 'package:notify/widgets/chat/MessageFullscreen.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
 import '../custom_classes/group.dart';
+import '../custom_classes/user.dart';
 import '../store/store.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
 
@@ -21,9 +23,10 @@ class ChatScreen extends StatefulWidget{
 }
 
 final rxPickedTasksList = Reactive(<Task>[]);
-final rxPickedReplyMessage = Reactive<Message?>(null).nullable;
-final rxPickedMessage = Reactive<Message?>(null).nullable;
+final rxPickedReplyMessage = Reactive<Message?>.Null();
+final rxPickedMessage = Reactive<Message?>.Null();
 final rxGroupMessages = Reactive<Map<int, List<Message>>>({});
+final rxGroupUsers = Reactive<Map<int, List<User>>>({}, log: true);
 
 class _StateChatScreen extends State<ChatScreen>{
   late Group group = widget.group;
@@ -41,6 +44,14 @@ class _StateChatScreen extends State<ChatScreen>{
   void initState() {
     super.initState();
     store.set('on_chat', true, false);
+    loadUsers(widget.group.id);
+  }
+
+  void loadUsers(int groupId) async {
+    final users = await UsersHttp.getByGroup(groupId);
+    final groupUsers = rxGroupUsers.value;
+    groupUsers[groupId] = users;
+    rxGroupUsers.value = groupUsers;
   }
 
   @override
@@ -48,6 +59,7 @@ class _StateChatScreen extends State<ChatScreen>{
     super.dispose();
     store.set('on_chat', false, false);
     rxPickedReplyMessage.value = null;
+    // rxGroupUsers.unSee();
   }
 
   @override

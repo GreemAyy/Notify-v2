@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/store/store.dart';
+import 'package:notify/store/collector.dart';
 import 'package:notify/widgets/chat/MessageItem.widget.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -18,7 +19,7 @@ class MessageFullscreen extends StatefulWidget {
 }
 
 class _StateMessageFullscreen extends State<MessageFullscreen> {
-  late void Function() deleter;
+  late Deleter deleter;
   var canPop = true;
   var show = false;
 

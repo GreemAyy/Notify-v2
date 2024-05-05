@@ -4,17 +4,17 @@ import '../../app_settings/const.dart';
 import 'Skeleton.ui.dart';
 
 class PicturesGrid extends StatelessWidget{
-  PicturesGrid({
+  const PicturesGrid({
     super.key,
     required this.imagesId,
     required this.imageHeight,
     required this.imageWidth,
     this.showFirst = true
   });
-  List<int> imagesId;
-  double imageHeight;
-  double imageWidth;
-  bool showFirst;
+  final List<int> imagesId;
+  final double imageHeight;
+  final double imageWidth;
+  final bool showFirst;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class PicturesGrid extends StatelessWidget{
 }
 
 class ImagePlaceholder extends StatelessWidget{
-  ImagePlaceholder({
+  const ImagePlaceholder({
     super.key,
     required this.imageId,
     required this.imageHeight,
@@ -66,11 +66,11 @@ class ImagePlaceholder extends StatelessWidget{
     this.fit = BoxFit.fitWidth,
     this.radius = 10
   });
-  int imageId;
-  double imageHeight;
-  double imageWidth;
-  double radius;
-  BoxFit fit;
+  final int imageId;
+  final double imageHeight;
+  final double imageWidth;
+  final double radius;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -89,18 +89,17 @@ class ImagePlaceholder extends StatelessWidget{
             )
         );
       },
-      placeholder: (context, _){
-        return Skeleton(
+      placeholder: (context, _) =>
+        Skeleton(
             height: imageHeight,
             width: imageWidth,
             borderRadius: 10,
             colorFrom: theme.textTheme.bodyMedium!.color!.withOpacity(.2),
             colorTo: theme.textTheme.bodyMedium!.color!.withOpacity(.5),
             setWidthFromScreenParams: false
-        );
-      },
-      errorWidget: (context, _, __){
-        return SizedBox(
+        ),
+      errorWidget: (context, _, __) =>
+        SizedBox(
           width: imageWidth,
           height: imageHeight,
           child: Align(
@@ -110,8 +109,7 @@ class ImagePlaceholder extends StatelessWidget{
               size: (imageWidth+imageHeight)/2/2,
             )
           )
-        );
-      },
+        )
     );
   }
 }

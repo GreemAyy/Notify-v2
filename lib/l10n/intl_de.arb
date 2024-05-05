@@ -9,6 +9,7 @@
   "my_tasks_text": "Meine Aufgaben",
   "home_task_header": "Aufgaben",
   "task":"Aufgabe",
+  "back": "Zurück",
   "name": "Name",
   "avatar": "Avatar",
   "photo": "Foto",
@@ -57,5 +58,6 @@
   "connecting_to_chat": "Verbindung zum Chat wird hergestellt. Bitte warten!",
   "loading": "Laden...",
   "message_deleted": "Nachricht gelöscht",
-  "task_deleted": "Aufgabe gelöscht"
+  "task_deleted": "Aufgabe gelöscht",
+  "empty_message": "Leer"
 }

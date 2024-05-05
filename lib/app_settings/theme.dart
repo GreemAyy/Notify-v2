@@ -8,9 +8,9 @@ Color _primaryColor = const Color.fromARGB(255, 0, 140, 255);
 
 ThemeData themeDefault = ThemeData(
   colorScheme: ColorScheme.fromSwatch().copyWith(
-      primary: _primaryColor,
-      secondary: _primaryColor,
-      surfaceTint: Colors.transparent
+    primary: _primaryColor,
+    secondary: _primaryColor,
+    surfaceTint: Colors.transparent
   ),
   brightness: Brightness.light,
   primaryColor: _primaryColor,

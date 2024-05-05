@@ -1,6 +1,6 @@
 import 'package:notify/screens/Home.screen.dart';
 import 'package:notify/screens/Settings.screen.dart';
-import 'package:notify/store/store_flutter_lib.dart';
+import 'package:notify/store/collector_flutter.dart';
 import 'package:flutter/material.dart';
 import 'generated/l10n.dart';
 

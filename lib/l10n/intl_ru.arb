@@ -5,6 +5,7 @@
   "auth_code": "Введите код",
   "snack_bar": "Непривильная почта или пароль!",
   "log_btn": "Войти",
+  "back": "Назад",
   "home_header": "Группы",
   "my_tasks_text": "Мои задачи",
   "home_task_header": "Задачи",
@@ -57,5 +58,6 @@
   "connecting_to_chat": "Подключение к чату. Ожидайте",
   "loading": "Загрузка...",
   "message_deleted": "Сообщение удалено",
-  "task_deleted": "Задача удалена"
+  "task_deleted": "Задача удалена",
+  "empty_message": "Пусто"
 }

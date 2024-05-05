@@ -1,6 +1,6 @@
 import 'package:notify/methods/workWithUser.dart';
 import 'package:flutter/material.dart';
-import 'package:notify/store/store_flutter_lib.dart';
+import 'package:notify/store/collector_flutter.dart';
 import 'package:notify/widgets/settings/ShowChangeLanguageModal.dart';
 import '../app_settings/const.dart';
 import '../generated/l10n.dart';
@@ -40,7 +40,7 @@ class _StateSettingsScreen extends State<SettingsScreen>{
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: ElevatedButton(
                     onPressed: (){
-                      cleanUser();
+                      clearUser();
                       Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
                     },
                     style: const ButtonStyle(
