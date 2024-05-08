@@ -59,5 +59,10 @@
   "loading": "Загрузка...",
   "message_deleted": "Сообщение удалено",
   "task_deleted": "Задача удалена",
-  "empty_message": "Пусто"
+  "empty_message": "Пусто",
+  "invite_code": "Код для приглашения",
+  "saved_in_clipboard": "Текст сохранён в буфер обмена",
+  "join_to_group": "Присоедениться к группе",
+  "join": "Присоедениться",
+  "write_invite_code": "Напишите код"
 }

@@ -159,7 +159,7 @@ class GroupListItem extends StatelessWidget{
                   size: 50
                 ):
                 CachedNetworkImage(
-                  imageUrl: '$URL_MAIN/api/images/${group.imageId}',
+                  imageUrl: '${Constants.URL_MAIN}/api/images/${group.imageId}',
                   imageBuilder: (context, image){
                     return SizedBox(
                       width: 50,

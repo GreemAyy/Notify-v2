@@ -7,24 +7,24 @@ import '../../generated/l10n.dart';
 import '../../http/tasks.http.dart';
 import '../../store/store.dart';
 
-class SecondTasksList extends StatefulWidget{
-  SecondTasksList({
+class TasksList extends StatefulWidget{
+  const TasksList({
     super.key,
     required this.display,
     this.tasks = const <Task>[],
     this.initLoad = true,
     this.isSliver = false
   });
-  bool display;
-  List<Task> tasks;
-  bool initLoad;
+  final bool display;
+  final List<Task> tasks;
+  final bool initLoad;
   final bool isSliver;
 
   @override
-  State<StatefulWidget> createState() => _StateSecondTasksList();
+  State<StatefulWidget> createState() => _StateTasksList();
 }
 
-class _StateSecondTasksList extends State<SecondTasksList>{
+class _StateTasksList extends State<TasksList>{
   late final _S = S.of(context);
   late var tasksList = widget.tasks;
   late bool isLoading = widget.initLoad;
@@ -163,7 +163,7 @@ class _StateSecondTasksList extends State<SecondTasksList>{
                 task: task
               );
             }
-        ),
+        )
       );
     }
   }

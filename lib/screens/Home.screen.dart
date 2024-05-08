@@ -1,7 +1,8 @@
-import 'package:notify/sockets/chatSockets.dart';
+import 'package:notify/sockets/chat_sockets.dart';
 import 'package:notify/store/store.dart';
-import 'package:notify/widgets/group/ShowGroupCreateModal.dart';
+import 'package:notify/widgets/group/show_group_create_modal.dart';
 import 'package:flutter/material.dart';
+import 'package:notify/widgets/group/show_join_modal.dart';
 import '../generated/l10n.dart';
 import '../sockets/sockets.dart';
 import '../widgets/group/MyGroupsList.widget.dart';
@@ -21,11 +22,6 @@ class _StateHomeScreen extends State<HomeScreen>{
     startSocketUpdateWatcher();
     startChatSockets();
     connectSocket();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -64,7 +60,6 @@ class _StateHomeScreen extends State<HomeScreen>{
                       ),
                       child: ListTile(
                         onTap: (){
-                          /*Navigator.pushReplacementNamed(context, '/my-tasks')*/
                           Navigator.pushNamed(context, '/my-tasks');
                         },
                         shape: RoundedRectangleBorder(
@@ -87,6 +82,29 @@ class _StateHomeScreen extends State<HomeScreen>{
                               fontSize: (theme.textTheme.bodyLarge!.fontSize??0)+10
                           )
                       )
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      child: InkWell(
+                        onTap: () => showJoinModal(context),
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                          decoration: BoxDecoration(
+                            color: theme.primaryColor,
+                            borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(S.of(context).join_to_group),
+                              const Icon(Icons.add)
+                            ]
+                          )
+                        )
+                      ),
+                    )
                   ),
                   const MyGroupsList()
                 ]

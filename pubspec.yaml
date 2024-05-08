@@ -30,6 +30,7 @@ dependencies:
   permission_handler: ^11.3.1
   scrollable_positioned_list: ^0.3.8
   pinput: ^4.0.0
+  fluttertoast: ^8.2.5
 
 dev_dependencies:
   flutter_test:

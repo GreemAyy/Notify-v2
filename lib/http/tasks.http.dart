@@ -6,7 +6,7 @@ import '../store/store.dart';
 
 abstract class TasksHttp{
   static Future<Map<String, dynamic>> createTask(Task task) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/create');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/create');
     var objToSend = {
       'task':task.toJson(),
       'user_id':task.creatorId,
@@ -18,7 +18,7 @@ abstract class TasksHttp{
   }
   
   static Future<List<Task>> getLocalUsersTasks(int userId, DateTime date) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/get-users-local-tasks');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/get-users-local-tasks');
     var objToSend = {
       'user_id':userId,
       'date':[date.day, date.month, date.year]
@@ -34,7 +34,7 @@ abstract class TasksHttp{
   }
 
   static Future<Task?> getSingleTask(int id) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/single/$id');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/single/$id');
     var req = await http.get(url);
     if(jsonDecode(req.body)['task']==null) return null;
     var body = Task.fromJson(jsonDecode(req.body)['task']);
@@ -42,7 +42,7 @@ abstract class TasksHttp{
   }
   
   static Future<List<Task>> getGroupTasks(int groupId, DateTime date) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/get-group-tasks');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/get-group-tasks');
     var objToSend = {
       'group_id':groupId,
       'date':[date.day, date.month, date.year]
@@ -58,7 +58,7 @@ abstract class TasksHttp{
   }
   
   static Future<List<Task>> getGroupsAllTasks(int id) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/get-group-all/$id');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/get-group-all/$id');
     var req = await http.get(url);
     var body = List<dynamic>
         .from(jsonDecode(req.body)).map((e) => Task.fromJson(e))
@@ -70,7 +70,7 @@ abstract class TasksHttp{
   }
   
   static Future<bool> changeTaskStatus(int taskId, int status) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/change-status');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/change-status');
     var objToSend = {
       "id":taskId,
       "status":status
@@ -84,7 +84,7 @@ abstract class TasksHttp{
   }
   
   static Future<bool> deleteTask(int id) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/delete');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/delete');
     var req = await http.post(url, body: jsonEncode({"id":id}), headers: {'Content-Type':'application/json'});
     if(req.statusCode<200||req.statusCode>=400){
       return false;
@@ -94,7 +94,7 @@ abstract class TasksHttp{
   }
 
   static Future<bool> updateTask(Task task) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/update');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/update');
     var req = await http.post(url, body: jsonEncode(task.toJson()), headers: {'Content-Type':'application/json'});
     if(req.statusCode<200||req.statusCode>=400){
       return false;
@@ -104,7 +104,7 @@ abstract class TasksHttp{
   }
   
   static Future<List<Task>> searchTasks(String text, int id, int groupId) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/search');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/search');
     var objToSend = {
       'text':text,
       'id':id,
@@ -118,7 +118,7 @@ abstract class TasksHttp{
   }
 
   static Future<bool> deleteImages(int id, List<int> images) async {
-    var url = Uri.parse('$URL_MAIN/api/tasks/delete-images');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/tasks/delete-images');
     var objToSend = {"id":id, "images":images};
     var req = await http.post(url, body: jsonEncode(objToSend), headers: {"Content-Type":"application/json"});
     if(req.statusCode<200||req.statusCode>=400) return false;

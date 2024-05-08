@@ -679,6 +679,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Invite code`
+  String get invite_code {
+    return Intl.message(
+      'Invite code',
+      name: 'invite_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Value saved in clipboard`
+  String get saved_in_clipboard {
+    return Intl.message(
+      'Value saved in clipboard',
+      name: 'saved_in_clipboard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join to group`
+  String get join_to_group {
+    return Intl.message(
+      'Join to group',
+      name: 'join_to_group',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Join`
+  String get join {
+    return Intl.message(
+      'Join',
+      name: 'join',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Write invite code`
+  String get write_invite_code {
+    return Intl.message(
+      'Write invite code',
+      name: 'write_invite_code',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

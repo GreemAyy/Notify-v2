@@ -61,5 +61,10 @@
   "task_deleted": "Task deleted",
   "empty_message": "Empty",
   "name_error": "Name length should be more or equals 2",
-  "nobody": "Nobody"
+  "nobody": "Nobody",
+  "invite_code": "Invite code",
+  "saved_in_clipboard": "Value saved in clipboard",
+  "join_to_group": "Join to group",
+  "join": "Join",
+  "write_invite_code": "Write invite code"
 }

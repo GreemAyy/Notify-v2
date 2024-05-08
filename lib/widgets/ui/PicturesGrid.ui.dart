@@ -77,7 +77,7 @@ class ImagePlaceholder extends StatelessWidget{
     final theme = Theme.of(context);
 
     return CachedNetworkImage(
-      imageUrl: '$URL_MAIN/api/images/$imageId',
+      imageUrl: '${Constants.URL_MAIN}/api/images/$imageId',
       imageBuilder: (context, image){
         return ClipRRect(
             borderRadius: BorderRadius.circular(radius),

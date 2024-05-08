@@ -1,13 +1,13 @@
 import 'package:notify/custom_classes/group.dart';
 import 'package:notify/widgets/group/MyGroupsList.widget.dart';
-import 'package:notify/widgets/task/SecondTaskSlider.widget.dart';
-import 'package:notify/widgets/task/ShowCreateTaskModal.dart';
-import 'package:notify/widgets/task/ShowDatePickerModal.dart';
+import 'package:notify/widgets/task/show_create_task_modal.dart';
+import 'package:notify/widgets/task/show_date_picker_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../custom_classes/task.dart';
 import '../store/store.dart';
 import '../store/collector.dart';
+import '../widgets/task/TaskSlider.widget.dart';
 import 'Chat.screen.dart';
 
 class TasksScreen extends StatefulWidget{
@@ -139,7 +139,7 @@ class _StateTasksScreen extends State<TasksScreen>{
                   )
               ),
               SliverToBoxAdapter(
-                  child: SecondTaskSlider(
+                  child: TaskSlider(
                       height: screenSize.height - headerHeight - safeAreaSize - groupBarHeight,
                       onNext:() => go(1),
                       onPrevious:() => go(-1)

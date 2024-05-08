@@ -1,4 +1,4 @@
-import 'package:notify/widgets/task/ShowTaskOptionsModal.dart';
+import 'package:notify/widgets/task/show_task_options_modal.dart';
 import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
 import 'package:flutter/material.dart';
 import '../../custom_classes/task.dart';

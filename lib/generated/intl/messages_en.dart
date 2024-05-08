@@ -52,6 +52,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Home"),
         "home_header": MessageLookupByLibrary.simpleMessage("Groups"),
         "home_task_header": MessageLookupByLibrary.simpleMessage("Tasks"),
+        "invite_code": MessageLookupByLibrary.simpleMessage("Invite code"),
+        "join": MessageLookupByLibrary.simpleMessage("Join"),
+        "join_to_group": MessageLookupByLibrary.simpleMessage("Join to group"),
         "language": MessageLookupByLibrary.simpleMessage("Language"),
         "light_theme": MessageLookupByLibrary.simpleMessage("Light"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
@@ -73,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
         "reply": MessageLookupByLibrary.simpleMessage("Reply"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "saved_in_clipboard":
+            MessageLookupByLibrary.simpleMessage("Value saved in clipboard"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
@@ -92,6 +97,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_to": MessageLookupByLibrary.simpleMessage("To"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "write": MessageLookupByLibrary.simpleMessage("Write"),
+        "write_invite_code":
+            MessageLookupByLibrary.simpleMessage("Write invite code"),
         "write_message": MessageLookupByLibrary.simpleMessage("Write message")
       };
 }

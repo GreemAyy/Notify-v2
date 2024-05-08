@@ -1,25 +1,25 @@
 import 'dart:async';
-import 'package:notify/widgets/task/SecondTasksList.widget.dart';
 import 'package:flutter/material.dart';
 import '../../store/store.dart';
 import 'LoadingPlaceholder.widget.dart';
+import 'TasksList.widget.dart';
 
-class SecondTaskSlider extends StatefulWidget{
-  SecondTaskSlider({
+class TaskSlider extends StatefulWidget{
+  const TaskSlider({
     super.key,
     required this.height,
     required this.onNext,
     required this.onPrevious
   });
-  double height;
-  void Function() onNext;
-  void Function() onPrevious;
+  final double height;
+  final void Function() onNext;
+  final void Function() onPrevious;
 
   @override
-  State<StatefulWidget> createState() => _StateSecondTaskSlider();
+  State<StatefulWidget> createState() => _StateTaskSlider();
 }
 
-class _StateSecondTaskSlider extends State<SecondTaskSlider>{
+class _StateTaskSlider extends State<TaskSlider>{
   double start = 0;
   double currentPosition = 0;
   bool disableAnimation = false;
@@ -128,7 +128,7 @@ class _StateSecondTaskSlider extends State<SecondTaskSlider>{
                       yPos: 0,
                       disableAnimation: disableAnimation,
                       duration: slideDuration,
-                      child: SecondTasksList(display: !isLoading)
+                      child: TasksList(display: !isLoading)
                     ),
                     TimeList(
                       height: widget.height,

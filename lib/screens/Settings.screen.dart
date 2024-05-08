@@ -1,7 +1,7 @@
-import 'package:notify/methods/workWithUser.dart';
+import 'package:notify/methods/work_with_user.dart';
 import 'package:flutter/material.dart';
 import 'package:notify/store/collector_flutter.dart';
-import 'package:notify/widgets/settings/ShowChangeLanguageModal.dart';
+import 'package:notify/widgets/settings/show_change_language_modal.dart';
 import '../app_settings/const.dart';
 import '../generated/l10n.dart';
 import '../store/store.dart';
@@ -64,6 +64,8 @@ class _StateSettingsScreen extends State<SettingsScreen>{
 }
 
 class ThemePicker extends StatelessWidget{
+  ThemePicker({super.key});
+
   final rxTheme = Reactive.withStore(StoreConnect(key: 'theme_mode', store: store), ThemeMode.system);
 
   @override
@@ -123,8 +125,10 @@ class ThemePicker extends StatelessWidget{
 }
 
 class LanguagePicker extends StatelessWidget{
+  LanguagePicker({super.key});
+
   final rxLocale = Reactive.withStore(StoreConnect(key: 'locale', store: store), const Locale('en'));
-  
+
   @override
   Widget build(BuildContext context) {
     return ReactiveBuilder(
@@ -151,7 +155,7 @@ class LanguagePicker extends StatelessWidget{
                   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   width: MediaQuery.of(context).size.width,
                   child: Text(
-                    langs[rxLocale.value.languageCode]!,
+                    Constants.LANGUAGES[rxLocale.value.languageCode]!,
                     style: theme.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w600
                     )

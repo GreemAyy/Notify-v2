@@ -38,6 +38,9 @@ class Reactive<T> with ChangeNotifier{
     return this;
   }
 
+  bool get isNull => _store.get(_key)==null;
+  bool get isNotNull => !isNull;
+
   T get value => _store.get(_key);
   set value(T value){
     if(_nullable||value!=null){

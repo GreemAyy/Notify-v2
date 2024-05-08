@@ -4,7 +4,7 @@ import 'package:notify/http/users.http.dart';
 import 'package:flutter/material.dart';
 import 'package:notify/screens/Auth.screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../methods/workWithUser.dart';
+import '../methods/work_with_user.dart';
 import '../store/store.dart';
 
 class InitScreen extends StatefulWidget{

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FormTextField extends StatefulWidget{
-  FormTextField({
+  const FormTextField({
     super.key,
     required this.onInput,
     this.enabled = true,
@@ -19,21 +19,21 @@ class FormTextField extends StatefulWidget{
     this.getFocusNode,
     this.getController
   });
-  String hintText;
-  double borderWidth;
-  double borderRadius;
-  Color? borderColor;
-  bool enabled;
-  Widget? icon;
-  bool autoOpen;
-  String? initValue;
-  String? errorText;
-  Color? backgroundColor;
-  int maxLines;
-  TextStyle? textStyle;
-  void Function(String text) onInput;
-  void Function(FocusNode node)? getFocusNode;
-  void Function(TextEditingController controller)? getController;
+  final String hintText;
+  final double borderWidth;
+  final double borderRadius;
+  final Color? borderColor;
+  final bool enabled;
+  final Widget? icon;
+  final bool autoOpen;
+  final String? initValue;
+  final String? errorText;
+  final Color? backgroundColor;
+  final int maxLines;
+  final TextStyle? textStyle;
+  final void Function(String text) onInput;
+  final void Function(FocusNode node)? getFocusNode;
+  final void Function(TextEditingController controller)? getController;
 
   @override
   State<StatefulWidget> createState() => _FormTextFieldState();

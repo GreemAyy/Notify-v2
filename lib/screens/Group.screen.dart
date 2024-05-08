@@ -1,5 +1,6 @@
 import 'package:notify/http/tasks.http.dart';
-import 'package:notify/widgets/group/ShowGroupSettings.dart';
+import 'package:notify/widgets/group/show_group_settings.dart';
+import 'package:notify/widgets/group/show_invite_modal.dart';
 import 'package:notify/widgets/ui/PicturesGrid.ui.dart';
 import 'package:notify/widgets/ui/Skeleton.ui.dart';
 import 'package:flutter/material.dart';
@@ -8,11 +9,11 @@ import '../custom_classes/task.dart';
 import '../store/store.dart';
 
 class GroupScreen extends StatefulWidget{
-  GroupScreen({
+  const GroupScreen({
     super.key,
     required this.group
   });
-  Group group;
+  final Group group;
 
   @override
   State<StatefulWidget> createState() => _StateGroupScreen();
@@ -99,9 +100,7 @@ class _StateGroupScreen extends State<GroupScreen>{
                       )
                   ),
                 IconButton(
-                    onPressed: (){
-
-                    },
+                    onPressed: () => showInviteModal(context),
                     icon: Icon(
                       Icons.share,
                       color: theme.textTheme.bodyMedium!.color

@@ -7,21 +7,21 @@ typedef GetMessagesBeforeIdOutput = ({List<Message> messages, bool haveMore});
 
 class MessagesHttp {
    static Future<int> createMessage(Message message) async {
-    final url = Uri.parse('$URL_MAIN/api/messages/create');
+    final url = Uri.parse('${Constants.URL_MAIN}/api/messages/create');
     final req = await http.post(url, body: jsonEncode(message.toJson()), headers: {"Content-Type": "application/json"});
     final body = Map<String, int>.from(jsonDecode(req.body));
     return body['id'] as int;
   }
 
    static Future<bool> updateMessage(Message message) async {
-     final url = Uri.parse('$URL_MAIN/api/messages/update');
+     final url = Uri.parse('${Constants.URL_MAIN}/api/messages/update');
      final req = await http.post(url, body: jsonEncode(message.toJson()), headers: {"Content-Type": "application/json"});
      final body = Map<String, bool>.from(jsonDecode(req.body));
      return body['updated'] as bool;
    }
 
   static Future<List<Message>> getMessagesAfterId(int groupId, int messageId) async {
-    final url = Uri.parse('$URL_MAIN/api/messages/get-after-id');
+    final url = Uri.parse('${Constants.URL_MAIN}/api/messages/get-after-id');
     final req = await http.post(url, body: jsonEncode({
       "group_id": groupId,
       "message_id": messageId
@@ -31,7 +31,7 @@ class MessagesHttp {
   }
 
    static Future<List<Message>> getMessagesUntil(int groupId, int from, int to) async {
-     final url = Uri.parse('$URL_MAIN/api/messages/get-until');
+     final url = Uri.parse('${Constants.URL_MAIN}/api/messages/get-until');
      final req = await http.post(url, body: jsonEncode({
        "group_id": groupId,
        "from_message_id": from,
@@ -42,7 +42,7 @@ class MessagesHttp {
    }
 
    static Future<GetMessagesBeforeIdOutput> getMessagesBeforeId(int groupId, int messageId) async {
-     final url = Uri.parse('$URL_MAIN/api/messages/get-before-id');
+     final url = Uri.parse('${Constants.URL_MAIN}/api/messages/get-before-id');
      final req = await http.post(url, body: jsonEncode({
        "group_id": groupId,
        "message_id": messageId
@@ -55,7 +55,7 @@ class MessagesHttp {
    }
 
    static Future<bool> deleteMessage(int groupId, int messageId) async {
-     final url = Uri.parse('$URL_MAIN/api/messages/delete');
+     final url = Uri.parse('${Constants.URL_MAIN}/api/messages/delete');
      final req = await http.post(url, body: jsonEncode({
        "group_id": groupId,
        "message_id": messageId
@@ -65,7 +65,7 @@ class MessagesHttp {
    }
 
   static Future<Message?> getSingle(int id) async {
-    final url = Uri.parse('$URL_MAIN/api/messages/single/$id');
+    final url = Uri.parse('${Constants.URL_MAIN}/api/messages/single/$id');
     final req = await http.get(url);
     final body = Map<String, dynamic>.from(jsonDecode(req.body));
     return body['message'] == null ? null : Message.fromJson(body['message']);

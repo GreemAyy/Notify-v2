@@ -1,12 +1,12 @@
 import 'package:notify/http/users.http.dart';
-import 'package:notify/methods/workWithUser.dart';
+import 'package:notify/methods/work_with_user.dart';
 import 'package:notify/widgets/auth/CodeAuth.widget.dart';
 import 'package:notify/widgets/auth/PhoneAuth.widget.dart';
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
 import '../store/store.dart';
 import '../store/collector_flutter.dart';
-import '../widgets/auth/NameAuth.dart';
+import '../widgets/auth/NameAuth.widget.dart';
 
 class AuthScreen extends StatefulWidget{
   const AuthScreen({super.key});
@@ -72,13 +72,14 @@ class _StateAuthScreen extends State<AuthScreen>{
         if(userInfo.name.length<2){
           rxFocusEmitter.value = 2;
         }else{
+          try{
+            rxFocusEmitter.value = 0;
+          }catch(_){}
           Navigator.pushNamedAndRemoveUntil(context, '/home', (_)=>false);
+          return;
         }
       }
       setState(() => isLoading = false);
-      try{
-        rxFocusEmitter.value = 0;
-      }catch(_){}
     }
   }
 

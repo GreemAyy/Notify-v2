@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:notify/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import '../../screens/Auth.screen.dart';
 
 class CodeAuth extends StatefulWidget{
   const CodeAuth({

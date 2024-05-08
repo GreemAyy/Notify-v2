@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../store/store.dart';
 
@@ -12,7 +11,7 @@ void setUser(int id, String hash) async {
   });
   store.onType;
 }
-//Navigator.pushNamedAndRemoveUntil(context, '/auth', (route) => false);
+
 void clearUser() async {
   var prefs = await SharedPreferences.getInstance();
   prefs.remove('id');

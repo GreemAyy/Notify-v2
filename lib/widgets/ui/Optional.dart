@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class Optional extends StatelessWidget{
-  Optional({
+  const Optional({
     super.key,
     required this.conditional,
     required this.complited,
     required this.uncomplited
   });
-  bool conditional;
-  Widget complited;
-  Widget uncomplited;
+  final bool conditional;
+  final Widget complited;
+  final Widget uncomplited;
 
   @override
   Widget build(BuildContext context) {

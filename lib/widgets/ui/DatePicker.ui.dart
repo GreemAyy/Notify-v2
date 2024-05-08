@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 class DatePicker extends StatefulWidget{
-  DatePicker({
+  const DatePicker({
     super.key,
     required this.date,
     required this.onDateChange,
     this.selectionMode = DateRangePickerSelectionMode.single,
     this.toDate
   });
-  DateTime date;
-  DateTime? toDate;
-  void Function(dynamic date) onDateChange;
-  DateRangePickerSelectionMode selectionMode;
+  final DateTime date;
+  final DateTime? toDate;
+  final void Function(dynamic date) onDateChange;
+  final DateRangePickerSelectionMode selectionMode;
 
   @override
   State<StatefulWidget> createState() =>_StateDatePicker();

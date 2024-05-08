@@ -7,6 +7,7 @@ import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:flutter/material.dart';
 import '../../generated/l10n.dart';
 import '../../http/images.http.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 void showGroupCreateModal(BuildContext context, void Function(int groupId) onCreate) async {
   showModalBottomSheet(
@@ -31,8 +32,8 @@ void showGroupCreateModal(BuildContext context, void Function(int groupId) onCre
 }
 
 class _Form extends StatefulWidget{
-  _Form({required this.onCreate});
-  void Function(int id) onCreate;
+  const _Form({required this.onCreate});
+  final void Function(int id) onCreate;
   @override
   State<StatefulWidget> createState() => _StateForm();
 }
@@ -60,6 +61,7 @@ class _StateForm extends State<_Form>{
     var createId = await GroupsHttp.createGroup(Group(id: 0, name: name, creatorId: userId, imageId: id));
     if(createId!=0){
       widget.onCreate(createId);
+      store.get<Socket>('socket')!.emit('connect-to-chat', {'group_id':createId});
       Navigator.pop(context);
     }else{
       setState(() => isLoading = false);

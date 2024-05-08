@@ -1,5 +1,5 @@
 import 'package:notify/http/tasks.http.dart';
-import 'package:notify/widgets/task/SecondTasksList.widget.dart';
+import 'package:notify/widgets/task/TasksList.widget.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
 import 'package:flutter/material.dart';
 import '../generated/l10n.dart';
@@ -80,10 +80,10 @@ class _StateSearchScreen extends State<SearchScreen>{
                     )
                 )
             ),
-            SecondTasksList(
-                display: !isLoading,
-                initLoad: false,
-                isSliver: true
+            TasksList(
+              display: !isLoading,
+              initLoad: false,
+              isSliver: true
             )
           ]
         )

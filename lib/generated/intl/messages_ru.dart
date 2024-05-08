@@ -53,6 +53,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "home": MessageLookupByLibrary.simpleMessage("Главная"),
         "home_header": MessageLookupByLibrary.simpleMessage("Группы"),
         "home_task_header": MessageLookupByLibrary.simpleMessage("Задачи"),
+        "invite_code":
+            MessageLookupByLibrary.simpleMessage("Код для приглашения"),
+        "join": MessageLookupByLibrary.simpleMessage("Присоедениться"),
+        "join_to_group":
+            MessageLookupByLibrary.simpleMessage("Присоедениться к группе"),
         "language": MessageLookupByLibrary.simpleMessage("Язык"),
         "light_theme": MessageLookupByLibrary.simpleMessage("Светлая"),
         "loading": MessageLookupByLibrary.simpleMessage("Загрузка..."),
@@ -71,6 +76,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),
         "reply": MessageLookupByLibrary.simpleMessage("Ответить"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
+        "saved_in_clipboard": MessageLookupByLibrary.simpleMessage(
+            "Текст сохранён в буфер обмена"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),
@@ -90,6 +97,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "task_to": MessageLookupByLibrary.simpleMessage("По"),
         "theme": MessageLookupByLibrary.simpleMessage("Тема"),
         "write": MessageLookupByLibrary.simpleMessage("Напишите"),
+        "write_invite_code":
+            MessageLookupByLibrary.simpleMessage("Напишите код"),
         "write_message":
             MessageLookupByLibrary.simpleMessage("Написать сообщение")
       };

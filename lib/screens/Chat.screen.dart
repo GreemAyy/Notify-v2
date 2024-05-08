@@ -4,7 +4,7 @@ import 'package:notify/custom_classes/task.dart';
 import 'package:notify/http/users.http.dart';
 import 'package:notify/store/collector_flutter.dart';
 import 'package:notify/widgets/chat/BottomMessageBar.widget.dart';
-import 'package:notify/widgets/chat/MessageFullscreen.dart';
+import 'package:notify/widgets/chat/MessageFullscreen.widget.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
 import '../custom_classes/group.dart';
 import '../custom_classes/user.dart';

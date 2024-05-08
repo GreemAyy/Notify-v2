@@ -124,6 +124,9 @@ class _StateBottomMessageBar extends State<BottomMessageBar>{
         'scroll_to_message',
         (rxGroupMessages.value[store.get<int>('group')!]??[]).first.id
     );
+    setState(() {
+      isOpen = false;
+    });
   }
 
   void _focusNodeListener(){
@@ -539,7 +542,7 @@ class _StatePhotoPicker extends State<PhotoPicker>{
             margin: const EdgeInsets.all(2.5),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              border: pickedImagesId.contains(image.id)?Border.all(
+              border: pickedImagesId.contains(image.id) ? Border.all(
                 color: theme.primaryColor,
                 width: 5
               ) : null
@@ -571,30 +574,28 @@ class ReplyBlock extends StatelessWidget{
 
     return rxPickedReplyMessage.toBuilder((context, reactive) {
       return InkWell(
-        onTap: (){
-          reactive.value = null;
-        },
-        child: AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            margin: reactive.value == null ? EdgeInsets.zero : height!=null?const EdgeInsets.only(bottom: 10):null,
-            height: reactive.value == null ? 0 : height!=null ? height! - 10 : null,
-            decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(.3),
-                border: Border(
-                    left: BorderSide(
-                        color: theme.primaryColor,
-                        width: 3
-                    )
-                )
-            ),
-            child: Row(
-                children: [
-                  const SizedBox(width: 5),
-                  Expanded(child: Text(reactive.value?.text??'', overflow: TextOverflow.ellipsis))
-                ]
-            )
-        )
-      );
+          onTap: () => reactive.value = null,
+          child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: reactive.isNull ? EdgeInsets.zero : height != null ? const EdgeInsets.only(bottom: 10) : null,
+              height: reactive.isNull ? 0 : height != null ? height! - 10 : null,
+              decoration: BoxDecoration(
+                  color: theme.primaryColor.withOpacity(.1),
+                  border: Border(
+                      left: BorderSide(
+                          color: theme.primaryColor,
+                          width: 3
+                      )
+                  )
+              ),
+              child: Row(
+                  children: [
+                    const SizedBox(width: 5),
+                    Expanded(child: Text(reactive.value?.text??'', overflow: TextOverflow.ellipsis))
+                  ]
+              )
+          )
+        );
     });
   }
 }

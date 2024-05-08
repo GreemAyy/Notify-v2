@@ -79,7 +79,7 @@ class _StateMessageItem extends State<MessageItem>{
                 child: (
                   widget.self ?
                   AnimatedAlign(
-                    duration: const Duration(milliseconds: 100),
+                    duration: const Duration(milliseconds: 150),
                     alignment: isOnDrag ? Alignment.centerLeft : Alignment.centerRight,
                     child: MessageBody(message: message, self: widget.self)
                   ) :
@@ -432,14 +432,16 @@ class _StateReplyMessageItem extends State<ReplyMessageItem>{
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
+        width: double.infinity,
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.5),
           border: Border(
             left: BorderSide(
               color: Theme.of(context).primaryColor,
               width: 3
             )
           ),
-          color: Theme.of(context).primaryColor.withOpacity(.3)
+          color: Theme.of(context).primaryColor.withOpacity(.1)
         ),
         child: Text(
           isLoading ?
@@ -499,4 +501,3 @@ class _StateUserMessageItem extends State<UserMessageItem>{
     );
   }
 }
-

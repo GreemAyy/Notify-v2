@@ -4,7 +4,7 @@ import '../app_settings/const.dart';
 
 abstract class ImagesHttp{
   static Future<Map<String, dynamic>> sendSingleFile(File file) async {
-    var url = Uri.parse('$URL_MAIN/api/images/load-single');
+    var url = Uri.parse('${Constants.URL_MAIN}/api/images/load-single');
     var dio = Dio();
     var formData = FormData();
     formData.files.add(

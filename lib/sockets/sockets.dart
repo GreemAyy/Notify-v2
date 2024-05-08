@@ -1,19 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:notify/app_settings/const.dart';
 import 'package:notify/custom_classes/group.dart';
-import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/sockets/notification.dart';
-import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import '../custom_classes/message.dart';
 import '../custom_classes/task.dart';
 import '../http/groups.http.dart';
 import '../store/store.dart';
 
 void connectSocket(){
   IO.Socket socket = IO.io(
-      URL_MAIN,
+      Constants.URL_MAIN,
       IO.OptionBuilder()
       .setTransports(['websocket'])
       .setPath('/socket.io')

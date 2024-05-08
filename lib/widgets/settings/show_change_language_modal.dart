@@ -25,7 +25,7 @@ class _StateLocaleList extends State<_LocaleList>{
         _controller.animateTo(
           duration: const Duration(milliseconds: 500),
           curve: Curves.ease,
-          (50*(langs.keys.toList().indexOf(
+          (50*(Constants.LANGUAGES.keys.toList().indexOf(
               store.get<Locale>('locale')?.languageCode??'en'
           ))).toDouble()
         );
@@ -44,7 +44,7 @@ class _StateLocaleList extends State<_LocaleList>{
         height: screenSize.height*.3,
         child: ListView(
           controller: _controller,
-          children: langs.entries.map((e){
+          children: Constants.LANGUAGES.entries.map((e){
             return InkWell(
               onTap: () => store.set('locale', Locale(e.key)),
               child: Container(

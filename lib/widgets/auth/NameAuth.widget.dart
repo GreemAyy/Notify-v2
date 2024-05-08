@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notify/widgets/ui/FormTextField.ui.dart';
-
 import '../../generated/l10n.dart';
 
 class NameAuth extends StatefulWidget{

@@ -1,4 +1,3 @@
-import 'package:notify/http/groups.http.dart';
 import 'package:notify/store/store.dart';
 import 'package:notify/widgets/chat/MessagesList.widget.dart';
 import 'package:socket_io_client/socket_io_client.dart';
