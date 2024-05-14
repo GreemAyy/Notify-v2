@@ -1,4 +1,6 @@
+import 'package:notify/custom_classes/message.dart';
 import 'package:notify/custom_classes/task.dart';
+import 'package:notify/screens/Chat.screen.dart';
 import 'package:notify/sockets/sockets.dart';
 import 'package:notify/widgets/task/LoadingPlaceholder.widget.dart';
 import 'package:notify/widgets/task/TaskItem.widget.dart';
@@ -28,7 +30,7 @@ class _StateTasksList extends State<TasksList>{
   late final _S = S.of(context);
   late var tasksList = widget.tasks;
   late bool isLoading = widget.initLoad;
-  Map<String, int> watchersIndexes = {};
+  final Map<String, int> watchersIndexes = {};
 
   @override
   void initState() {
@@ -56,17 +58,23 @@ class _StateTasksList extends State<TasksList>{
       }
     });
     watchersIndexes['delete_task'] = store.watch<Task>('delete_task', (task) async {
-      var isDeleted = await TasksHttp.deleteTask(task.id);
+      final isDeleted = await TasksHttp.deleteTask(task.id);
       if(isDeleted){
         setState(() {
           tasksList = tasksList.where((e) => e.id != task.id).toList();
         });
         updateSocket(task, SocketCommand.delete);
+        final groupMessages = rxGroupMessages.value;
+        groupMessages[task.groupId] = (groupMessages[task.groupId]??[]).map((e){
+          e.media = e.media.where((media) => media.type == MessageMediaDataType.task&&media.id==task.id).toList();
+          return e;
+        }).toList();
+        rxGroupMessages.value = groupMessages;
       }
     });
     watchersIndexes['change_task_status'] = store.watch<({int status, Task task})>('change_task_status', (data) async {
-      var task = data.task;
-      var isChanged = await TasksHttp.changeTaskStatus(data.task.id, data.status);
+      final task = data.task;
+      final isChanged = await TasksHttp.changeTaskStatus(data.task.id, data.status);
       if(isChanged){
         setState(() {
           tasksList = tasksList.map((i){
@@ -84,16 +92,16 @@ class _StateTasksList extends State<TasksList>{
   }
 
   void loadTasks(DateTime date) async {
-    var group = store.get<int>('group')!;
+    final group = store.get<int>('group')!;
     setState(() => isLoading = true);
     if(group==0){
-      var tasks = await TasksHttp.getLocalUsersTasks(store.get('id'), date);
+      final tasks = await TasksHttp.getLocalUsersTasks(store.get('id'), date);
       setState(() {
         tasksList = tasks;
         isLoading = false;
       });
     }else{
-      var tasks = await TasksHttp.getGroupTasks(group, date);
+      final tasks = await TasksHttp.getGroupTasks(group, date);
       setState(() {
         tasksList = tasks;
         isLoading = false;
@@ -105,7 +113,7 @@ class _StateTasksList extends State<TasksList>{
   void dispose() {
     super.dispose();
     if(!widget.initLoad) store.unSee('search_tasks');
-    watchersIndexes.forEach((key, value) => store.unSeeAt(key, value));
+    watchersIndexes.forEach((key, index) => store.unSeeAt(key, index));
   }
 
   @override

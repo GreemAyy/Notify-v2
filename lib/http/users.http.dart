@@ -3,7 +3,7 @@ import 'package:notify/app_settings/const.dart';
 import 'package:http/http.dart' as http;
 import '../custom_classes/user.dart';
 
-class UsersHttp{
+abstract class UsersHttp{
  static Future<User?> getSingle(int id) async {
    final url = Uri.parse('${Constants.URL_MAIN}/api/users/$id');
    final req = await http.get(url);

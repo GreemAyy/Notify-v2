@@ -61,8 +61,9 @@
   "task_deleted": "Задача удалена",
   "empty_message": "Пусто",
   "invite_code": "Код для приглашения",
-  "saved_in_clipboard": "Текст сохранён в буфер обмена",
+  "saved_in_clipboard": "Код сохранён в буфер обмена",
   "join_to_group": "Присоедениться к группе",
   "join": "Присоедениться",
-  "write_invite_code": "Напишите код"
+  "write_invite_code": "Напишите код",
+  "members": "Участники"
 }

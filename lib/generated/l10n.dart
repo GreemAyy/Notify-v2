@@ -690,10 +690,10 @@ class S {
     );
   }
 
-  /// `Value saved in clipboard`
+  /// `Code saved in clipboard`
   String get saved_in_clipboard {
     return Intl.message(
-      'Value saved in clipboard',
+      'Code saved in clipboard',
       name: 'saved_in_clipboard',
       desc: '',
       args: [],
@@ -725,6 +725,16 @@ class S {
     return Intl.message(
       'Write invite code',
       name: 'write_invite_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Members`
+  String get members {
+    return Intl.message(
+      'Members',
+      name: 'members',
       desc: '',
       args: [],
     );

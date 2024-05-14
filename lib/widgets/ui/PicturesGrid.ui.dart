@@ -78,6 +78,11 @@ class ImagePlaceholder extends StatelessWidget{
 
     return CachedNetworkImage(
       imageUrl: '${Constants.URL_MAIN}/api/images/$imageId',
+      filterQuality: FilterQuality.low,
+      memCacheHeight: imageHeight.toInt(),
+      memCacheWidth: imageWidth.toInt(),
+      maxHeightDiskCache: imageHeight.toInt()*2,
+      maxWidthDiskCache: imageWidth.toInt()*2,
       imageBuilder: (context, image){
         return ClipRRect(
             borderRadius: BorderRadius.circular(radius),

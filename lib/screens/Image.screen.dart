@@ -4,13 +4,13 @@ import '../custom_classes/task.dart';
 import '../generated/l10n.dart';
 
 class ImageScreen extends StatefulWidget {
-  ImageScreen({
+  const ImageScreen({
     super.key,
     required this.heroTag,
     required this.image
   });
-  String heroTag;
-  Widget image;
+  final String heroTag;
+  final Widget image;
 
   @override
   State<StatefulWidget> createState() => _StateImageScreen();

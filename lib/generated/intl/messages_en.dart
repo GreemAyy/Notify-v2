@@ -61,6 +61,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "log_btn": MessageLookupByLibrary.simpleMessage("Log"),
         "logout": MessageLookupByLibrary.simpleMessage("Log out"),
         "max": MessageLookupByLibrary.simpleMessage("Max"),
+        "members": MessageLookupByLibrary.simpleMessage("Members"),
         "message": MessageLookupByLibrary.simpleMessage("Message"),
         "message_deleted":
             MessageLookupByLibrary.simpleMessage("Message deleted"),
@@ -77,7 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "reply": MessageLookupByLibrary.simpleMessage("Reply"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saved_in_clipboard":
-            MessageLookupByLibrary.simpleMessage("Value saved in clipboard"),
+            MessageLookupByLibrary.simpleMessage("Code saved in clipboard"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "send": MessageLookupByLibrary.simpleMessage("Send"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),

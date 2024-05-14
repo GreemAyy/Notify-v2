@@ -70,4 +70,7 @@ class MessageMedia {
   bool operator == (Object other) {
     return type.value == other;
   }
+
+  @override
+  int get hashCode => id.hashCode + type.hashCode;
 }

@@ -14,13 +14,15 @@ void showJoinModal(BuildContext context){
       child: Container(
         height: 160,
         padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
-        child: _Join()
+        child: const _Join()
       ),
     )
   );
 }
 
 class _Join extends StatefulWidget{
+  const _Join();
+
   @override
   State<StatefulWidget> createState() => _StateJoin();
 }

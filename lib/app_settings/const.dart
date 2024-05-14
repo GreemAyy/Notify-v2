@@ -1,5 +1,5 @@
-abstract class Constants{
-  static const URL_MAIN = "https://9fe3-77-222-104-18.ngrok-free.app";
+abstract class Constants {
+  static const URL_MAIN = "https://tender-dogs-allow.loca.lt";
   static const LANGUAGES = {
     "en":"English",
     "ru":"Русский",

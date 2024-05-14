@@ -33,8 +33,8 @@ class _StateSettingsScreen extends State<SettingsScreen>{
                 )
               )
             ),
-            SliverToBoxAdapter(child: ThemePicker()),
-            SliverToBoxAdapter(child: LanguagePicker()),
+            const SliverToBoxAdapter(child: ThemePicker()),
+            const SliverToBoxAdapter(child: LanguagePicker()),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -63,15 +63,15 @@ class _StateSettingsScreen extends State<SettingsScreen>{
   }
 }
 
-class ThemePicker extends StatelessWidget{
-  ThemePicker({super.key});
+final _rxTheme = Reactive.withStore(StoreConnect(key: 'theme_mode', store: store), ThemeMode.system);
 
-  final rxTheme = Reactive.withStore(StoreConnect(key: 'theme_mode', store: store), ThemeMode.system);
+class ThemePicker extends StatelessWidget{
+  const ThemePicker({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ReactiveBuilder(
-        reactive: rxTheme,
+        reactive: _rxTheme,
         builder: (context, _){
           final theme = Theme.of(context);
           final _S = S.of(context);
@@ -95,26 +95,26 @@ class ThemePicker extends StatelessWidget{
               ),
               ...themes.entries.map((e){
                 return InkWell(
-                    onTap: () => rxTheme.value = e.value,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                                e.key,
-                                style: theme.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.w600
-                                )
-                            ),
-                            if(e.value.name==rxTheme.value.name)
-                              Icon(
-                                  Icons.done,
-                                  color: theme.primaryColor
-                              )
-                          ]
-                      ),
+                  onTap: () => _rxTheme.value = e.value,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 7.5, horizontal: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          e.key,
+                          style: theme.textTheme.bodyMedium!.copyWith(
+                            fontWeight: FontWeight.w600
+                          )
+                        ),
+                        if(e.value.name==_rxTheme.value.name)
+                          Icon(
+                            Icons.done,
+                            color: theme.primaryColor
+                          )
+                      ]
                     )
+                  )
                 );
               }).toList()
             ]
@@ -124,46 +124,46 @@ class ThemePicker extends StatelessWidget{
   }
 }
 
-class LanguagePicker extends StatelessWidget{
-  LanguagePicker({super.key});
+final _rxLocale = Reactive.withStore(StoreConnect(key: 'locale', store: store), const Locale('en'));
 
-  final rxLocale = Reactive.withStore(StoreConnect(key: 'locale', store: store), const Locale('en'));
+class LanguagePicker extends StatelessWidget{
+  const LanguagePicker({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ReactiveBuilder(
-        reactive: rxLocale, 
-        builder: (context, _){
-          final theme = Theme.of(context);
-          final _S = S.of(context);
+     reactive: _rxLocale,
+     builder: (context, _){
+       final theme = Theme.of(context);
+       final _S = S.of(context);
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Text(
-                  _S.language,
-                  style: theme.textTheme.bodyLarge!.copyWith(
-                    color: theme.primaryColor
-                  )
-                ),
-              ),
-              InkWell(
-                onTap: () => showChangeLanguageModal(context),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  width: MediaQuery.of(context).size.width,
-                  child: Text(
-                    Constants.LANGUAGES[rxLocale.value.languageCode]!,
-                    style: theme.textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600
-                    )
-                  )
-                )
-              )
-            ]
-          );
-        }
+       return Column(
+         crossAxisAlignment: CrossAxisAlignment.start,
+         children: [
+           Padding(
+             padding: const EdgeInsets.only(left: 10),
+             child: Text(
+               _S.language,
+               style: theme.textTheme.bodyLarge!.copyWith(
+                 color: theme.primaryColor
+               )
+             )
+           ),
+           InkWell(
+             onTap: () => showChangeLanguageModal(context),
+             child: Container(
+               padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+               width: MediaQuery.of(context).size.width,
+               child: Text(
+                 Constants.LANGUAGES[_rxLocale.value.languageCode]!,
+                 style: theme.textTheme.bodyMedium!.copyWith(
+                   fontWeight: FontWeight.w600
+                 )
+               )
+             )
+           )
+         ]
+       );
+     }
     );
   }}

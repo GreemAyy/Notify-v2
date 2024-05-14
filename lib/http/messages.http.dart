@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 typedef GetMessagesBeforeIdOutput = ({List<Message> messages, bool haveMore});
 
-class MessagesHttp {
+abstract class MessagesHttp {
    static Future<int> createMessage(Message message) async {
     final url = Uri.parse('${Constants.URL_MAIN}/api/messages/create');
     final req = await http.post(url, body: jsonEncode(message.toJson()), headers: {"Content-Type": "application/json"});

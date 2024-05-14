@@ -64,6 +64,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "log_btn": MessageLookupByLibrary.simpleMessage("Войти"),
         "logout": MessageLookupByLibrary.simpleMessage("Выйти"),
         "max": MessageLookupByLibrary.simpleMessage("Максимум"),
+        "members": MessageLookupByLibrary.simpleMessage("Участники"),
         "message": MessageLookupByLibrary.simpleMessage("Сообщение"),
         "message_deleted":
             MessageLookupByLibrary.simpleMessage("Сообщение удалено"),
@@ -76,8 +77,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),
         "reply": MessageLookupByLibrary.simpleMessage("Ответить"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
-        "saved_in_clipboard": MessageLookupByLibrary.simpleMessage(
-            "Текст сохранён в буфер обмена"),
+        "saved_in_clipboard":
+            MessageLookupByLibrary.simpleMessage("Код сохранён в буфер обмена"),
         "search": MessageLookupByLibrary.simpleMessage("Поиск"),
         "send": MessageLookupByLibrary.simpleMessage("Отправить"),
         "settings": MessageLookupByLibrary.simpleMessage("Настройки"),

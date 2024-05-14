@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class Skeleton extends StatefulWidget{
-  Skeleton({
+  const Skeleton({
     super.key,
     this.width = 0,
     required this.height,
@@ -14,15 +14,15 @@ class Skeleton extends StatefulWidget{
     this.horizontalOuterPadding = 0,
     this.colorUpdateDuration = const Duration(milliseconds: 500)
   });
-  double width;
-  double height;
-  bool setWidthFromScreenParams;
-  Color colorFrom;
-  Color colorTo;
-  double borderRadius;
-  double verticalOuterPadding;
-  double horizontalOuterPadding;
-  Duration colorUpdateDuration;
+  final double width;
+  final double height;
+  final bool setWidthFromScreenParams;
+  final Color colorFrom;
+  final Color colorTo;
+  final double borderRadius;
+  final double verticalOuterPadding;
+  final double horizontalOuterPadding;
+  final Duration colorUpdateDuration;
 
   @override
   State<StatefulWidget> createState() => _StateSkeleton();
@@ -52,7 +52,7 @@ class _StateSkeleton extends State<Skeleton>{
 
     return AnimatedContainer(
         duration: widget.colorUpdateDuration,
-        width: widget.setWidthFromScreenParams ? screenWidth : widget.width,
+        width: screenWidth==0&&widget.setWidthFromScreenParams ? screenWidth : widget.width,
         height: widget.height,
         margin: EdgeInsets.symmetric(vertical: widget.verticalOuterPadding, horizontal: widget.horizontalOuterPadding),
         decoration: BoxDecoration(

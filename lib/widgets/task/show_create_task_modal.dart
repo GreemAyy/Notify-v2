@@ -21,14 +21,14 @@ bool moreThen(TimeOfDay from, TimeOfDay to) =>
 
 void showCreateTaskModal(BuildContext context, void Function(int id) onCreate, [int groupId = 0]){
   showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      enableDrag: false,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20))
-      ),
-      builder: (context) => _CreateTask(groupId: groupId)
+    context: context,
+    showDragHandle: true,
+    enableDrag: false,
+    isScrollControlled: true,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20))
+    ),
+    builder: (context) => _CreateTask(groupId: groupId)
   );
 }
 
@@ -44,7 +44,9 @@ class _CreateTask extends StatefulWidget{
 
 class _StateCreateTask extends State<_CreateTask>{
   late final _S = S.of(context);
+  final scrollController = ScrollController();
   bool isLoading = false;
+  bool isFullScreen = false;
   String title = '';
   String description = '';
   DateTime dateFrom = store.get<DateTime>('date')!;
@@ -53,9 +55,16 @@ class _StateCreateTask extends State<_CreateTask>{
   TimeOfDay timeTo = TimeOfDay.now();
 
   @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(_scrollListener);
+  }
+
+  @override
   void dispose() {
     super.dispose();
     rxImagesList.value = [];
+    scrollController.removeListener(_scrollListener);
   }
 
   void showMessage(){
@@ -122,6 +131,17 @@ class _StateCreateTask extends State<_CreateTask>{
     Navigator.pop(context);
   }
 
+  void _scrollListener(){
+    setState(() {
+      if(!isFullScreen&&scrollController.position.pixels>10){
+        isFullScreen = true;
+      }
+      if(isFullScreen&&scrollController.position.pixels<10){
+        isFullScreen = false;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -129,10 +149,12 @@ class _StateCreateTask extends State<_CreateTask>{
 
     return Stack(
       children: [
-        Container(
+        AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            height: (MediaQuery.of(context).size.height)-safeAreaSize,
+            height: (MediaQuery.of(context).size.height)-(isFullScreen?10:safeAreaSize),
             child: SingleChildScrollView(
+              controller: scrollController,
               child:
                  Optional(
                    conditional: isLoading,
