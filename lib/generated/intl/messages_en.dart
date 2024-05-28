@@ -33,11 +33,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Complete"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
         "connecting_to_chat": MessageLookupByLibrary.simpleMessage(
             "Connecting to chat. Please wait!"),
         "create": MessageLookupByLibrary.simpleMessage("Create"),
         "create_group": MessageLookupByLibrary.simpleMessage("Create group"),
         "dark_theme": MessageLookupByLibrary.simpleMessage("Dark"),
+        "deny_access": MessageLookupByLibrary.simpleMessage("Deny access"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "edit_task": MessageLookupByLibrary.simpleMessage("Edit task"),
         "email": MessageLookupByLibrary.simpleMessage("E-Mail"),
@@ -75,6 +77,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nobody": MessageLookupByLibrary.simpleMessage("Nobody"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "photo": MessageLookupByLibrary.simpleMessage("Photo"),
+        "pick": MessageLookupByLibrary.simpleMessage("Pick"),
+        "pick_users": MessageLookupByLibrary.simpleMessage("Pick users"),
         "reply": MessageLookupByLibrary.simpleMessage("Reply"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "saved_in_clipboard":

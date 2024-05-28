@@ -36,12 +36,14 @@ class _StateTaskScreen extends State<TaskScreen>{
   late var task = widget.task;
   late var title = task.title;
   late var description = task.description;
-  final ScrollController _controller = ScrollController();
+  final _controller = ScrollController();
   final pickedImages = <int>[];
   static const _imageWidth = 200.0;
   static const _imageHeight = 275.0;
   var userId = store.get('id')!;
   var pickedIndex = 0;
+  late bool isInitLoading = !widget.task.fullAccess;
+  late bool isHaveAccess = widget.task.fullAccess;
   bool isLoading = false;
   bool showBottomBar = false;
   bool canPop = true;
@@ -49,6 +51,27 @@ class _StateTaskScreen extends State<TaskScreen>{
   @override
   void initState() {
     super.initState();
+    if(!widget.task.fullAccess){
+      accessCheck().then((result){
+        setState(() {
+          isInitLoading = false;
+          isHaveAccess = result;
+        });
+      });
+    }
+    initTimer();
+  }
+
+  Future<bool> accessCheck() async {
+    final taskAccesses = await TasksHttp.getTaskAccess(widget.task.id);
+    if(taskAccesses!=null){
+      final userId = store.get<int>('id')!;
+      return !taskAccesses.usersId.contains(userId);
+    }
+    return false;
+  }
+
+  void initTimer(){
     Timer? timer;
     timer = Timer(const Duration(milliseconds: 100), (){
       if(widget.isChild) return;
@@ -73,7 +96,7 @@ class _StateTaskScreen extends State<TaskScreen>{
     if(isLoading) return;
     setState(() => isLoading = true);
     _controller.jumpTo(0);
-    var updatedTask = Task(
+    final updatedTask = Task(
         id: task.id,
         dayFrom: dateFrom.day,
         monthFrom: dateFrom.month,
@@ -90,7 +113,8 @@ class _StateTaskScreen extends State<TaskScreen>{
         creatorId: task.creatorId,
         groupId: task.groupId,
         imagesId: task.imagesId,
-        status: task.status
+        status: task.status,
+        fullAccess: task.fullAccess
     );
     if(jsonEncode(updatedTask.toJson()) != jsonEncode(task.toJson())){
       var update = await TasksHttp.updateTask(updatedTask);
@@ -103,6 +127,25 @@ class _StateTaskScreen extends State<TaskScreen>{
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenSize = MediaQuery.of(context).size;
+
+    if(isInitLoading || !isHaveAccess){
+      return Scaffold(
+        appBar: AppBar(),
+        extendBodyBehindAppBar: true,
+        body: Align(
+          alignment: Alignment.center,
+          child: (
+            isInitLoading ?
+            CircularProgressIndicator(
+                color: theme.primaryColor
+            ) :
+            Text(_S.deny_access, style: theme.textTheme.bodyLarge!.copyWith(
+              color: theme.primaryColor
+            ))
+          )
+        )
+      );
+    }
 
     return PopScope(
       onPopInvoked: (isPop){
@@ -132,6 +175,7 @@ class _StateTaskScreen extends State<TaskScreen>{
                 slivers: [
                   SliverAppBar(
                     pinned: true,
+                    backgroundColor: theme.scaffoldBackgroundColor,
                     automaticallyImplyLeading: !widget.isChild,
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -312,7 +356,7 @@ class _StateTaskScreen extends State<TaskScreen>{
                             selectionMode: DateRangePickerSelectionMode.range,
                             onDateChange: (args){
                               if(!widget.isChild){
-                                var date = args.value as PickerDateRange;
+                                final date = args.value as PickerDateRange;
                                 setState(() {
                                   dateFrom = date.startDate!;
                                   dateTo = date.endDate==null ? date.startDate! : date.endDate!;
@@ -350,7 +394,7 @@ class _StateTaskScreen extends State<TaskScreen>{
                             )
                         ]
                       )
-                    ),
+                    )
                   ),
                   if(!widget.isChild&&task.creatorId==userId)
                     const SliverToBoxAdapter(
@@ -392,8 +436,8 @@ class _StateTaskScreen extends State<TaskScreen>{
                                                 store.updateWithData('change_task_status', (status:TaskStatus.completed, task:task));
                                                 Navigator.pop(context);
                                               },
-                                              style: ButtonStyle(
-                                                backgroundColor: MaterialStatePropertyAll(theme.primaryColor),
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: theme.primaryColor
                                               ),
                                               child: Text(
                                                   _S.btn_complete,
@@ -424,8 +468,8 @@ class _StateTaskScreen extends State<TaskScreen>{
                                               store.updateWithData('delete_task', task);
                                               Navigator.pop(context);
                                             },
-                                            style: const ButtonStyle(
-                                              backgroundColor: MaterialStatePropertyAll(Colors.red),
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.red
                                             ),
                                             child: Text(
                                                 _S.btn_delete,
@@ -462,8 +506,8 @@ class _StateTaskScreen extends State<TaskScreen>{
                                                 });
                                               }
                                             },
-                                            style: const ButtonStyle(
-                                                backgroundColor: MaterialStatePropertyAll(Colors.red)
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor: theme.primaryColor
                                             ),
                                             child: Text(
                                                 _S.btn_delete,

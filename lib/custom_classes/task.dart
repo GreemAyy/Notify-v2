@@ -3,6 +3,30 @@ abstract class TaskStatus{
   static const completed = 1;
 }
 
+class TaskAccess{
+  int id;
+  int taskId;
+  List<int> usersId;
+
+  TaskAccess({
+    this.id = 0,
+    required this.taskId,
+    required this.usersId
+  });
+
+  factory TaskAccess.fromJson(Map<String, dynamic> json) => TaskAccess(
+    id: json['id'],
+    taskId: json['task_id'],
+    usersId: List<int>.from(json["users_id"].map((x) => x))
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "task_id": taskId,
+    "users_id": List<dynamic>.from(usersId.map((x) => x)),
+  };
+}
+
 class Task {
   int id;
   int dayFrom;
@@ -21,9 +45,10 @@ class Task {
   int groupId;
   List<int> imagesId;
   int status;
+  bool fullAccess;
 
   Task({
-    required this.id,
+    this.id = 0,
     required this.dayFrom,
     required this.monthFrom,
     required this.yearFrom,
@@ -37,9 +62,10 @@ class Task {
     required this.title,
     required this.description,
     required this.creatorId,
-    required this.groupId,
-    required this.imagesId,
-    required this.status,
+    this.groupId = 0,
+    this.imagesId = const <int>[],
+    this.status = TaskStatus.uncompleted,
+    this.fullAccess = true
   });
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
@@ -60,6 +86,7 @@ class Task {
     groupId: json["group_id"],
     imagesId: List<int>.from(json["images_id"].map((x) => x)),
     status: json["status"],
+    fullAccess: json["full_access"] == 1 ? true : false
   );
 
   Map<String, dynamic> toJson() => {
@@ -80,5 +107,6 @@ class Task {
     "group_id": groupId,
     "images_id": List<dynamic>.from(imagesId.map((x) => x)),
     "status": status,
+    "full_access":fullAccess ? 1 : 0
   };
 }

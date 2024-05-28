@@ -2,23 +2,21 @@ import 'dart:developer' as dev;
 
 class _EventEmitter {
     Map<String,List<Function?>> events = {};
+    int getEventsCount(String key) => events[key]?.length ?? 0;
 
-    int getEventsCount(String key){
-      return events[key]?.length??0;
-    }
     void on(String eventName, void Function() callback){
-      var event = events[eventName];
-      if(event==null){
-         events[eventName]=[];
-      }
+      if(events[eventName]==null) events[eventName] = [];
       events[eventName]!.add(callback);
     }
     void emit(String eventName, [dynamic value]){
-      var callbacks = events[eventName];
+      final callbacks = events[eventName];
       if(callbacks != null){
-        for (var call in callbacks) {
-          if(call!=null){
-            call();
+        for (var i = 0; i < callbacks.length; i++) {
+          final call = callbacks[i];
+          try{
+            if(call != null) call();
+          }catch(_){
+            events[eventName]?[i] = null;
           }
         }
       }
@@ -26,17 +24,12 @@ class _EventEmitter {
     void remove(String eventName){
       try{
         events.remove(eventName);
-      }catch(e){
-        rethrow;
-      }
+      }catch(e){rethrow;}
     }
-
     void removeOn(String key, CallbackInputType<dynamic> on){
-      if(events[key]==null) return;
-      int count = 0;
-      events[key] = events[key]!.map((e) => e.toString()==on.toString()&&count==0?null:e).toList();
+      if(events[key] == null) return;
+      events[key]!.remove(on);
     }
-
     void removeAt(String eventName, int index){
       try{
         if(events[eventName]?.length==1){
@@ -44,10 +37,8 @@ class _EventEmitter {
         }else{
           events[eventName]?[index] = null;
         }
-        var isEveryNull = events[eventName]?.where((element) => element!=null).isEmpty??true;
-        if(isEveryNull){
-          events[eventName]?.clear();
-        }
+        final isEveryNull = events[eventName]?.where((element) => element!=null).isEmpty ?? true;
+        if(isEveryNull) events[eventName]?.clear();
       }catch(e){rethrow;}
     }
 }
@@ -64,9 +55,9 @@ class Updater{
   bool logMessages;
   final _logs = <String>[];
   final _emitter = _EventEmitter();
-  final Map<String, dynamic> _localHolder = {};
+  final _localHolder = <String, dynamic>{};
   ({String key, dynamic data}) _lastUpdate = (key: '', data: null);
-  static const _anyWatchKey = '@_/#_ANY_/#_WATCH_/#_@';
+  static const _ANY_WATCH_KEY = '@_/#_ANY_/#_WATCH_/#_@';
 
   void _log(String _){
     if(debug) _logs.add(_);
@@ -92,19 +83,19 @@ class Updater{
       _log(_);
       callback(_localHolder[key]);
       _lastUpdate = (key: key, data:_localHolder[key]);
-      _emitter.emit(_anyWatchKey);
+      _emitter.emit(_ANY_WATCH_KEY);
     });
-    if(_localHolder[key]!=null){
+    if(_localHolder[key] != null){
       _localHolder.remove(key);
     }
-    return _emitter.getEventsCount(key)-1;
+    return _emitter.getEventsCount(key) - 1;
   }
   Deleter watchWithDeleteCallback<CallbackType>(String key, CallbackInputType<CallbackType> callback){
     final watchIndex = watch(key, callback);
     return () => unSeeAt(key, watchIndex);
   }
   void anyWatch(void Function(String key, dynamic data) callback){
-    _emitter.on(_anyWatchKey, () {
+    _emitter.on(_ANY_WATCH_KEY, () {
       callback(_lastUpdate.key, _lastUpdate.data);
     });
   }
@@ -191,9 +182,9 @@ class Collector extends Updater {
 
   void multiSet(List<String> keys, List<dynamic> values, [List<bool> shouldUpdate = const []]){
     for(int i = 0; i < keys.length; i++){
-      var key = keys[i];
-      var value = values[i];
-      var valueAt = _states[key];
+      final key = keys[i];
+      final value = values[i];
+      final valueAt = _states[key];
       if(valueAt!=null&&!identical(value.runtimeType, valueAt.runtimeType)&&strongTyped){
         throw Exception('New value type at key :$key is not matches to setted value');
       }

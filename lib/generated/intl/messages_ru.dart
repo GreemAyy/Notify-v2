@@ -33,11 +33,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_cancel": MessageLookupByLibrary.simpleMessage("Отменить"),
         "btn_complete": MessageLookupByLibrary.simpleMessage("Выполнить"),
         "btn_delete": MessageLookupByLibrary.simpleMessage("Удалить"),
+        "close": MessageLookupByLibrary.simpleMessage("Закрыть"),
         "connecting_to_chat": MessageLookupByLibrary.simpleMessage(
             "Подключение к чату. Ожидайте"),
         "create": MessageLookupByLibrary.simpleMessage("Создать"),
         "create_group": MessageLookupByLibrary.simpleMessage("Создать группу"),
         "dark_theme": MessageLookupByLibrary.simpleMessage("Тёмная"),
+        "deny_access":
+            MessageLookupByLibrary.simpleMessage("Отказать в доступе"),
         "edit": MessageLookupByLibrary.simpleMessage("Изменить"),
         "edit_task":
             MessageLookupByLibrary.simpleMessage("Редактировать задачу"),
@@ -75,6 +78,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_photo": MessageLookupByLibrary.simpleMessage("Нет фото"),
         "password": MessageLookupByLibrary.simpleMessage("Пароль"),
         "photo": MessageLookupByLibrary.simpleMessage("Фото"),
+        "pick": MessageLookupByLibrary.simpleMessage("Выбрать"),
+        "pick_users":
+            MessageLookupByLibrary.simpleMessage("Выбрать пользователей"),
         "reply": MessageLookupByLibrary.simpleMessage("Ответить"),
         "save": MessageLookupByLibrary.simpleMessage("Сохранить"),
         "saved_in_clipboard":

@@ -31,7 +31,7 @@ Map<String, Widget Function(BuildContext)> routes = {
   '/init':(context) => const InitScreen(),
   '/auth':(context) => const AuthScreen(),
   '/home-only':(context) => const HomeScreen(),
-  '/home':(context) => Navigation(),
+  '/home':(context) => const Navigation(),
   '/my-tasks':(context) => const TasksScreen(),
   '/image':(context){
     var args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;

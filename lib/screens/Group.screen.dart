@@ -11,6 +11,8 @@ import '../custom_classes/user.dart';
 import '../generated/l10n.dart';
 import '../store/store.dart';
 
+final _pageBucket = PageStorageBucket();
+
 class GroupScreen extends StatefulWidget{
   const GroupScreen({
     super.key,
@@ -130,7 +132,6 @@ class _StateGroupScreen extends State<GroupScreen> with TickerProviderStateMixin
 
 typedef ImagesIds = ({int id, Task task});
 var _alreadyLoaded = <ImagesIds>[];
-var _tasksScreenScrollPosition = 0.0;
 
 class TasksGrid extends StatefulWidget{
   const TasksGrid({
@@ -146,12 +147,11 @@ class TasksGrid extends StatefulWidget{
 class _StateTasksGrid extends State<TasksGrid>{
   var imagesIds = _alreadyLoaded;
   var isLoading = true;
-  final scrollController = ScrollController(initialScrollOffset: _tasksScreenScrollPosition);
 
   @override
   void initState(){
     super.initState();
-    ()async{
+    () async {
       if(_alreadyLoaded.isEmpty){
         await init();
       }else{
@@ -160,32 +160,17 @@ class _StateTasksGrid extends State<TasksGrid>{
           isLoading = false;
         });
       }
-      if(scrollController.hasClients){
-        scrollController.addListener(_scrollListener);
-      }
     }();
   }
 
-  void _scrollListener(){
-    _tasksScreenScrollPosition = scrollController.position.pixels;
-  }
-
- @override
- void dispose(){
-    super.dispose();
-    scrollController.removeListener(_scrollListener);
- }
-
  Future<void> init() async {
-    var id = widget.groupId;
-    var getTasks = await TasksHttp.getGroupsAllTasks(id);
-    var holder = <({int id, Task task})>[];
+    final id = widget.groupId;
+    final getTasks = await TasksHttp.getGroupsAllTasks(id);
+    final holder = <({int id, Task task})>[];
     for (var task in getTasks) {
       if(task.imagesId[0]!=0){
         holder.addAll(
-            task.imagesId.map((e){
-              return (id: e, task: task);
-            })
+            task.imagesId.map((e)=> (id: e, task: task))
         );
       }
     }
@@ -201,53 +186,56 @@ class _StateTasksGrid extends State<TasksGrid>{
     final screenSize = MediaQuery.of(context).size;
     final theme = Theme.of(context);
 
-    return GridView.builder(
+    return PageStorage(
+      bucket: _pageBucket,
+      child: GridView.builder(
+        key: const PageStorageKey('group_page_one'),
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: screenSize.width/3
         ),
-      controller: scrollController,
-      itemCount: isLoading?12:imagesIds.length,
-      itemBuilder: (BuildContext context, int index) {
-            if(isLoading){
-              return Skeleton(
-                  height: screenSize.width/3-5,
-                  width: screenSize.width/3-5,
-                  verticalOuterPadding: 2.5,
-                  horizontalOuterPadding: 2.5,
-                  colorFrom: theme.textTheme.bodyMedium!.color!.withOpacity(.1),
-                  colorTo: theme.textTheme.bodyMedium!.color!.withOpacity(.3),
-                  borderRadius: 10
-              );
-            }
-            var imageId = imagesIds[index];
-            return InkWell(
-                onTap: (){
-                  Navigator.pushNamed(context, '/image-with-task', arguments: {
-                    "hero":'hero_image_screen_$imageId',
-                    "image": ImagePlaceholder(
-                      imageId: imageId.id,
-                      imageHeight: screenSize.height,
-                      imageWidth: screenSize.width,
-                      fit: BoxFit.contain,
-                      radius: 0,
-                    ),
-                    "task":imageId.task
-                  });
-                },
-                child: Hero(
-                    tag: 'hero_image_screen_$imageId',
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: ImagePlaceholder(
+        itemCount: isLoading ? 12 : imagesIds.length,
+        itemBuilder: (BuildContext context, int index) {
+              if(isLoading){
+                return Skeleton(
+                    height: screenSize.width~/3-5,
+                    width: screenSize.width~/3-5,
+                    verticalOuterPadding: 2.5,
+                    horizontalOuterPadding: 2.5,
+                    colorFrom: theme.textTheme.bodyMedium!.color!.withOpacity(.1),
+                    colorTo: theme.textTheme.bodyMedium!.color!.withOpacity(.3),
+                    borderRadius: 10
+                );
+              }
+              final imageId = imagesIds[index];
+              return InkWell(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/image-with-task', arguments: {
+                      "hero":'hero_image_screen_$imageId',
+                      "image": ImagePlaceholder(
                         imageId: imageId.id,
-                        imageHeight: screenSize.width/3-10,
-                        imageWidth: screenSize.width/3-10,
-                        radius: 5,
+                        imageHeight: screenSize.height,
+                        imageWidth: screenSize.width,
+                        fit: BoxFit.contain,
+                        radius: 0,
+                      ),
+                      "task":imageId.task
+                    });
+                  },
+                  child: Hero(
+                      tag: 'hero_image_screen_$imageId',
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ImagePlaceholder(
+                          imageId: imageId.id,
+                          imageHeight: screenSize.width~/3-10,
+                          imageWidth: screenSize.width~/3-10,
+                          radius: 5,
+                        )
                       )
-                    )
-                )
-            );
-      },
+                  )
+              );
+        },
+      ),
     );
   }
 }
@@ -284,26 +272,30 @@ class _StateMembersList extends State<MembersList>{
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: isLoading ? 9 : membersList.length,
-        itemBuilder: (context, index){
-          if(isLoading){
-            return Skeleton(
-              verticalOuterPadding: 5,
-              horizontalOuterPadding: 10,
-              height: 50,
-              borderRadius: 15,
-              colorFrom: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(.1),
-              colorTo: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(.3),
+    return PageStorage(
+      bucket: _pageBucket,
+      child: ListView.builder(
+          key: const PageStorageKey("group_page_two"),
+          itemCount: isLoading ? 9 : membersList.length,
+          itemBuilder: (context, index){
+            if(isLoading){
+              return Skeleton(
+                verticalOuterPadding: 5,
+                horizontalOuterPadding: 10,
+                height: 50,
+                borderRadius: 15,
+                colorFrom: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(.1),
+                colorTo: Theme.of(context).textTheme.bodyMedium!.color!.withOpacity(.3),
+              );
+            }
+            return MemberItem(
+                onPress: (){
+
+                },
+                member: membersList[index]
             );
           }
-          return MemberItem(
-              onPress: (){
-
-              },
-              member: membersList[index]
-          );
-        }
+      ),
     );
   }
 }
@@ -313,9 +305,11 @@ class MemberItem extends StatelessWidget{
     super.key,
     required this.member,
     required this.onPress,
+    this.isPicked = false
   });
   final User member;
   final void Function() onPress;
+  final bool isPicked;
   static const imageSize = 40.0;
 
   @override
@@ -327,11 +321,13 @@ class MemberItem extends StatelessWidget{
         child: InkWell(
           onTap: onPress,
           borderRadius: BorderRadius.circular(15),
-          child: Container(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: theme.textTheme.bodyMedium!.color!.withOpacity(.1)
+              color: theme.textTheme.bodyMedium!.color!.withOpacity(.1),
+              border: isPicked?Border.all(width: 3, color: theme.primaryColor):null
             ),
             child: Row(
               children: [

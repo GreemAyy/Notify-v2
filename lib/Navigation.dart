@@ -7,7 +7,7 @@ import 'generated/l10n.dart';
 final rxPickedIndex = Reactive(0);
 
 class Navigation extends StatelessWidget{
-  Navigation({super.key});
+  const Navigation({super.key});
 
   @override
   Widget build(BuildContext context) {

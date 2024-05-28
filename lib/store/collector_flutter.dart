@@ -15,7 +15,7 @@ class Reactive<T> with ChangeNotifier{
   Reactive(T? value, {StoreConnect? storeConnection, bool nullable = false, bool log = false}){
     _nullable = nullable||value==null;
     if(storeConnection==null){
-      var gkey = _generateKey();
+      final gkey = _generateKey();
       _store = Collector({gkey:value}, strongTyped: !_nullable);
       _key = gkey;
     }else{

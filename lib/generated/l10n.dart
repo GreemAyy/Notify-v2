@@ -739,6 +739,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Deny access`
+  String get deny_access {
+    return Intl.message(
+      'Deny access',
+      name: 'deny_access',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick`
+  String get pick {
+    return Intl.message(
+      'Pick',
+      name: 'pick',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick users`
+  String get pick_users {
+    return Intl.message(
+      'Pick users',
+      name: 'pick_users',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

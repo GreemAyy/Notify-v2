@@ -39,6 +39,6 @@ ThemeData themeDark = ThemeData(
   textTheme: _textTheme,
   bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.white
-  )
+  ),
 );
 

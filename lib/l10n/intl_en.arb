@@ -67,5 +67,9 @@
   "join_to_group": "Join to group",
   "join": "Join",
   "write_invite_code": "Write invite code",
-  "members": "Members"
+  "members": "Members",
+  "deny_access": "Deny access",
+  "close": "Close",
+  "pick": "Pick",
+  "pick_users": "Pick users"
 }

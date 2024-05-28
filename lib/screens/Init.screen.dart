@@ -44,15 +44,15 @@ class _StateInitScreen extends State<InitScreen>{
   }
 
   void init() async {
-    var prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     final id = prefs.getInt('id');
     final hash = prefs.getString('hash');
     final localeCode = prefs.getString('locale');
     final themeMode = prefs.getString('theme_mode');
-    final access = await UsersHttp.checkUserAccess(id??0, hash??'');
+    final access = await UsersHttp.checkUserAccess(id ?? 0, hash ?? '');
     final locale = WidgetsBinding.instance.platformDispatcher.locale;
     store.mapMultiSet({
-      "locale":localeCode!=null?Locale(localeCode):locale,
+      "locale":localeCode!=null ? Locale(localeCode) : locale,
       "theme_mode":getThemeMode(themeMode)
     });
     
